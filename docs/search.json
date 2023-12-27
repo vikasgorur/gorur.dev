@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "taste-of-autodiff.html",
+    "href": "taste-of-autodiff.html",
+    "title": "A Taste of Automatic Differentiation",
+    "section": "",
+    "text": "If we have a function\n\\[\nf(x) = x^2\n\\]\nit’s derivative is\n\\[\n\\frac{df(x)}{dx} = 2x\n\\]\nusing Zygote\n\nprint(gradient(x -&gt; x^2, 2))\n\n(4.0,)\nDo polynomial interpolation\nthe interesting thing is that autodiff can solve problems without needing the math\nOptim.jl can optimize any loss function using forward-mode AD.\nBut Zygote allows backwards mode AD which is more efficient when there are many parameters."
+  },
+  {
+    "objectID": "taste-of-autodiff.html#further-reading",
+    "href": "taste-of-autodiff.html#further-reading",
+    "title": "A Taste of Automatic Differentiation",
+    "section": "Further reading",
+    "text": "Further reading\nKarpathy video. Autodiff survey paper. PyTorch paper. Zygote.jl\nhttps://thenumb.at/Autodiff/\nhttps://www.assemblyai.com/blog/differentiable-programming-a-simple-introduction/\nzygote paper https://arxiv.org/abs/1810.07951\nperfect hashing https://www.cs.cmu.edu/~avrim/451/lectures/lect0916.pdf\nGiven a set of company names, find a simple similarity function that can tolerate upto a certain amount of typos."
+  },
+  {
+    "objectID": "taste-of-autodiff.html#julia-footnotes",
+    "href": "taste-of-autodiff.html#julia-footnotes",
+    "title": "A Taste of Automatic Differentiation",
+    "section": "Julia footnotes",
+    "text": "Julia footnotes"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Programs for Humans",
+    "section": "",
+    "text": "Exercises from the book Coding the Matrix:\n\nProblem 1.5.1"
+  },
+  {
+    "objectID": "cipher-exercise.html",
+    "href": "cipher-exercise.html",
+    "title": "",
+    "section": "",
+    "text": "Problem 1.5.1:\nAn 11-symbol message has been encrypted as follows. Each symbol is represented by a number between 0 and 26 (\\(A \\rightarrow 0, B \\rightarrow 1, ...)\\). Each number is represented by a five-bit binary sequence (\\(0 \\rightarrow 00000, 1 \\rightarrow 00001, ...)\\). Finally, the resulting sequence of 55 bits is encrypted using a flawed version of the one-time pad: the key is not 55 random bits but 11 copies of the same sequence of 5 random bits. The cyphertext is:\n\\[\n10101 \\space 00100 \\space 10101 \\space 01011 \\space 11001 \\space 00011 \\space 01011 \\space 10101 \\space 00100 \\space 11001 \\space 11010\n\\]\nTry to find the plaintext.\n\nSolution:\nWe convert the input into an array of integers and write a helper function to turn such an array into a alphabetic string.\n\ninput = \"10101 00100 10101 01011 11001 00011 01011 10101 00100 11001 11010\"\n\ncipher::Vector{Int} = map(s -&gt; parse(Int, s, base=2), split(input, \" \"))\n\ndecode(c::Vector{Int})::String = join(map(x -&gt; Char(x + 65), c))\ndecode(cipher)\n\n\"VEVLZDLVEZ[\"\n\n\nThe crypt function is just XOR, and serves as both the encryption and decryption function. Since the key has 5 bits, we apply the crypt function to the input using every key in the range 0:31.\n\ncrypt(message::Vector{Int}, key::Int) = map(c -&gt; c ⊻ key, message)\n\nkeys = 0:31\n\nplaintexts = map(k -&gt; decode(crypt(cipher, k)), keys)\n\ndisplay(reshape(plaintexts, (8, 4)))\n\n8×4 Matrix{String}:\n \"VEVLZDLVEZ[\"    \"^M^DRLD^MRS\"     \"FUF\\\\JT\\\\FUJK\"  \"N]NTB\\\\TN]BC\"\n \"UFUKYCKUFY\\\\\"   \"]N]CQKC]NQT\"     \"EVE[IS[EVIL\"    \"M^MSA[SM^AD\"\n \"XGXJ\\\\BJXG\\\\Y\"  \"`O`BTJB`OTQ\"     \"HWHZLRZHWLI\"    \"P_PRDZRP_DA\"\n \"WHWI[AIWH[Z\"    \"_P_ASIA_PSR\"     \"GXGYKQYGXKJ\"    \"O`OQCYQO`CB\"\n \"RARP^HPRA^_\"    \"ZIZHVPHZIVW\"     \"BQB`NX`BQNO\"    \"JYJXF`XJYFG\"\n \"QBQO]GOQB]`\"    \"YJYGUOGYJUX\"     \"ARA_MW_ARMP\"    \"IZIWE_WIZEH\"\n \"TCTN`FNTC`]\"    \"\\\\K\\\\FXNF\\\\KXU\"  \"DSD^PV^DSPM\"    \"L[LVH^VL[HE\"\n \"SDSM_EMSD_^\"    \"[L[EWME[LWV\"     \"CTC]OU]CTON\"    \"K\\\\KUG]UK\\\\GF\"\n\n\nWe see that only one of these contains English words, and that’s the answer: EVE[IS[EVIL."
+  }
+]

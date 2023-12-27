@@ -1,0 +1,11 @@
+---
+title: "Programs for Humans"
+jupyter: julia-1.9
+format:
+    html:
+        code-fold: true
+---
+
+Exercises from the book [Coding the Matrix](https://codingthematrix.com/):
+
+- [Problem 1.5.1](cipher-exercise.html)

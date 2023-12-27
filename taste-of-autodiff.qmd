@@ -1,0 +1,57 @@
+---
+title: "A Taste of Automatic Differentiation"
+jupyter: julia-1.9
+format:
+    html:
+        code-fold: false
+---
+
+If we have a function
+
+$$
+f(x) = x^2
+$$
+
+it's derivative is
+
+$$
+\frac{df(x)}{dx} = 2x
+$$
+
+```{julia}
+using Zygote
+
+print(gradient(x -> x^2, 2))
+
+```
+
+Do polynomial interpolation
+
+the interesting thing is that autodiff can solve problems without needing the math
+
+Optim.jl can optimize any loss function using forward-mode AD.
+
+But Zygote allows backwards mode AD which is more efficient when there are many parameters.
+
+## Further reading
+
+Karpathy video.
+Autodiff survey paper.
+PyTorch paper.
+Zygote.jl
+
+
+
+https://thenumb.at/Autodiff/
+
+https://www.assemblyai.com/blog/differentiable-programming-a-simple-introduction/
+
+zygote paper https://arxiv.org/abs/1810.07951
+
+perfect hashing https://www.cs.cmu.edu/~avrim/451/lectures/lect0916.pdf
+
+Given a set of company names, find a simple similarity function
+that can tolerate upto a certain amount of typos.
+
+## Julia footnotes
+
