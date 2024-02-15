@@ -1,0 +1,20 @@
+
+---
+title: "Counting"
+jupyter: julia-1.9
+format:
+    html:
+        theme: flatly
+        mainfont: "PT Serif"
+        code-fold: false
+---
+
+## References
+
+| 1. John Tsitsiklis, *Counting*. MIT 6.041 Probabilistic Systems Analysis and Applied Probability, Fall 2010. [YouTube](https://www.youtube.com/watch?v=6oV3pKLgW2I).
+|
+|       This is a great.
+|
+| 2. Some other book
+|
+|       Was really good.

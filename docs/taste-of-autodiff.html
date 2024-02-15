@@ -92,6 +92,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -126,28 +129,169 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>If we have a function</p>
+<p>Large language models (LLMs) are magic. I want to answer the question, “where is the magic?” by writing simple, readable code to illustrate all the key ideas that make the magic happen. The code is written in Julia but I try not to use any esoteric features so that it can be understood by programmers coming from any language.</p>
+<p>This is the first post in the series, focusing on Automatic Differentiation (AD). The idea of AD starts with the fascinating question: what if we could differentiate <em>code</em>? What problems would that allow us to solve?</p>
+<p>We will try out that exercise with a couple of toy examples and build up to understanding its relevance to training neural networks.</p>
+<p>We start by recalling the definition of a derivative:</p>
+<p><span class="math display">\[
+f'(x) = \lim_{\delta x \to 0} \frac{f(x + \delta x) - f(x)}{\delta x}
+\]</span></p>
+<p>For example,</p>
 <p><span class="math display">\[
 f(x) = x^2
+\]</span> <span class="math display">\[
+f'(x) = 2x
 \]</span></p>
-<p>it’s derivative is</p>
-<p><span class="math display">\[
-\frac{df(x)}{dx} = 2x
-\]</span></p>
+<p>The intuition of the derivative of <span class="math inline">\(f\)</span> at a point <span class="math inline">\(x_0\)</span> is that it measures how <em>sensitive</em> the output is to a small change in the input around the neighborhood of <span class="math inline">\(x_0\)</span>.</p>
+<p>We can translate the definition into code in a straight-forward way:</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Zygote</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">gradient</span>(x <span class="op">-&gt;</span> x<span class="op">^</span><span class="fl">2</span>, <span class="fl">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">d</span>(f, x)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    δ <span class="op">=</span> <span class="fl">1e-6</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (<span class="fu">f</span>(x <span class="op">+</span> δ) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> δ</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(x) <span class="op">=</span> x<span class="op">^</span><span class="fl">2</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">d</span>(f, <span class="fl">2.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>(4.0,)</code></pre>
+<pre><code>4.0000010006480125</code></pre>
 </div>
 </div>
-<p>Do polynomial interpolation</p>
-<p>the interesting thing is that autodiff can solve problems without needing the math</p>
-<p>Optim.jl can optimize any loss function using forward-mode AD.</p>
-<p>But Zygote allows backwards mode AD which is more efficient when there are many parameters.</p>
+<p>The code above is an example of <em>numeric differentiation</em>. While this approach isn’t efficient or suitable for ML applications, it’s sufficient for our first toy example.</p>
+<section id="example-1-linear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="example-1-linear-regression">Example 1: Linear Regression</h2>
+<p>The problem of linear regression is to fit the “best” line through a set of points. For our example we’ll use a dataset with just one input variable <code>n</code> and one output variable <code>duration</code>.</p>
+<p>This is a real-world dataset I gathered by measuring the time it takes to train a particular ML model as a function of the number of training examples. While the time it takes for a training job to run might seem like the result of a complicated process, the relationship with the number of training examples is almost perfectly linear. It’s a nice confirmation for me that linear relationships arise naturally in the real world and are not just found in statistics textbooks.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">CSV</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"metrics.csv"</span>, DataFrame)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>metrics[<span class="op">:</span>, [<span class="op">:</span>n, <span class="op">:</span>duration]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div><div style="float: left;"><span>14×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">duration</th>
+</tr>
+<tr class="odd subheader headerLastRow">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">2002</td>
+<td style="text-align: right;">49</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">2053</td>
+<td style="text-align: right;">62</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">1014</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: right;">556</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: right;">936</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: right;">1465</td>
+<td style="text-align: right;">36</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">7</td>
+<td style="text-align: right;">2365</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">8</td>
+<td style="text-align: right;">777</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">9</td>
+<td style="text-align: right;">2518</td>
+<td style="text-align: right;">83</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">10</td>
+<td style="text-align: right;">1222</td>
+<td style="text-align: right;">33</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">11</td>
+<td style="text-align: right;">938</td>
+<td style="text-align: right;">31</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">12</td>
+<td style="text-align: right;">907</td>
+<td style="text-align: right;">38</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">13</td>
+<td style="text-align: right;">1944</td>
+<td style="text-align: right;">63</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">14</td>
+<td style="text-align: right;">3194</td>
+<td style="text-align: right;">102</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We’ll think of the input and output variables as the vectors <span class="math inline">\(\textbf{X}\)</span> and <span class="math inline">\(\textbf{Y}\)</span>. We will also scale the raw data so that each of these vectors contains values only in the range <span class="math inline">\([0, 1]\)</span>. Our aim is to find the best parameters (<span class="math inline">\(\beta_1\)</span>, <span class="math inline">\(\beta_2\)</span>) for the line: <span class="math display">\[
+\textbf{Y} = \beta_1 \textbf{X} + \beta_2
+\]</span></p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scale</span>(V) <span class="op">=</span> (V <span class="op">.-</span> <span class="fu">minimum</span>(V)) <span class="op">./</span> (<span class="fu">maximum</span>(V) <span class="op">-</span> <span class="fu">minimum</span>(V))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> <span class="fu">scale</span>(metrics[!, <span class="op">:</span>n])</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> <span class="fu">scale</span>(metrics[!, <span class="op">:</span>duration])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>14-element Vector{Float64}:
+ 0.3764705882352941
+ 0.5294117647058824
+ 0.12941176470588237
+ 0.0
+ 0.11764705882352941
+ 0.2235294117647059
+ 0.5529411764705883
+ 0.058823529411764705
+ 0.7764705882352941
+ 0.18823529411764706
+ 0.16470588235294117
+ 0.24705882352941178
+ 0.5411764705882353
+ 1.0</code></pre>
+</div>
+</div>
+<p>To actually find the parameters we need to define the notion of the “best fit”. We can think of the line we’re trying to fit as a prediction model. We can then measure its fit by computing the difference between the correct answer and the predicted answer for each data point and adding up the differences. We will also square each of the differences so that it doesn’t matter if the prediction is off in either direction, only the magnitude is relevant.</p>
+<p>(TODO: why not just use the absolute value? Is it because historically it was easier to differentiate the squared loss?)</p>
+<p>Loss function gradient descent</p>
+<p>visualize the gradient</p>
+</section>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>Much deeper blog post https://jingnanshi.com/blog/autodiff.html</p>
 <p>Karpathy video. Autodiff survey paper. PyTorch paper. Zygote.jl</p>
 <p>https://thenumb.at/Autodiff/</p>
 <p>https://www.assemblyai.com/blog/differentiable-programming-a-simple-introduction/</p>
@@ -157,6 +301,19 @@ f(x) = x^2
 </section>
 <section id="julia-footnotes" class="level2">
 <h2 class="anchored" data-anchor-id="julia-footnotes">Julia footnotes</h2>
+<p>Explain broadcasting.</p>
+<p>Outline</p>
+<p>concept of gradient</p>
+<p>The four kinds of calculating the gradient: - symbolic - numeric (prone to rounding instability)</p>
+<p>“auto” depends on maintaining “evaluation traces” (= Wengert list = expression DAG)</p>
+<p>with the DAG, we can propagate the gradient forwards or backwards.</p>
+<p>forwards requires 1 pass for each variable backwards can compute all</p>
+<p>using that to solve linear regression with descent</p>
+<p>gradient with multiple params - polynomial interpolation reverse-mode Zygote - auto gradient (ref paper)</p>
+<p>using better optimization (BFGS)</p>
+<p>PyTorch &amp; relevance to neural networks.</p>
+<p>Forward-mode AD in Julia https://arxiv.org/pdf/1607.07892.pdf</p>
+<p>Eng tradeoffs in various libraries http://www.stochasticlifestyle.com/engineering-trade-offs-in-automatic-differentiation-from-tensorflow-and-pytorch-to-jax-and-julia/</p>
 
 
 </section>
