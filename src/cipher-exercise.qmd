@@ -1,0 +1,40 @@
+
+**Problem 1.5.1**:
+
+An 11-symbol message has been encrypted as follows. Each symbol is represented by a number between 0 and 26 ($A \rightarrow 0, B \rightarrow 1, ...)$. Each number is represented by a five-bit binary sequence ($0 \rightarrow 00000, 1 \rightarrow 00001, ...)$. Finally, the resulting sequence of 55 bits is encrypted using a flawed version of the one-time pad: the key is not 55 random bits but 11 copies of the same sequence of 5 random bits. The cyphertext is:
+
+$$
+10101 \space 00100 \space 10101 \space 01011 \space 11001 \space 00011 \space 01011 \space 10101 \space 00100 \space 11001 \space 11010
+$$
+
+Try to find the plaintext.
+
+---
+
+**Solution**:
+
+We convert the input into an array of integers and write a helper function to turn such an array into a alphabetic string.
+
+```{julia}
+input = "10101 00100 10101 01011 11001 00011 01011 10101 00100 11001 11010"
+
+cipher::Vector{Int} = map(s -> parse(Int, s, base=2), split(input, " "))
+
+decode(c::Vector{Int})::String = join(map(x -> Char(x + 65), c))
+decode(cipher)
+```
+
+The crypt function is just XOR, and serves as both the encryption and decryption function. Since the key has 5 bits, we apply the crypt
+function to the input using every key in the range `0:31`.
+
+```{julia}
+crypt(message::Vector{Int}, key::Int) = map(c -> c ⊻ key, message)
+
+keys = 0:31
+
+plaintexts = map(k -> decode(crypt(cipher, k)), keys)
+
+display(reshape(plaintexts, (8, 4)))
+```
+
+We see that only one of these contains English words, and that's the answer: `EVE[IS[EVIL`.

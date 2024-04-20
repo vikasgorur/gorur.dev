@@ -1,79 +1,65 @@
 [
   {
-    "objectID": "taste-of-autodiff.html",
-    "href": "taste-of-autodiff.html",
+    "objectID": "src/stats110/practice1.html",
+    "href": "src/stats110/practice1.html",
+    "title": "Stats 110: Strategic Practice 1",
+    "section": "",
+    "text": "For each part, decide whether the blank should be filled with \\(=\\), \\(&lt;\\), or \\(&gt;\\), and give a short but clear explanation.\n\n(probability that the total after rolling 4 fair dice is 21) ____ (probability that the total after rolling 4 fair dice is 22)\n(probability that a random 2 letter word is a palindrome) ____ (probability that a random 3 letter word is a palindrome)\n\n\nSolution (a):\n\\[P_{21} &gt; P_{22}\\]\nThink of the result of rolling 4 dice as a vector: \\([6 \\ 6 \\ 6 \\ 6]\\). Producing a sum of \\(21\\) or \\(22\\) can be thought of as subtracting another vector, a delta, from this one:\n\\[ 22 = sum([6 \\ 6 \\ 6 \\ 6] - [0 \\ 1 \\ 1 \\ 0]) \\] \\[ 21 = sum([6 \\ 6 \\ 6 \\ 6] - [1 \\ 1 \\ 1 \\ 0]) \\]\nBut notice that for every delta that we can use to make \\(22\\), there are \\(4\\) ways to derive a delta that produces \\(21\\). This is because we can add a \\(1\\) to any of the four positions in the original delta. Thus there are more ways to get \\(21\\) from 4 rolls of dice than \\(22\\) and the probability \\(P_{21}\\) is greater.\nSolution (b):\n\\[P_2 = P_3\\]\nThe only 2-letter palindroms are those where both the letters are the same. Thus,\n\\[P_2 = \\frac{26}{26^2} = \\frac{1}{26}\\]\nFor a 3-letter palindrome, there are \\(26\\) ways to pick the first and last letter, and \\(26\\) further ways to pick the middle one. Thus,\n\\[P_3 = \\frac{26^2}{26^3} = \\frac{1}{26}\\]"
+  },
+  {
+    "objectID": "src/counting-phone-calls.html",
+    "href": "src/counting-phone-calls.html",
+    "title": "Counting Phone Calls",
+    "section": "",
+    "text": "My telephone rings 12 times each week, the calls being randomly distributed among the 7 days. What is the probability that I get atleast one call each day?\n\nfunction phonecalls()\n    # True if there is at least one call per day\n    oneperday(days::Vector{Int}) = !any(d -&gt; d == 0, days)\n\n    N = 10000000\n    days = zeros(Int, 7)\n    count = 0\n    for _ in 1:N\n        for _ in 1:12\n            days[rand(1:7)] += 1\n        end\n        if oneperday(days)\n            count += 1\n        end\n        fill!(days, 0)\n    end\n    count / N\nend\n\nphonecalls()\n\n0.2284545\n\n\nTotal number of ways to assign the calls: \\(7^{12}\\)\nAtleast one per day:\n\\[\n{\\binom{12}{7} \\cdot 7! \\cdot 7^5}\n\\]"
+  },
+  {
+    "objectID": "src/taste-of-autodiff.html",
+    "href": "src/taste-of-autodiff.html",
     "title": "A Taste of Automatic Differentiation",
     "section": "",
     "text": "Large language models (LLMs) are magic. I want to answer the question, “where is the magic?” by writing simple, readable code to illustrate all the key ideas that make the magic happen. The code is written in Julia but I try not to use any esoteric features so that it can be understood by programmers coming from any language.\nThis is the first post in the series, focusing on Automatic Differentiation (AD). The idea of AD starts with the fascinating question: what if we could differentiate code? What problems would that allow us to solve?\nWe will try out that exercise with a couple of toy examples and build up to understanding its relevance to training neural networks.\nWe start by recalling the definition of a derivative:\n\\[\nf'(x) = \\lim_{\\delta x \\to 0} \\frac{f(x + \\delta x) - f(x)}{\\delta x}\n\\]\nFor example,\n\\[\nf(x) = x^2\n\\] \\[\nf'(x) = 2x\n\\]\nThe intuition of the derivative of \\(f\\) at a point \\(x_0\\) is that it measures how sensitive the output is to a small change in the input around the neighborhood of \\(x_0\\).\nWe can translate the definition into code in a straight-forward way:\nfunction d(f, x)\n    δ = 1e-6\n    return (f(x + δ) - f(x)) / δ\nend\n\nf(x) = x^2\nprint(d(f, 2.0))\n\n4.0000010006480125\nThe code above is an example of numeric differentiation. While this approach isn’t efficient or suitable for ML applications, it’s sufficient for our first toy example."
   },
   {
-    "objectID": "taste-of-autodiff.html#further-reading",
-    "href": "taste-of-autodiff.html#further-reading",
-    "title": "A Taste of Automatic Differentiation",
-    "section": "Further reading",
-    "text": "Further reading\nMuch deeper blog post https://jingnanshi.com/blog/autodiff.html\nKarpathy video. Autodiff survey paper. PyTorch paper. Zygote.jl\nhttps://thenumb.at/Autodiff/\nhttps://www.assemblyai.com/blog/differentiable-programming-a-simple-introduction/\nzygote paper https://arxiv.org/abs/1810.07951\nperfect hashing https://www.cs.cmu.edu/~avrim/451/lectures/lect0916.pdf\nGiven a set of company names, find a simple similarity function that can tolerate upto a certain amount of typos."
-  },
-  {
-    "objectID": "taste-of-autodiff.html#julia-footnotes",
-    "href": "taste-of-autodiff.html#julia-footnotes",
-    "title": "A Taste of Automatic Differentiation",
-    "section": "Julia footnotes",
-    "text": "Julia footnotes\nExplain broadcasting.\nOutline\nconcept of gradient\nThe four kinds of calculating the gradient: - symbolic - numeric (prone to rounding instability)\n“auto” depends on maintaining “evaluation traces” (= Wengert list = expression DAG)\nwith the DAG, we can propagate the gradient forwards or backwards.\nforwards requires 1 pass for each variable backwards can compute all\nusing that to solve linear regression with descent\ngradient with multiple params - polynomial interpolation reverse-mode Zygote - auto gradient (ref paper)\nusing better optimization (BFGS)\nPyTorch & relevance to neural networks.\nForward-mode AD in Julia https://arxiv.org/pdf/1607.07892.pdf\nEng tradeoffs in various libraries http://www.stochasticlifestyle.com/engineering-trade-offs-in-automatic-differentiation-from-tensorflow-and-pytorch-to-jax-and-julia/"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Programs for Humans",
-    "section": "",
-    "text": "Exercises from the book Coding the Matrix:\n\nProblem 1.5.1"
-  },
-  {
-    "objectID": "cipher-exercise.html",
-    "href": "cipher-exercise.html",
-    "title": "",
-    "section": "",
-    "text": "Problem 1.5.1:\nAn 11-symbol message has been encrypted as follows. Each symbol is represented by a number between 0 and 26 (\\(A \\rightarrow 0, B \\rightarrow 1, ...)\\). Each number is represented by a five-bit binary sequence (\\(0 \\rightarrow 00000, 1 \\rightarrow 00001, ...)\\). Finally, the resulting sequence of 55 bits is encrypted using a flawed version of the one-time pad: the key is not 55 random bits but 11 copies of the same sequence of 5 random bits. The cyphertext is:\n\\[\n10101 \\space 00100 \\space 10101 \\space 01011 \\space 11001 \\space 00011 \\space 01011 \\space 10101 \\space 00100 \\space 11001 \\space 11010\n\\]\nTry to find the plaintext.\n\nSolution:\nWe convert the input into an array of integers and write a helper function to turn such an array into a alphabetic string.\n\ninput = \"10101 00100 10101 01011 11001 00011 01011 10101 00100 11001 11010\"\n\ncipher::Vector{Int} = map(s -&gt; parse(Int, s, base=2), split(input, \" \"))\n\ndecode(c::Vector{Int})::String = join(map(x -&gt; Char(x + 65), c))\ndecode(cipher)\n\n\"VEVLZDLVEZ[\"\n\n\nThe crypt function is just XOR, and serves as both the encryption and decryption function. Since the key has 5 bits, we apply the crypt function to the input using every key in the range 0:31.\n\ncrypt(message::Vector{Int}, key::Int) = map(c -&gt; c ⊻ key, message)\n\nkeys = 0:31\n\nplaintexts = map(k -&gt; decode(crypt(cipher, k)), keys)\n\ndisplay(reshape(plaintexts, (8, 4)))\n\n8×4 Matrix{String}:\n \"VEVLZDLVEZ[\"    \"^M^DRLD^MRS\"     \"FUF\\\\JT\\\\FUJK\"  \"N]NTB\\\\TN]BC\"\n \"UFUKYCKUFY\\\\\"   \"]N]CQKC]NQT\"     \"EVE[IS[EVIL\"    \"M^MSA[SM^AD\"\n \"XGXJ\\\\BJXG\\\\Y\"  \"`O`BTJB`OTQ\"     \"HWHZLRZHWLI\"    \"P_PRDZRP_DA\"\n \"WHWI[AIWH[Z\"    \"_P_ASIA_PSR\"     \"GXGYKQYGXKJ\"    \"O`OQCYQO`CB\"\n \"RARP^HPRA^_\"    \"ZIZHVPHZIVW\"     \"BQB`NX`BQNO\"    \"JYJXF`XJYFG\"\n \"QBQO]GOQB]`\"    \"YJYGUOGYJUX\"     \"ARA_MW_ARMP\"    \"IZIWE_WIZEH\"\n \"TCTN`FNTC`]\"    \"\\\\K\\\\FXNF\\\\KXU\"  \"DSD^PV^DSPM\"    \"L[LVH^VL[HE\"\n \"SDSM_EMSD_^\"    \"[L[EWME[LWV\"     \"CTC]OU]CTON\"    \"K\\\\KUG]UK\\\\GF\"\n\n\nWe see that only one of these contains English words, and that’s the answer: EVE[IS[EVIL."
-  },
-  {
-    "objectID": "taste-of-autodiff.html#example-1-linear-regression",
-    "href": "taste-of-autodiff.html#example-1-linear-regression",
+    "objectID": "src/taste-of-autodiff.html#example-1-linear-regression",
+    "href": "src/taste-of-autodiff.html#example-1-linear-regression",
     "title": "A Taste of Automatic Differentiation",
     "section": "Example 1: Linear Regression",
     "text": "Example 1: Linear Regression\nThe problem of linear regression is to fit the “best” line through a set of points. For our example we’ll use a dataset with just one input variable n and one output variable duration.\nThis is a real-world dataset I gathered by measuring the time it takes to train a particular ML model as a function of the number of training examples. While the time it takes for a training job to run might seem like the result of a complicated process, the relationship with the number of training examples is almost perfectly linear. It’s a nice confirmation for me that linear relationships arise naturally in the real world and are not just found in statistics textbooks.\n\nimport CSV\nusing DataFrames\n\nmetrics = CSV.read(\"metrics.csv\", DataFrame)\nmetrics[:, [:n, :duration]]\n\n14×2 DataFrame\n\n\n\nRow\nn\nduration\n\n\n\nInt64\nInt64\n\n\n\n\n1\n2002\n49\n\n\n2\n2053\n62\n\n\n3\n1014\n28\n\n\n4\n556\n17\n\n\n5\n936\n27\n\n\n6\n1465\n36\n\n\n7\n2365\n64\n\n\n8\n777\n22\n\n\n9\n2518\n83\n\n\n10\n1222\n33\n\n\n11\n938\n31\n\n\n12\n907\n38\n\n\n13\n1944\n63\n\n\n14\n3194\n102\n\n\n\n\n\n\nWe’ll think of the input and output variables as the vectors \\(\\textbf{X}\\) and \\(\\textbf{Y}\\). We will also scale the raw data so that each of these vectors contains values only in the range \\([0, 1]\\). Our aim is to find the best parameters (\\(\\beta_1\\), \\(\\beta_2\\)) for the line: \\[\n\\textbf{Y} = \\beta_1 \\textbf{X} + \\beta_2\n\\]\n\nscale(V) = (V .- minimum(V)) ./ (maximum(V) - minimum(V))\n\nX = scale(metrics[!, :n])\nY = scale(metrics[!, :duration])\n\n14-element Vector{Float64}:\n 0.3764705882352941\n 0.5294117647058824\n 0.12941176470588237\n 0.0\n 0.11764705882352941\n 0.2235294117647059\n 0.5529411764705883\n 0.058823529411764705\n 0.7764705882352941\n 0.18823529411764706\n 0.16470588235294117\n 0.24705882352941178\n 0.5411764705882353\n 1.0\n\n\nTo actually find the parameters we need to define the notion of the “best fit”. We can think of the line we’re trying to fit as a prediction model. We can then measure its fit by computing the difference between the correct answer and the predicted answer for each data point and adding up the differences. We will also square each of the differences so that it doesn’t matter if the prediction is off in either direction, only the magnitude is relevant.\n(TODO: why not just use the absolute value? Is it because historically it was easier to differentiate the squared loss?)\nLoss function gradient descent\nvisualize the gradient"
   },
   {
-    "objectID": "math-intuition.html",
-    "href": "math-intuition.html",
-    "title": "Pre-requisites: Mathematical Intuition",
-    "section": "",
-    "text": "It might seem like understanding deep learning and LLMs requires a lot of math knowledge. While that may be true for researchers in the field, I feel that for a practicing programmer who merely wants to apply the techniques, it’s much more important to simply have a decent amount of intuition about the math concepts.\nThis post mentions all the math concepts required to understand the rest of the posts in the series."
+    "objectID": "src/taste-of-autodiff.html#further-reading",
+    "href": "src/taste-of-autodiff.html#further-reading",
+    "title": "A Taste of Automatic Differentiation",
+    "section": "Further reading",
+    "text": "Further reading\nMuch deeper blog post https://jingnanshi.com/blog/autodiff.html\nKarpathy video. Autodiff survey paper. PyTorch paper. Zygote.jl\nhttps://thenumb.at/Autodiff/\nhttps://www.assemblyai.com/blog/differentiable-programming-a-simple-introduction/\nzygote paper https://arxiv.org/abs/1810.07951\nperfect hashing https://www.cs.cmu.edu/~avrim/451/lectures/lect0916.pdf\nGiven a set of company names, find a simple similarity function that can tolerate upto a certain amount of typos."
   },
   {
-    "objectID": "math-intuition.html#linear-algebra",
-    "href": "math-intuition.html#linear-algebra",
-    "title": "Pre-requisites: Mathematical Intuition",
-    "section": "Linear Algebra",
-    "text": "Linear Algebra"
+    "objectID": "src/taste-of-autodiff.html#julia-footnotes",
+    "href": "src/taste-of-autodiff.html#julia-footnotes",
+    "title": "A Taste of Automatic Differentiation",
+    "section": "Julia footnotes",
+    "text": "Julia footnotes\nExplain broadcasting.\nOutline\nconcept of gradient\nThe four kinds of calculating the gradient: - symbolic - numeric (prone to rounding instability)\n“auto” depends on maintaining “evaluation traces” (= Wengert list = expression DAG)\nwith the DAG, we can propagate the gradient forwards or backwards.\nforwards requires 1 pass for each variable backwards can compute all\nusing that to solve linear regression with descent\ngradient with multiple params - polynomial interpolation reverse-mode Zygote - auto gradient (ref paper)\nusing better optimization (BFGS)\nPyTorch & relevance to neural networks.\nForward-mode AD in Julia https://arxiv.org/pdf/1607.07892.pdf\nEng tradeoffs in various libraries http://www.stochasticlifestyle.com/engineering-trade-offs-in-automatic-differentiation-from-tensorflow-and-pytorch-to-jax-and-julia/"
   },
   {
-    "objectID": "counting-phone-calls.html",
-    "href": "counting-phone-calls.html",
-    "title": "Counting Phone Calls",
+    "objectID": "src/stats110/practice1.html#problem-1",
+    "href": "src/stats110/practice1.html#problem-1",
+    "title": "Stats 110: Strategic Practice 1",
     "section": "",
-    "text": "My telephone rings 12 times each week, the calls being randomly distributed among the 7 days. What is the probability that I get atleast one call each day?\n\nfunction phonecalls()\n    # True if there is at least one call per day\n    oneperday(days::Vector{Int}) = !any(d -&gt; d == 0, days)\n\n    N = 10000000\n    days = zeros(Int, 7)\n    count = 0\n    for _ in 1:N\n        for _ in 1:12\n            days[rand(1:7)] += 1\n        end\n        if oneperday(days)\n            count += 1\n        end\n        fill!(days, 0)\n    end\n    count / N\nend\n\nphonecalls()\n\n0.2283235\n\n\nTotal number of ways to assign the calls: \\(7^{12}\\)\nAtleast one per day:\n\\[\n{\\binom{12}{7} \\cdot 7! \\cdot 7^5}\n\\]"
+    "text": "For each part, decide whether the blank should be filled with \\(=\\), \\(&lt;\\), or \\(&gt;\\), and give a short but clear explanation.\n\n(probability that the total after rolling 4 fair dice is 21) ____ (probability that the total after rolling 4 fair dice is 22)\n(probability that a random 2 letter word is a palindrome) ____ (probability that a random 3 letter word is a palindrome)\n\n\nSolution (a):\n\\[P_{21} &gt; P_{22}\\]\nThink of the result of rolling 4 dice as a vector: \\([6 \\ 6 \\ 6 \\ 6]\\). Producing a sum of \\(21\\) or \\(22\\) can be thought of as subtracting another vector, a delta, from this one:\n\\[ 22 = sum([6 \\ 6 \\ 6 \\ 6] - [0 \\ 1 \\ 1 \\ 0]) \\] \\[ 21 = sum([6 \\ 6 \\ 6 \\ 6] - [1 \\ 1 \\ 1 \\ 0]) \\]\nBut notice that for every delta that we can use to make \\(22\\), there are \\(4\\) ways to derive a delta that produces \\(21\\). This is because we can add a \\(1\\) to any of the four positions in the original delta. Thus there are more ways to get \\(21\\) from 4 rolls of dice than \\(22\\) and the probability \\(P_{21}\\) is greater.\nSolution (b):\n\\[P_2 = P_3\\]\nThe only 2-letter palindroms are those where both the letters are the same. Thus,\n\\[P_2 = \\frac{26}{26^2} = \\frac{1}{26}\\]\nFor a 3-letter palindrome, there are \\(26\\) ways to pick the first and last letter, and \\(26\\) further ways to pick the middle one. Thus,\n\\[P_3 = \\frac{26^2}{26^3} = \\frac{1}{26}\\]"
   },
   {
-    "objectID": "src/counting.html",
-    "href": "src/counting.html",
-    "title": "Counting",
-    "section": "",
-    "text": "1. John Tsitsiklis, Counting. MIT 6.041 Probabilistic Systems Analysis and Applied Probability, Fall 2010. YouTube.\n\n      This is a great.\n\n2. Some other book\n\n      Was really good."
+    "objectID": "src/stats110/practice1.html#problem-2",
+    "href": "src/stats110/practice1.html#problem-2",
+    "title": "Stats 110: Strategic Practice 1",
+    "section": "Problem 2",
+    "text": "Problem 2\nA random 5 card poker hand is dealt from a standard deck of cards. Find the probability of each of the following (in terms of binomial coefficients).\n\nA flush (all 5 cards being of the same suit; do not count a royal flush, which is a flush with an Ace, King, Queen, Jack, and 10)\nTwo pair (e.g., two 3’s, two 7’s, and an Ace)\n\n\nSolution (a):\nThe total number of hands is \\(\\binom{52}{5}\\). There are \\(4\\) suits, and for each suit there are \\(\\binom{13}{5}\\) flushes. Thus,\n\\[P_{flush} = \\frac{4 \\cdot \\binom{13}{5}}{\\binom{52}{5}}\\]\nSolution (b):"
   },
   {
-    "objectID": "src/counting.html#references",
-    "href": "src/counting.html#references",
-    "title": "Counting",
+    "objectID": "src/everything-is-a-vector.html",
+    "href": "src/everything-is-a-vector.html",
+    "title": "Everything is a Vector",
     "section": "",
-    "text": "1. John Tsitsiklis, Counting. MIT 6.041 Probabilistic Systems Analysis and Applied Probability, Fall 2010. YouTube.\n\n      This is a great.\n\n2. Some other book\n\n      Was really good."
+    "text": "Hi this is nice.\nWhat now?\n\ndistance(v1, v2) = sqrt(sum((v1 - v2).^2))\n\ndistance (generic function with 1 method)\n\n\n\nfunction knn(X, v, k)\n    ds = [distance(x, v) for x in X]\n    return sortperm(ds)[1:k]\nend\n\nknn (generic function with 1 method)"
   }
 ]

@@ -1,7 +1,7 @@
 
 ---
 title: "Counting"
-jupyter: julia-1.9
+jupyter: julia-1.10
 format:
     html:
         theme: flatly

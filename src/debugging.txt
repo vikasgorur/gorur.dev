@@ -1,0 +1,6 @@
+
+`quarto check`
+
+`jupyter kernelspec list`
+
+`add IJulia; build IJulia` # add/remove/build IJulia

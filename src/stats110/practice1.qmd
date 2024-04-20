@@ -1,0 +1,62 @@
+---
+title: "Stats 110: Strategic Practice 1"
+jupyter: julia-1.10
+format:
+    html:
+        theme: flatly
+        mainfont: "PT Serif"
+        code-fold: false
+---
+
+## Problem 1
+
+For each part, decide whether the blank should be filled with $=$, $<$, or $>$, and give a short but clear explanation.
+
+(a) (probability that the total after rolling 4 fair dice is 21) ____ (probability that the total after rolling 4 fair dice is 22)
+
+(b) (probability that a random 2 letter word is a palindrome) ____ (probability that a random 3 letter word is a palindrome)
+
+---
+
+**Solution (a)**:
+
+$$P_{21} > P_{22}$$
+
+Think of the result of rolling 4 dice as a vector: $[6 \ 6 \ 6 \ 6]$. Producing a sum of $21$ or $22$ can be thought of as subtracting
+another vector, a delta, from this one:
+
+$$ 22 = sum([6 \ 6 \ 6 \ 6] - [0 \ 1 \ 1 \ 0]) $$
+$$ 21 = sum([6 \ 6 \ 6 \ 6] - [1 \ 1 \ 1 \ 0]) $$
+
+But notice that for every delta that we can use to make $22$, there are $4$ ways to derive a delta that produces $21$. This is because
+we can add a $1$ to any of the four positions in the original delta. Thus there are more ways to get $21$ from 4 rolls of dice than $22$ and the probability $P_{21}$ is greater.
+
+**Solution (b)**:
+
+$$P_2 = P_3$$
+
+The only 2-letter palindroms are those where both the letters are the same. Thus,
+
+$$P_2 = \frac{26}{26^2} = \frac{1}{26}$$
+
+For a 3-letter palindrome, there are $26$ ways to pick the first and last letter, and $26$ further ways to pick the middle one. Thus,
+
+$$P_3 = \frac{26^2}{26^3} = \frac{1}{26}$$
+
+## Problem 2
+
+A random 5 card poker hand is dealt from a standard deck of cards. Find the probability of each of the following (in terms of binomial coefficients).
+
+a. A flush (all 5 cards being of the same suit; do not count a royal flush, which is a flush with an Ace, King, Queen, Jack, and 10)
+
+b. Two pair (e.g., two 3's, two 7's, and an Ace)
+---
+
+**Solution (a)**:
+
+The total number of hands is $\binom{52}{5}$. There are $4$ suits, and for each suit there are $\binom{13}{5}$ flushes. Thus,
+
+$$P_{flush} = \frac{4 \cdot \binom{13}{5}}{\binom{52}{5}}$$
+
+**Solution (b)**:
+
