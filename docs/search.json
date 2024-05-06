@@ -5,5 +5,61 @@
     "title": "Vikas Gorur",
     "section": "",
     "text": "Engineering at Airbase, previously Twitter, Blurb, Gluster.\n@vikasgorur"
+  },
+  {
+    "objectID": "src/index.html#study",
+    "href": "src/index.html#study",
+    "title": "Vikas Gorur",
+    "section": "Study",
+    "text": "Study\n\nEverything is A Vector"
+  },
+  {
+    "objectID": "src/everything-is-a-vector.html",
+    "href": "src/everything-is-a-vector.html",
+    "title": "Everything is a Vector",
+    "section": "",
+    "text": "There is a simple but powerful idea at the heart of all of Machine Learning. It is considered so obvious that many books and courses treat it as an after-thought. The idea is this:\nWhen you understand this it’s like realizing that everything in your computer is stored as bits.\nIn this post we will explore the power of this idea by applying the same simple ML algorithm to different kinds of vectors."
+  },
+  {
+    "objectID": "src/everything-is-a-vector.html#nearest-neighbors",
+    "href": "src/everything-is-a-vector.html#nearest-neighbors",
+    "title": "Everything is a Vector",
+    "section": "Nearest neighbors",
+    "text": "Nearest neighbors\nDescribe the Wifi dataset: https://archive.ics.uci.edu/dataset/422/wireless+indoor+localization\nSignal strength of 7 access points, collected in two rooms. We will use a simplified version with only w5 and w7.\n\nusing CSV, DataFrames, MarkdownTables\n\nwifi = CSV.read(\n    \"data/wifi.tsv\",\n    DataFrame,\n    header=[\"w1\", \"w2\", \"w3\", \"w4\", \"w5\", \"w6\", \"w7\", \"room\"]\n)\nwifi = wifi[(wifi.room .== 1) .| (wifi.room .== 2), [:w5, :w7, :room]]\nmarkdown_table(wifi[rand(1:size(wifi, 1), 5), :])\n\n\n\n\nw5\nw7\nroom\n\n\n\n\n-69\n-72\n2\n\n\n-70\n-86\n1\n\n\n-71\n-87\n1\n\n\n-71\n-79\n2\n\n\n-68\n-83\n1\n\n\n\n\n\nA vector in machine learning is a point in \\(n\\)-dimensional space.\nDistance between two points:\n\ndistance(v1, v2) = sqrt(sum((v1 - v2).^2))\ndistance([0, 0], [3, 4])\n\n5.0\n\n\nsortperm - return indexes of the form [smallest element, next smallest element, …]\n\nprint(sortperm([4, 3, 1, 2]))\n\n[3, 4, 2, 1]\n\n\nDescribe the knn algorithm.\n\npoints with labels\nknn\n\n\nstruct Point\n    xn::Vector{Float64}\n    label::String\nend\n\nfunction knn(X::Array{Point}, v::Vector{Float64}, k::Int)\n    ds = [distance(x.xn, v) for x in X]\n    return X[sortperm(ds)[1:k]]\nend\n\nknn (generic function with 1 method)\n\n\nExample of knn working in 2 dimensions\n\nknn([\n    Point([0.0, 0.0], \"zero\"),\n    Point([1.0, 1.0], \"one\"),\n    Point([2.0, 2.0], \"two\"),\n    Point([3.0, 3.0], \"three\"),\n    Point([4.0, 4.0], \"four\"),\n    Point([5.0, 5.0], \"five\")\n], [3.0, 3.0], 3)\n\n3-element Vector{Point}:\n Point([3.0, 3.0], \"three\")\n Point([2.0, 2.0], \"two\")\n Point([4.0, 4.0], \"four\")\n\n\nTurn the dataset into Points.\n\n# Iterate across each row of wifi and create a Point for it\nX = [\n    Point(collect(row[[:w5, :w7]]), string(row[:room]))\n    for row in eachrow(wifi)\n]\n\n\nExplain the prediction algorithm.\nDescribe train/test split.\nResult of running knn on the wifi dataset.\n\n\nusing MLUtils\n\nX_test, X_train = splitobs(X, at=0.15)\nX_train = collect(X_train)\nX_test = collect(X_test)\n\nsize(X_train)\n\"Return the element that occurs most frequently in an array\"\nfunction majority(items::Vector{T})::T where T\n    c = Dict{T, Int}()\n    for it in items\n        if !haskey(c, it)\n            c[it] = 1\n        else\n            c[it] += 1\n        end\n    end\n    return sort(collect(c), by=x-&gt;x[2], rev=true)[1][1]\nend\n\n# Compute the accuracy score\ntotal = 0\ncorrect = 0\n\nfor p in X_test\n    neighbors = knn(X_train, p.xn, 7)\n    label = majority([x.label for x in neighbors])\n    if label == p.label\n        correct += 1\n    end\n    total += 1\nend\n\nprintln(\"Accuracy: $(correct / total * 100.0)%\")\n\nAccuracy: 96.0%\n\n\nDraw the scatter plot\n\nusing PlotlyJS\n\nplot(scatter(\n    x = [p.xn[1] for p in X_train],\n    y = [p.xn[2] for p in X_train],\n    mode = \"markers\",\n))"
+  },
+  {
+    "objectID": "src/everything-is-a-vector.html#words-as-vectors",
+    "href": "src/everything-is-a-vector.html#words-as-vectors",
+    "title": "Everything is a Vector",
+    "section": "Words as vectors",
+    "text": "Words as vectors\nEncode a recipe as a vector by doing a one-hot encoding of each of the words in the recipe.\nUse knn to predict the cuisine of a new recipe."
+  },
+  {
+    "objectID": "src/everything-is-a-vector.html#words-as-vectors-better",
+    "href": "src/everything-is-a-vector.html#words-as-vectors-better",
+    "title": "Everything is a Vector",
+    "section": "Words as vectors (better)",
+    "text": "Words as vectors (better)\nUse text embeddings to turn a recipe into a vector. How to combine vectors for individual words into vector for the whole recipe?"
+  },
+  {
+    "objectID": "src/everything-is-a-vector.html#closing-thoughts",
+    "href": "src/everything-is-a-vector.html#closing-thoughts",
+    "title": "Everything is a Vector",
+    "section": "closing thoughts",
+    "text": "closing thoughts\nwhat else are vectors? - images - sound"
+  },
+  {
+    "objectID": "src/everything-is-a-vector.html#further-reading",
+    "href": "src/everything-is-a-vector.html#further-reading",
+    "title": "Everything is a Vector",
+    "section": "Further reading",
+    "text": "Further reading\nWord2vec paper, won the “test of time” award\nDistributed Representations of Words and Phrases and their Compositionality https://arxiv.org/abs/1310.4546\nThe illustrated Word2vec https://jalammar.github.io/illustrated-word2vec/"
+  },
+  {
+    "objectID": "src/index.html#machine-learning",
+    "href": "src/index.html#machine-learning",
+    "title": "Vikas Gorur",
+    "section": "Machine Learning",
+    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n\nEverything is A Vector"
   }
 ]

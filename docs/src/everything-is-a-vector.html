@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Everything is a Vector</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#nearest-neighbors" id="toc-nearest-neighbors" class="nav-link active" data-scroll-target="#nearest-neighbors">Nearest neighbors</a></li>
+  <li><a href="#words-as-vectors" id="toc-words-as-vectors" class="nav-link" data-scroll-target="#words-as-vectors">Words as vectors</a></li>
+  <li><a href="#words-as-vectors-better" id="toc-words-as-vectors-better" class="nav-link" data-scroll-target="#words-as-vectors-better">Words as vectors (better)</a></li>
+  <li><a href="#closing-thoughts" id="toc-closing-thoughts" class="nav-link" data-scroll-target="#closing-thoughts">closing thoughts</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Everything is a Vector</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>There is a simple but powerful idea at the heart of all of Machine Learning. It is considered so obvious that many books and courses treat it as an after-thought. The idea is this:</p>
+<blockquote class="blockquote">
+<p>All real-world data can be thought of as points in a high-dimensional space.</p>
+</blockquote>
+<p>When you understand this it’s like realizing that everything in your computer is stored as bits.</p>
+<p>In this post we will explore the power of this idea by applying the same simple ML algorithm to different kinds of vectors.</p>
+<section id="nearest-neighbors" class="level2">
+<h2 class="anchored" data-anchor-id="nearest-neighbors">Nearest neighbors</h2>
+<p>Describe the Wifi dataset: https://archive.ics.uci.edu/dataset/422/wireless+indoor+localization</p>
+<p>Signal strength of 7 access points, collected in two rooms. We will use a simplified version with only <code>w5</code> and <code>w7</code>.</p>
+<div id="b7cda342" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CSV</span>, <span class="bu">DataFrames</span>, <span class="bu">MarkdownTables</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>wifi <span class="op">=</span> CSV.<span class="fu">read</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"data/wifi.tsv"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    DataFrame,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    header<span class="op">=</span>[<span class="st">"w1"</span>, <span class="st">"w2"</span>, <span class="st">"w3"</span>, <span class="st">"w4"</span>, <span class="st">"w5"</span>, <span class="st">"w6"</span>, <span class="st">"w7"</span>, <span class="st">"room"</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>wifi <span class="op">=</span> wifi[(wifi.room <span class="op">.==</span> <span class="fl">1</span>) <span class="op">.|</span> (wifi.room <span class="op">.==</span> <span class="fl">2</span>), [<span class="op">:</span>w5, <span class="op">:</span>w7, <span class="op">:</span>room]]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">markdown_table</span>(wifi[<span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fu">size</span>(wifi, <span class="fl">1</span>), <span class="fl">5</span>), <span class="op">:</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="12">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th>w5</th>
+<th>w7</th>
+<th>room</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>-69</td>
+<td>-72</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>-70</td>
+<td>-86</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>-71</td>
+<td>-87</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>-71</td>
+<td>-79</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>-68</td>
+<td>-83</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>A <strong>vector</strong> in machine learning is a point in <span class="math inline">\(n\)</span>-dimensional space.</p>
+<p>Distance between two points:</p>
+<div id="be8ddd99" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">distance</span>(v1, v2) <span class="op">=</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((v1 <span class="op">-</span> v2)<span class="op">.^</span><span class="fl">2</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">distance</span>([<span class="fl">0</span>, <span class="fl">0</span>], [<span class="fl">3</span>, <span class="fl">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>5.0</code></pre>
+</div>
+</div>
+<p><code>sortperm</code> - return indexes of the form [smallest element, next smallest element, …]</p>
+<div id="9d47c3be" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sortperm</span>([<span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">2</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[3, 4, 2, 1]</code></pre>
+</div>
+</div>
+<p>Describe the knn algorithm.</p>
+<ul>
+<li>points with labels</li>
+<li>knn</li>
+</ul>
+<div id="a894134f" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Point</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    xn<span class="op">::</span><span class="dt">Vector{Float64}</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    label<span class="op">::</span><span class="dt">String</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">knn</span>(X<span class="op">::</span><span class="dt">Array{Point}</span>, v<span class="op">::</span><span class="dt">Vector{Float64}</span>, k<span class="op">::</span><span class="dt">Int</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> [<span class="fu">distance</span>(x.xn, v) for x <span class="kw">in</span> X]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X[<span class="fu">sortperm</span>(ds)[<span class="fl">1</span><span class="op">:</span>k]]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>knn (generic function with 1 method)</code></pre>
+</div>
+</div>
+<p>Example of knn working in 2 dimensions</p>
+<div id="cf150867" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">knn</span>([</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Point</span>([<span class="fl">0.0</span>, <span class="fl">0.0</span>], <span class="st">"zero"</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Point</span>([<span class="fl">1.0</span>, <span class="fl">1.0</span>], <span class="st">"one"</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Point</span>([<span class="fl">2.0</span>, <span class="fl">2.0</span>], <span class="st">"two"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Point</span>([<span class="fl">3.0</span>, <span class="fl">3.0</span>], <span class="st">"three"</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Point</span>([<span class="fl">4.0</span>, <span class="fl">4.0</span>], <span class="st">"four"</span>),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Point</span>([<span class="fl">5.0</span>, <span class="fl">5.0</span>], <span class="st">"five"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>], [<span class="fl">3.0</span>, <span class="fl">3.0</span>], <span class="fl">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>3-element Vector{Point}:
+ Point([3.0, 3.0], "three")
+ Point([2.0, 2.0], "two")
+ Point([4.0, 4.0], "four")</code></pre>
+</div>
+</div>
+<p>Turn the dataset into <code>Point</code>s.</p>
+<div id="10b8dff8" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate across each row of wifi and create a Point for it</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> [</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Point</span>(<span class="fu">collect</span>(row[[<span class="op">:</span>w5, <span class="op">:</span>w7]]), <span class="fu">string</span>(row[<span class="op">:</span>room]))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    for row <span class="kw">in</span> <span class="fu">eachrow</span>(wifi)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Explain the prediction algorithm.</li>
+<li>Describe train/test split.</li>
+<li>Result of running knn on the wifi dataset.</li>
+</ul>
+<div id="0a03ad6e" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">MLUtils</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>X_test, X_train <span class="op">=</span> <span class="fu">splitobs</span>(X, at<span class="op">=</span><span class="fl">0.15</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> <span class="fu">collect</span>(X_train)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> <span class="fu">collect</span>(X_test)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">size</span>(X_train)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="st">"Return the element that occurs most frequently in an array"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">majority</span>(items<span class="op">::</span><span class="dt">Vector{T}</span>)<span class="op">::</span><span class="dt">T </span><span class="kw">where</span> T</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> <span class="fu">Dict</span><span class="dt">{T, Int}</span>()</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> it <span class="kw">in</span> items</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> !<span class="fu">haskey</span>(c, it)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>            c[it] <span class="op">=</span> <span class="fl">1</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>            c[it] <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">sort</span>(<span class="fu">collect</span>(c), by<span class="op">=</span>x<span class="op">-&gt;</span>x[<span class="fl">2</span>], rev<span class="op">=</span><span class="cn">true</span>)[<span class="fl">1</span>][<span class="fl">1</span>]</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the accuracy score</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>total <span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>correct <span class="op">=</span> <span class="fl">0</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> X_test</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    neighbors <span class="op">=</span> <span class="fu">knn</span>(X_train, p.xn, <span class="fl">7</span>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    label <span class="op">=</span> <span class="fu">majority</span>([x.label for x <span class="kw">in</span> neighbors])</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> label <span class="op">==</span> p.label</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>        correct <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    total <span class="op">+=</span> <span class="fl">1</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Accuracy: </span><span class="sc">$</span>(correct <span class="op">/</span> total <span class="op">*</span> <span class="fl">100.0</span>)<span class="st">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Accuracy: 96.0%</code></pre>
+</div>
+</div>
+<p>Draw the scatter plot</p>
+<div id="c644c59a" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">PlotlyJS</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">scatter</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> [p.xn[<span class="fl">1</span>] for p <span class="kw">in</span> X_train],</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> [p.xn[<span class="fl">2</span>] for p <span class="kw">in</span> X_train],</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    mode <span class="op">=</span> <span class="st">"markers"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div class="webio-mountpoint" data-webio-mountpoint="1868943845449313578">
+    <script>
+    (function(){
+    // Some integrations (namely, IJulia/Jupyter) use an alternate render pathway than
+    // just putting the html on the page. If WebIO isn't defined, then it's pretty likely
+    // that we're in one of those situations and the integration just isn't installed
+    // correctly.
+    if (typeof window.WebIO === "undefined") {
+        document
+            .querySelector('[data-webio-mountpoint="1868943845449313578"]')
+            .innerHTML = (
+                '<div style="padding: 1em; background-color: #f8d6da; border: 1px solid #f5c6cb; font-weight: bold;">' +
+                '<p><strong>WebIO not detected.</strong></p>' +
+                '<p>Please read ' +
+                '<a href="https://juliagizmos.github.io/WebIO.jl/latest/troubleshooting/not-detected/" target="_blank">the troubleshooting guide</a> ' +
+                'for more information on how to resolve this issue.</p>' +
+                '<p><a href="https://juliagizmos.github.io/WebIO.jl/latest/troubleshooting/not-detected/" target="_blank">https://juliagizmos.github.io/WebIO.jl/latest/troubleshooting/not-detected/</a></p>' +
+                '</div>'
+            );
+        return;
+    }
+    WebIO.mount(
+        document.querySelector('[data-webio-mountpoint="1868943845449313578"]'),
+        {"props":{},"nodeType":"Scope","type":"node","instanceArgs":{"imports":{"data":[{"name":"Plotly","type":"js","url":"\/assetserver\/c8d890b7ab5bafa988f8e237150d24f16764a7ea-plotly.min.js"},{"name":null,"type":"js","url":"\/assetserver\/6e661dd33ca15afee5b333d240e073494aaea846-plotly_webio.bundle.js"}],"type":"async_block"},"id":"1585464911242070676","handlers":{"_toImage":["(function (options){return this.Plotly.toImage(this.plotElem,options).then((function (data){return WebIO.setval({\"name\":\"image\",\"scope\":\"1585464911242070676\",\"id\":\"15\",\"type\":\"observable\"},data)}))})"],"__get_gd_contents":["(function (prop){prop==\"data\" ? (WebIO.setval({\"name\":\"__gd_contents\",\"scope\":\"1585464911242070676\",\"id\":\"16\",\"type\":\"observable\"},this.plotElem.data)) : undefined; return prop==\"layout\" ? (WebIO.setval({\"name\":\"__gd_contents\",\"scope\":\"1585464911242070676\",\"id\":\"16\",\"type\":\"observable\"},this.plotElem.layout)) : undefined})"],"_downloadImage":["(function (options){return this.Plotly.downloadImage(this.plotElem,options)})"],"_commands":["(function (args){var fn=args.shift(); var elem=this.plotElem; var Plotly=this.Plotly; args.unshift(elem); return Plotly[fn].apply(this,args)})"]},"systemjs_options":null,"mount_callbacks":["function () {\n    var handler = ((function (Plotly,PlotlyWebIO){PlotlyWebIO.init(WebIO); var gd=this.dom.querySelector(\"#plot-9ad80cf7-5b13-4413-b39e-d1df7759733c\"); this.plotElem=gd; this.Plotly=Plotly; (window.Blink!==undefined) ? (gd.style.width=\"100%\", gd.style.height=\"100vh\", gd.style.marginLeft=\"0%\", gd.style.marginTop=\"0vh\") : undefined; window.onresize=(function (){return Plotly.Plots.resize(gd)}); Plotly.newPlot(gd,[{\"mode\":\"markers\",\"y\":[-87.0,-83.0,-83.0,-77.0,-80.0,-79.0,-80.0,-80.0,-85.0,-85.0,-80.0,-82.0,-90.0,-87.0,-81.0,-88.0,-88.0,-83.0,-88.0,-81.0,-80.0,-88.0,-82.0,-81.0,-84.0,-82.0,-81.0,-81.0,-83.0,-81.0,-77.0,-83.0,-81.0,-78.0,-81.0,-83.0,-78.0,-81.0,-81.0,-80.0,-87.0,-91.0,-87.0,-87.0,-86.0,-87.0,-83.0,-88.0,-80.0,-79.0,-82.0,-74.0,-80.0,-85.0,-80.0,-84.0,-82.0,-80.0,-76.0,-76.0,-88.0,-86.0,-82.0,-89.0,-84.0,-81.0,-88.0,-84.0,-80.0,-80.0,-80.0,-81.0,-87.0,-86.0,-82.0,-87.0,-79.0,-81.0,-90.0,-78.0,-87.0,-81.0,-82.0,-77.0,-79.0,-78.0,-78.0,-84.0,-86.0,-85.0,-94.0,-88.0,-85.0,-79.0,-86.0,-84.0,-79.0,-80.0,-83.0,-86.0,-85.0,-79.0,-78.0,-80.0,-77.0,-77.0,-77.0,-78.0,-85.0,-80.0,-84.0,-81.0,-82.0,-82.0,-76.0,-81.0,-78.0,-90.0,-90.0,-91.0,-80.0,-83.0,-80.0,-81.0,-88.0,-86.0,-87.0,-88.0,-88.0,-87.0,-89.0,-88.0,-83.0,-83.0,-78.0,-82.0,-80.0,-79.0,-81.0,-83.0,-81.0,-80.0,-81.0,-82.0,-81.0,-85.0,-77.0,-82.0,-84.0,-85.0,-82.0,-81.0,-79.0,-82.0,-83.0,-87.0,-81.0,-85.0,-80.0,-84.0,-81.0,-82.0,-82.0,-78.0,-80.0,-81.0,-82.0,-82.0,-82.0,-80.0,-81.0,-82.0,-86.0,-84.0,-82.0,-81.0,-81.0,-84.0,-85.0,-85.0,-87.0,-78.0,-83.0,-83.0,-81.0,-83.0,-80.0,-81.0,-81.0,-87.0,-86.0,-79.0,-89.0,-82.0,-88.0,-76.0,-83.0,-85.0,-90.0,-83.0,-89.0,-87.0,-88.0,-87.0,-87.0,-83.0,-78.0,-80.0,-89.0,-86.0,-86.0,-87.0,-87.0,-87.0,-83.0,-83.0,-83.0,-88.0,-79.0,-78.0,-74.0,-82.0,-87.0,-85.0,-84.0,-87.0,-83.0,-88.0,-91.0,-91.0,-83.0,-83.0,-86.0,-84.0,-83.0,-84.0,-90.0,-83.0,-84.0,-83.0,-82.0,-81.0,-87.0,-90.0,-82.0,-83.0,-78.0,-84.0,-84.0,-88.0,-80.0,-82.0,-82.0,-87.0,-87.0,-77.0,-89.0,-87.0,-85.0,-81.0,-81.0,-78.0,-85.0,-86.0,-96.0,-87.0,-84.0,-81.0,-81.0,-83.0,-83.0,-82.0,-83.0,-87.0,-86.0,-88.0,-88.0,-86.0,-86.0,-86.0,-81.0,-85.0,-84.0,-85.0,-87.0,-83.0,-86.0,-87.0,-83.0,-85.0,-84.0,-86.0,-81.0,-86.0,-82.0,-82.0,-80.0,-83.0,-82.0,-81.0,-83.0,-82.0,-82.0,-81.0,-83.0,-83.0,-82.0,-82.0,-84.0,-85.0,-87.0,-87.0,-93.0,-93.0,-90.0,-89.0,-90.0,-88.0,-88.0,-83.0,-86.0,-81.0,-81.0,-85.0,-85.0,-80.0,-78.0,-80.0,-81.0,-84.0,-79.0,-77.0,-78.0,-81.0,-81.0,-80.0,-77.0,-81.0,-86.0,-81.0,-80.0,-81.0,-82.0,-81.0,-79.0,-79.0,-82.0,-76.0,-79.0,-79.0,-69.0,-68.0,-73.0,-73.0,-73.0,-68.0,-77.0,-73.0,-73.0,-66.0,-66.0,-74.0,-66.0,-71.0,-68.0,-71.0,-70.0,-66.0,-73.0,-76.0,-66.0,-70.0,-72.0,-71.0,-70.0,-74.0,-71.0,-74.0,-73.0,-73.0,-77.0,-80.0,-77.0,-79.0,-78.0,-77.0,-79.0,-80.0,-78.0,-71.0,-90.0,-74.0,-74.0,-72.0,-71.0,-76.0,-71.0,-70.0,-75.0,-71.0,-75.0,-69.0,-71.0,-72.0,-75.0,-78.0,-76.0,-76.0,-77.0,-80.0,-75.0,-75.0,-75.0,-78.0,-78.0,-80.0,-92.0,-79.0,-80.0,-78.0,-79.0,-80.0,-87.0,-81.0,-82.0,-82.0,-76.0,-67.0,-67.0,-83.0,-73.0,-74.0,-74.0,-71.0,-80.0,-75.0,-76.0,-79.0,-72.0,-74.0,-74.0,-67.0,-76.0,-72.0,-71.0,-73.0,-73.0,-66.0,-72.0,-73.0,-75.0,-73.0,-75.0,-72.0,-72.0,-74.0,-73.0,-70.0,-74.0,-74.0,-79.0,-79.0,-67.0,-75.0,-68.0,-70.0,-64.0,-72.0,-65.0,-64.0,-67.0,-68.0,-67.0,-66.0,-70.0,-66.0,-77.0,-75.0,-85.0,-76.0,-79.0,-81.0,-78.0,-73.0,-74.0,-76.0,-76.0,-81.0,-89.0,-77.0,-78.0,-81.0,-80.0,-79.0,-80.0,-78.0,-78.0,-78.0,-78.0,-75.0,-79.0,-80.0,-76.0,-79.0,-77.0,-80.0,-79.0,-78.0,-78.0,-78.0,-75.0,-73.0,-75.0,-76.0,-78.0,-80.0,-79.0,-80.0,-79.0,-73.0,-78.0,-78.0,-70.0,-74.0,-75.0,-80.0,-79.0,-79.0,-79.0,-74.0,-77.0,-75.0,-73.0,-73.0,-71.0,-79.0,-69.0,-69.0,-71.0,-75.0,-72.0,-68.0,-74.0,-77.0,-70.0,-68.0,-71.0,-70.0,-67.0,-65.0,-67.0,-68.0,-70.0,-67.0,-74.0,-76.0,-76.0,-70.0,-75.0,-75.0,-63.0,-64.0,-66.0,-64.0,-65.0,-65.0,-64.0,-65.0,-65.0,-65.0,-64.0,-65.0,-64.0,-66.0,-66.0,-65.0,-65.0,-73.0,-71.0,-76.0,-72.0,-72.0,-72.0,-70.0,-68.0,-64.0,-64.0,-69.0,-78.0,-78.0,-70.0,-71.0,-66.0,-68.0,-70.0,-71.0,-70.0,-70.0,-71.0,-69.0,-70.0,-70.0,-71.0,-76.0,-70.0,-67.0,-71.0,-64.0,-65.0,-69.0,-71.0,-66.0,-79.0,-71.0,-75.0,-76.0,-71.0,-71.0,-71.0,-72.0,-72.0,-74.0,-74.0,-76.0,-73.0,-72.0,-73.0,-82.0,-71.0,-72.0,-66.0,-75.0,-72.0,-67.0,-71.0,-73.0,-73.0,-72.0,-72.0,-77.0,-75.0,-77.0,-73.0,-79.0,-79.0,-85.0,-80.0,-78.0,-74.0,-74.0,-75.0,-74.0,-74.0,-73.0,-77.0,-77.0,-73.0,-85.0,-84.0,-84.0,-83.0,-79.0,-72.0,-75.0,-73.0,-75.0,-69.0,-80.0,-80.0,-78.0,-77.0,-69.0,-72.0,-77.0,-77.0,-77.0,-76.0,-77.0,-72.0,-69.0,-69.0,-67.0,-72.0,-74.0,-70.0,-70.0,-69.0,-70.0,-69.0,-80.0,-76.0,-76.0,-80.0,-77.0,-71.0,-80.0,-70.0,-70.0,-69.0,-69.0,-71.0,-73.0,-70.0,-70.0,-72.0,-69.0,-69.0,-70.0,-72.0,-74.0,-77.0,-71.0,-79.0,-74.0,-75.0,-72.0,-69.0,-70.0,-74.0,-73.0,-73.0,-75.0,-79.0,-74.0,-77.0,-69.0,-85.0,-70.0,-70.0,-74.0,-75.0,-76.0,-76.0,-77.0,-77.0,-73.0,-77.0,-83.0,-75.0,-75.0,-71.0,-82.0,-74.0,-76.0,-72.0,-79.0,-77.0,-78.0,-71.0,-76.0,-74.0,-72.0,-75.0,-78.0,-73.0,-66.0,-78.0,-66.0,-75.0,-79.0,-64.0,-73.0,-74.0,-69.0,-69.0,-66.0,-75.0,-71.0,-69.0,-72.0,-73.0,-66.0,-79.0,-64.0,-73.0,-72.0,-73.0,-78.0,-72.0,-69.0,-68.0,-72.0,-71.0,-75.0,-79.0,-74.0,-75.0,-75.0,-72.0,-77.0,-77.0,-77.0,-76.0,-77.0,-76.0,-77.0,-76.0,-76.0,-72.0,-69.0,-66.0,-71.0,-72.0,-70.0,-71.0,-70.0,-84.0,-70.0,-72.0,-72.0,-71.0,-78.0,-74.0,-72.0,-76.0,-73.0,-70.0,-70.0,-70.0,-78.0,-67.0,-73.0,-73.0,-67.0,-74.0,-69.0,-69.0,-70.0,-73.0,-69.0,-64.0,-75.0,-75.0,-79.0,-89.0,-71.0,-74.0,-70.0,-70.0,-74.0,-74.0,-73.0,-74.0,-79.0,-79.0,-81.0,-77.0,-76.0,-77.0,-77.0],\"type\":\"scatter\",\"x\":[-74.0,-68.0,-64.0,-62.0,-66.0,-72.0,-63.0,-63.0,-61.0,-67.0,-67.0,-73.0,-70.0,-70.0,-74.0,-69.0,-68.0,-73.0,-67.0,-64.0,-67.0,-67.0,-68.0,-68.0,-62.0,-75.0,-75.0,-72.0,-62.0,-73.0,-70.0,-67.0,-73.0,-80.0,-73.0,-71.0,-66.0,-64.0,-72.0,-68.0,-67.0,-69.0,-68.0,-68.0,-69.0,-70.0,-74.0,-80.0,-74.0,-62.0,-74.0,-70.0,-64.0,-64.0,-65.0,-72.0,-71.0,-66.0,-68.0,-74.0,-70.0,-68.0,-68.0,-69.0,-74.0,-65.0,-66.0,-68.0,-70.0,-67.0,-67.0,-75.0,-72.0,-65.0,-65.0,-71.0,-70.0,-68.0,-73.0,-73.0,-73.0,-72.0,-73.0,-64.0,-74.0,-75.0,-75.0,-67.0,-68.0,-74.0,-65.0,-73.0,-73.0,-71.0,-71.0,-70.0,-62.0,-65.0,-69.0,-70.0,-66.0,-67.0,-64.0,-69.0,-69.0,-67.0,-67.0,-66.0,-68.0,-66.0,-73.0,-74.0,-74.0,-72.0,-75.0,-68.0,-65.0,-66.0,-74.0,-73.0,-75.0,-75.0,-69.0,-66.0,-66.0,-66.0,-69.0,-68.0,-68.0,-67.0,-68.0,-69.0,-68.0,-71.0,-76.0,-68.0,-69.0,-69.0,-69.0,-68.0,-64.0,-65.0,-62.0,-62.0,-64.0,-66.0,-66.0,-67.0,-67.0,-68.0,-72.0,-65.0,-65.0,-64.0,-60.0,-63.0,-63.0,-65.0,-63.0,-64.0,-68.0,-65.0,-69.0,-72.0,-66.0,-68.0,-73.0,-70.0,-71.0,-68.0,-67.0,-71.0,-69.0,-66.0,-73.0,-65.0,-65.0,-69.0,-67.0,-67.0,-68.0,-69.0,-64.0,-65.0,-68.0,-66.0,-69.0,-68.0,-63.0,-61.0,-68.0,-67.0,-68.0,-64.0,-66.0,-68.0,-66.0,-66.0,-66.0,-66.0,-69.0,-66.0,-66.0,-71.0,-65.0,-68.0,-65.0,-71.0,-66.0,-70.0,-69.0,-71.0,-66.0,-67.0,-69.0,-69.0,-66.0,-67.0,-64.0,-67.0,-68.0,-71.0,-71.0,-69.0,-69.0,-65.0,-67.0,-69.0,-65.0,-64.0,-65.0,-68.0,-71.0,-69.0,-70.0,-69.0,-69.0,-66.0,-68.0,-65.0,-66.0,-69.0,-66.0,-68.0,-65.0,-69.0,-67.0,-68.0,-72.0,-72.0,-70.0,-68.0,-66.0,-68.0,-68.0,-67.0,-65.0,-66.0,-69.0,-68.0,-66.0,-67.0,-71.0,-75.0,-67.0,-66.0,-66.0,-66.0,-70.0,-69.0,-68.0,-68.0,-68.0,-69.0,-69.0,-71.0,-70.0,-72.0,-72.0,-69.0,-69.0,-70.0,-69.0,-76.0,-73.0,-75.0,-76.0,-75.0,-77.0,-74.0,-75.0,-69.0,-68.0,-69.0,-67.0,-74.0,-75.0,-74.0,-76.0,-75.0,-75.0,-75.0,-76.0,-76.0,-75.0,-75.0,-74.0,-75.0,-74.0,-74.0,-75.0,-73.0,-74.0,-73.0,-73.0,-74.0,-74.0,-74.0,-68.0,-75.0,-73.0,-75.0,-74.0,-73.0,-70.0,-66.0,-65.0,-70.0,-64.0,-65.0,-67.0,-63.0,-64.0,-73.0,-64.0,-73.0,-60.0,-64.0,-66.0,-64.0,-66.0,-66.0,-66.0,-72.0,-70.0,-68.0,-74.0,-67.0,-62.0,-65.0,-66.0,-66.0,-73.0,-70.0,-72.0,-56.0,-64.0,-69.0,-71.0,-68.0,-73.0,-75.0,-73.0,-67.0,-76.0,-69.0,-72.0,-72.0,-66.0,-64.0,-74.0,-69.0,-69.0,-67.0,-71.0,-65.0,-67.0,-65.0,-72.0,-74.0,-68.0,-73.0,-74.0,-71.0,-73.0,-72.0,-72.0,-73.0,-69.0,-71.0,-68.0,-76.0,-71.0,-64.0,-63.0,-65.0,-63.0,-63.0,-66.0,-66.0,-71.0,-66.0,-59.0,-65.0,-66.0,-69.0,-71.0,-71.0,-68.0,-64.0,-62.0,-78.0,-68.0,-71.0,-69.0,-77.0,-73.0,-66.0,-70.0,-69.0,-71.0,-58.0,-63.0,-68.0,-67.0,-67.0,-65.0,-61.0,-60.0,-61.0,-68.0,-68.0,-68.0,-65.0,-65.0,-65.0,-67.0,-64.0,-69.0,-71.0,-60.0,-66.0,-64.0,-66.0,-70.0,-67.0,-75.0,-73.0,-61.0,-61.0,-63.0,-65.0,-68.0,-79.0,-79.0,-74.0,-70.0,-74.0,-69.0,-86.0,-62.0,-73.0,-71.0,-75.0,-77.0,-74.0,-74.0,-80.0,-80.0,-75.0,-75.0,-75.0,-73.0,-75.0,-75.0,-84.0,-68.0,-70.0,-70.0,-64.0,-61.0,-75.0,-71.0,-63.0,-66.0,-62.0,-62.0,-78.0,-75.0,-74.0,-77.0,-77.0,-76.0,-71.0,-73.0,-71.0,-82.0,-82.0,-74.0,-81.0,-74.0,-70.0,-80.0,-72.0,-71.0,-74.0,-71.0,-63.0,-68.0,-64.0,-64.0,-71.0,-74.0,-73.0,-72.0,-72.0,-72.0,-72.0,-72.0,-64.0,-71.0,-75.0,-65.0,-67.0,-70.0,-74.0,-73.0,-67.0,-68.0,-75.0,-65.0,-69.0,-69.0,-64.0,-73.0,-61.0,-66.0,-66.0,-68.0,-66.0,-71.0,-67.0,-61.0,-63.0,-72.0,-65.0,-67.0,-65.0,-64.0,-62.0,-62.0,-65.0,-65.0,-63.0,-63.0,-69.0,-65.0,-65.0,-66.0,-67.0,-80.0,-63.0,-73.0,-71.0,-64.0,-64.0,-63.0,-74.0,-62.0,-62.0,-63.0,-64.0,-64.0,-64.0,-61.0,-71.0,-62.0,-64.0,-61.0,-62.0,-60.0,-60.0,-62.0,-70.0,-63.0,-62.0,-72.0,-69.0,-69.0,-63.0,-60.0,-63.0,-69.0,-63.0,-63.0,-61.0,-64.0,-62.0,-63.0,-66.0,-68.0,-67.0,-62.0,-63.0,-66.0,-75.0,-64.0,-75.0,-73.0,-64.0,-71.0,-64.0,-64.0,-64.0,-63.0,-64.0,-66.0,-74.0,-69.0,-73.0,-67.0,-67.0,-71.0,-64.0,-70.0,-65.0,-70.0,-71.0,-62.0,-65.0,-72.0,-72.0,-65.0,-62.0,-62.0,-64.0,-72.0,-58.0,-68.0,-57.0,-66.0,-71.0,-71.0,-65.0,-65.0,-69.0,-70.0,-70.0,-70.0,-71.0,-73.0,-73.0,-67.0,-66.0,-69.0,-71.0,-62.0,-62.0,-69.0,-67.0,-67.0,-67.0,-66.0,-71.0,-65.0,-58.0,-60.0,-76.0,-66.0,-63.0,-60.0,-69.0,-73.0,-69.0,-74.0,-67.0,-64.0,-68.0,-68.0,-70.0,-75.0,-72.0,-60.0,-61.0,-59.0,-62.0,-59.0,-61.0,-61.0,-60.0,-60.0,-61.0,-61.0,-63.0,-61.0,-61.0,-64.0,-65.0,-65.0,-66.0,-62.0,-62.0,-61.0,-80.0,-80.0,-80.0,-68.0,-71.0,-77.0,-70.0,-66.0,-71.0,-61.0,-66.0,-60.0,-56.0,-67.0,-62.0,-71.0,-70.0,-70.0,-70.0,-70.0,-73.0,-70.0,-66.0,-62.0,-63.0,-61.0,-71.0,-60.0,-66.0,-60.0,-62.0,-64.0,-63.0,-58.0,-59.0,-63.0,-70.0,-67.0,-64.0,-65.0,-61.0,-63.0,-69.0,-62.0,-64.0,-61.0,-66.0,-60.0,-59.0,-61.0,-63.0,-63.0,-63.0,-64.0,-67.0,-60.0,-63.0,-70.0,-67.0,-70.0,-74.0,-76.0,-76.0,-59.0,-71.0,-69.0,-67.0,-62.0,-64.0,-74.0,-75.0,-69.0,-69.0,-62.0,-69.0,-65.0,-65.0,-71.0,-68.0,-70.0,-70.0,-61.0,-64.0,-66.0,-66.0,-70.0,-69.0,-63.0,-68.0,-67.0,-78.0,-78.0,-78.0,-70.0,-68.0,-68.0,-64.0,-64.0,-71.0,-71.0,-75.0,-64.0,-65.0,-69.0,-69.0,-69.0,-65.0,-66.0,-67.0,-66.0,-70.0,-63.0,-63.0,-67.0,-69.0,-63.0,-74.0,-61.0,-61.0,-61.0,-60.0,-68.0,-65.0,-63.0,-75.0,-68.0,-76.0,-71.0,-71.0,-68.0,-63.0,-63.0,-69.0,-64.0,-64.0,-58.0,-61.0,-73.0,-64.0,-68.0,-71.0,-71.0,-85.0,-63.0,-64.0,-65.0,-69.0]}],{\"template\":{\"layout\":{\"coloraxis\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}},\"xaxis\":{\"gridcolor\":\"white\",\"zerolinewidth\":2,\"title\":{\"standoff\":15},\"ticks\":\"\",\"zerolinecolor\":\"white\",\"automargin\":true,\"linecolor\":\"white\"},\"hovermode\":\"closest\",\"paper_bgcolor\":\"white\",\"geo\":{\"showlakes\":true,\"showland\":true,\"landcolor\":\"#E5ECF6\",\"bgcolor\":\"white\",\"subunitcolor\":\"white\",\"lakecolor\":\"white\"},\"colorscale\":{\"sequential\":[[0.0,\"#0d0887\"],[0.1111111111111111,\"#46039f\"],[0.2222222222222222,\"#7201a8\"],[0.3333333333333333,\"#9c179e\"],[0.4444444444444444,\"#bd3786\"],[0.5555555555555556,\"#d8576b\"],[0.6666666666666666,\"#ed7953\"],[0.7777777777777778,\"#fb9f3a\"],[0.8888888888888888,\"#fdca26\"],[1.0,\"#f0f921\"]],\"diverging\":[[0,\"#8e0152\"],[0.1,\"#c51b7d\"],[0.2,\"#de77ae\"],[0.3,\"#f1b6da\"],[0.4,\"#fde0ef\"],[0.5,\"#f7f7f7\"],[0.6,\"#e6f5d0\"],[0.7,\"#b8e186\"],[0.8,\"#7fbc41\"],[0.9,\"#4d9221\"],[1,\"#276419\"]],\"sequentialminus\":[[0.0,\"#0d0887\"],[0.1111111111111111,\"#46039f\"],[0.2222222222222222,\"#7201a8\"],[0.3333333333333333,\"#9c179e\"],[0.4444444444444444,\"#bd3786\"],[0.5555555555555556,\"#d8576b\"],[0.6666666666666666,\"#ed7953\"],[0.7777777777777778,\"#fb9f3a\"],[0.8888888888888888,\"#fdca26\"],[1.0,\"#f0f921\"]]},\"yaxis\":{\"gridcolor\":\"white\",\"zerolinewidth\":2,\"title\":{\"standoff\":15},\"ticks\":\"\",\"zerolinecolor\":\"white\",\"automargin\":true,\"linecolor\":\"white\"},\"shapedefaults\":{\"line\":{\"color\":\"#2a3f5f\"}},\"hoverlabel\":{\"align\":\"left\"},\"mapbox\":{\"style\":\"light\"},\"polar\":{\"angularaxis\":{\"gridcolor\":\"white\",\"ticks\":\"\",\"linecolor\":\"white\"},\"bgcolor\":\"#E5ECF6\",\"radialaxis\":{\"gridcolor\":\"white\",\"ticks\":\"\",\"linecolor\":\"white\"}},\"autotypenumbers\":\"strict\",\"font\":{\"color\":\"#2a3f5f\"},\"ternary\":{\"baxis\":{\"gridcolor\":\"white\",\"ticks\":\"\",\"linecolor\":\"white\"},\"bgcolor\":\"#E5ECF6\",\"caxis\":{\"gridcolor\":\"white\",\"ticks\":\"\",\"linecolor\":\"white\"},\"aaxis\":{\"gridcolor\":\"white\",\"ticks\":\"\",\"linecolor\":\"white\"}},\"annotationdefaults\":{\"arrowhead\":0,\"arrowwidth\":1,\"arrowcolor\":\"#2a3f5f\"},\"plot_bgcolor\":\"#E5ECF6\",\"title\":{\"x\":0.05},\"scene\":{\"xaxis\":{\"gridcolor\":\"white\",\"gridwidth\":2,\"backgroundcolor\":\"#E5ECF6\",\"ticks\":\"\",\"showbackground\":true,\"zerolinecolor\":\"white\",\"linecolor\":\"white\"},\"zaxis\":{\"gridcolor\":\"white\",\"gridwidth\":2,\"backgroundcolor\":\"#E5ECF6\",\"ticks\":\"\",\"showbackground\":true,\"zerolinecolor\":\"white\",\"linecolor\":\"white\"},\"yaxis\":{\"gridcolor\":\"white\",\"gridwidth\":2,\"backgroundcolor\":\"#E5ECF6\",\"ticks\":\"\",\"showbackground\":true,\"zerolinecolor\":\"white\",\"linecolor\":\"white\"}},\"colorway\":[\"#636efa\",\"#EF553B\",\"#00cc96\",\"#ab63fa\",\"#FFA15A\",\"#19d3f3\",\"#FF6692\",\"#B6E880\",\"#FF97FF\",\"#FECB52\"]},\"data\":{\"barpolar\":[{\"type\":\"barpolar\",\"marker\":{\"line\":{\"color\":\"#E5ECF6\",\"width\":0.5}}}],\"carpet\":[{\"aaxis\":{\"gridcolor\":\"white\",\"endlinecolor\":\"#2a3f5f\",\"minorgridcolor\":\"white\",\"startlinecolor\":\"#2a3f5f\",\"linecolor\":\"white\"},\"type\":\"carpet\",\"baxis\":{\"gridcolor\":\"white\",\"endlinecolor\":\"#2a3f5f\",\"minorgridcolor\":\"white\",\"startlinecolor\":\"#2a3f5f\",\"linecolor\":\"white\"}}],\"scatterpolar\":[{\"type\":\"scatterpolar\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"parcoords\":[{\"line\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}},\"type\":\"parcoords\"}],\"scatter\":[{\"type\":\"scatter\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"histogram2dcontour\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"histogram2dcontour\",\"colorscale\":[[0.0,\"#0d0887\"],[0.1111111111111111,\"#46039f\"],[0.2222222222222222,\"#7201a8\"],[0.3333333333333333,\"#9c179e\"],[0.4444444444444444,\"#bd3786\"],[0.5555555555555556,\"#d8576b\"],[0.6666666666666666,\"#ed7953\"],[0.7777777777777778,\"#fb9f3a\"],[0.8888888888888888,\"#fdca26\"],[1.0,\"#f0f921\"]]}],\"contour\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"contour\",\"colorscale\":[[0.0,\"#0d0887\"],[0.1111111111111111,\"#46039f\"],[0.2222222222222222,\"#7201a8\"],[0.3333333333333333,\"#9c179e\"],[0.4444444444444444,\"#bd3786\"],[0.5555555555555556,\"#d8576b\"],[0.6666666666666666,\"#ed7953\"],[0.7777777777777778,\"#fb9f3a\"],[0.8888888888888888,\"#fdca26\"],[1.0,\"#f0f921\"]]}],\"scattercarpet\":[{\"type\":\"scattercarpet\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"mesh3d\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"mesh3d\"}],\"surface\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"surface\",\"colorscale\":[[0.0,\"#0d0887\"],[0.1111111111111111,\"#46039f\"],[0.2222222222222222,\"#7201a8\"],[0.3333333333333333,\"#9c179e\"],[0.4444444444444444,\"#bd3786\"],[0.5555555555555556,\"#d8576b\"],[0.6666666666666666,\"#ed7953\"],[0.7777777777777778,\"#fb9f3a\"],[0.8888888888888888,\"#fdca26\"],[1.0,\"#f0f921\"]]}],\"scattermapbox\":[{\"type\":\"scattermapbox\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"scattergeo\":[{\"type\":\"scattergeo\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"histogram\":[{\"type\":\"histogram\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"pie\":[{\"type\":\"pie\",\"automargin\":true}],\"choropleth\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"choropleth\"}],\"heatmapgl\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"heatmapgl\",\"colorscale\":[[0.0,\"#0d0887\"],[0.1111111111111111,\"#46039f\"],[0.2222222222222222,\"#7201a8\"],[0.3333333333333333,\"#9c179e\"],[0.4444444444444444,\"#bd3786\"],[0.5555555555555556,\"#d8576b\"],[0.6666666666666666,\"#ed7953\"],[0.7777777777777778,\"#fb9f3a\"],[0.8888888888888888,\"#fdca26\"],[1.0,\"#f0f921\"]]}],\"bar\":[{\"type\":\"bar\",\"error_y\":{\"color\":\"#2a3f5f\"},\"error_x\":{\"color\":\"#2a3f5f\"},\"marker\":{\"line\":{\"color\":\"#E5ECF6\",\"width\":0.5}}}],\"heatmap\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"heatmap\",\"colorscale\":[[0.0,\"#0d0887\"],[0.1111111111111111,\"#46039f\"],[0.2222222222222222,\"#7201a8\"],[0.3333333333333333,\"#9c179e\"],[0.4444444444444444,\"#bd3786\"],[0.5555555555555556,\"#d8576b\"],[0.6666666666666666,\"#ed7953\"],[0.7777777777777778,\"#fb9f3a\"],[0.8888888888888888,\"#fdca26\"],[1.0,\"#f0f921\"]]}],\"contourcarpet\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"contourcarpet\"}],\"table\":[{\"type\":\"table\",\"header\":{\"line\":{\"color\":\"white\"},\"fill\":{\"color\":\"#C8D4E3\"}},\"cells\":{\"line\":{\"color\":\"white\"},\"fill\":{\"color\":\"#EBF0F8\"}}}],\"scatter3d\":[{\"line\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}},\"type\":\"scatter3d\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"scattergl\":[{\"type\":\"scattergl\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"histogram2d\":[{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0},\"type\":\"histogram2d\",\"colorscale\":[[0.0,\"#0d0887\"],[0.1111111111111111,\"#46039f\"],[0.2222222222222222,\"#7201a8\"],[0.3333333333333333,\"#9c179e\"],[0.4444444444444444,\"#bd3786\"],[0.5555555555555556,\"#d8576b\"],[0.6666666666666666,\"#ed7953\"],[0.7777777777777778,\"#fb9f3a\"],[0.8888888888888888,\"#fdca26\"],[1.0,\"#f0f921\"]]}],\"scatterternary\":[{\"type\":\"scatterternary\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}],\"scatterpolargl\":[{\"type\":\"scatterpolargl\",\"marker\":{\"colorbar\":{\"ticks\":\"\",\"outlinewidth\":0}}}]}},\"margin\":{\"l\":50,\"b\":50,\"r\":50,\"t\":60}},{\"showLink\":false,\"editable\":false,\"responsive\":true,\"staticPlot\":false,\"scrollZoom\":true}); gd.on(\"plotly_hover\",(function (data){var filtered_data=WebIO.PlotlyCommands.filterEventData(gd,data,\"hover\"); return !(filtered_data.isnil) ? (WebIO.setval({\"name\":\"hover\",\"scope\":\"1585464911242070676\",\"id\":\"11\",\"type\":\"observable\"},filtered_data.out)) : undefined})); gd.on(\"plotly_unhover\",(function (){return WebIO.setval({\"name\":\"hover\",\"scope\":\"1585464911242070676\",\"id\":\"11\",\"type\":\"observable\"},{})})); gd.on(\"plotly_selected\",(function (data){var filtered_data=WebIO.PlotlyCommands.filterEventData(gd,data,\"selected\"); return !(filtered_data.isnil) ? (WebIO.setval({\"name\":\"selected\",\"scope\":\"1585464911242070676\",\"id\":\"12\",\"type\":\"observable\"},filtered_data.out)) : undefined})); gd.on(\"plotly_deselect\",(function (){return WebIO.setval({\"name\":\"selected\",\"scope\":\"1585464911242070676\",\"id\":\"12\",\"type\":\"observable\"},{})})); gd.on(\"plotly_relayout\",(function (data){var filtered_data=WebIO.PlotlyCommands.filterEventData(gd,data,\"relayout\"); return !(filtered_data.isnil) ? (WebIO.setval({\"name\":\"relayout\",\"scope\":\"1585464911242070676\",\"id\":\"14\",\"type\":\"observable\"},filtered_data.out)) : undefined})); return gd.on(\"plotly_click\",(function (data){var filtered_data=WebIO.PlotlyCommands.filterEventData(gd,data,\"click\"); return !(filtered_data.isnil) ? (WebIO.setval({\"name\":\"click\",\"scope\":\"1585464911242070676\",\"id\":\"13\",\"type\":\"observable\"},filtered_data.out)) : undefined}))}));\n    (WebIO.importBlock({\"data\":[{\"name\":\"Plotly\",\"type\":\"js\",\"url\":\"\/assetserver\/c8d890b7ab5bafa988f8e237150d24f16764a7ea-plotly.min.js\"},{\"name\":null,\"type\":\"js\",\"url\":\"\/assetserver\/6e661dd33ca15afee5b333d240e073494aaea846-plotly_webio.bundle.js\"}],\"type\":\"async_block\"})).then((imports) => handler.apply(this, imports));\n}\n"],"observables":{"_toImage":{"sync":false,"id":"18","value":{}},"hover":{"sync":false,"id":"11","value":{}},"selected":{"sync":false,"id":"12","value":{}},"__gd_contents":{"sync":false,"id":"16","value":{}},"click":{"sync":false,"id":"13","value":{}},"image":{"sync":true,"id":"15","value":""},"__get_gd_contents":{"sync":false,"id":"20","value":""},"_downloadImage":{"sync":false,"id":"19","value":{}},"relayout":{"sync":false,"id":"14","value":{}},"_commands":{"sync":false,"id":"17","value":[]}}},"children":[{"props":{"id":"plot-9ad80cf7-5b13-4413-b39e-d1df7759733c"},"nodeType":"DOM","type":"node","instanceArgs":{"namespace":"html","tag":"div"},"children":[]}]},
+        window,
+    );
+    })()
+    </script>
+</div>
+</div>
+</div>
+</section>
+<section id="words-as-vectors" class="level2">
+<h2 class="anchored" data-anchor-id="words-as-vectors">Words as vectors</h2>
+<p>Encode a recipe as a vector by doing a one-hot encoding of each of the words in the recipe.</p>
+<p>Use knn to predict the cuisine of a new recipe.</p>
+</section>
+<section id="words-as-vectors-better" class="level2">
+<h2 class="anchored" data-anchor-id="words-as-vectors-better">Words as vectors (better)</h2>
+<p>Use text embeddings to turn a recipe into a vector. How to combine vectors for individual words into vector for the whole recipe?</p>
+</section>
+<section id="closing-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="closing-thoughts">closing thoughts</h2>
+<p>what else are vectors? - images - sound</p>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>Word2vec paper, won the “test of time” award</p>
+<p><em>Distributed Representations of Words and Phrases and their Compositionality</em> https://arxiv.org/abs/1310.4546</p>
+<p>The illustrated Word2vec https://jalammar.github.io/illustrated-word2vec/</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -2104,6 +2104,17 @@ files = [
 ]
 
 [[package]]
+name = "webio-jupyter-extension"
+version = "0.1.0"
+description = "A JupyterLab extension."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "webio_jupyter_extension-0.1.0-py3-none-any.whl", hash = "sha256:97478bd68f3b0d3f16958e92b3ff37492f7efab56b7b2a99a4e9dbccfb9f96d2"},
+    {file = "webio_jupyter_extension-0.1.0.tar.gz", hash = "sha256:9b41496b86dd0b5734d99f98785ba68cf4b3cd75ae5c704b97bbacbf198ed2b7"},
+]
+
+[[package]]
 name = "websocket-client"
 version = "1.7.0"
 description = "WebSocket client for Python with low level API options"
@@ -2133,4 +2144,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "9e244cee709040866b2419c029cf5762a67b70fab2353c06bf3a79d20758d513"
+content-hash = "8edaf83254831e8a0d63f9ecfa5829c095f57c0370f2615d6ecf02e9644f29fe"

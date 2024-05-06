@@ -9,4 +9,8 @@ Engineering at [Airbase](https://www.airbase.com/), previously Twitter, Blurb, G
 
 [@vikasgorur](https://x.com/vikasgorur)
 
----
+## Machine Learning
+
+This is my attempt to build the "tech tree" of ML, starting from the absolute basics and ending up somewhere around GPT-4.
+
+- [Everything is A Vector](everything-is-a-vector.qmd)
