@@ -1,0 +1,196 @@
+---
+title: "Learning by Gradient Descent"
+jupyter: julia-1.10
+format:
+    html:
+        theme: flatly
+        mainfont: "PT Serif"
+        code-fold: false
+---
+
+*This is one of the posts in a series that aims to build an understanding of Large Language Models (LLMs) starting from the absolute
+basics. The only background knowledge assumed is some coding ability and pre-college math. All the code is written in [Julia](https://julialang.org/), but I try to ensure that deep familiarity with Julia is not necessary to follow along.*
+
+---
+
+When we first learn to program computers we learn the art of giving it precise instructions. As SICP calls it, a program is an encoding
+of "procedural knowledge".
+
+Machine learning is a different way of completing tasks. You don't give it instructions, you instead craft a cost function and
+let the machine find a minimum. Automatic diff is how that magic happens.
+
+Machine learning can be thought of as writing programs in a completely new way. Instead of giving explicit instructions to solve
+a problem, we instead define a general template of a function that we call a *model* that has *parameters* that can be learned
+from data.
+
+Another way to think about it is to assume that a perfect function exists somewhere in the platonic mathematical realm that
+does exactly what you want, and we're trying to find an *approximation* of that function that is good enough for a purpose at hand.
+
+How do we find this approximation? Apart from defining a model, we also need to define how good a model is, and that's called a loss function.
+
+The loss function is a function of the parameters and the data. We then try to minimize the loss function by doing gradient descent.
+
+We start by recalling the definition of a derivative:
+
+$$
+f'(x) = \lim_{\delta x \to 0} \frac{f(x + \delta x) - f(x)}{\delta x}
+$$
+
+For example,
+
+$$
+f(x) = x^2
+$$
+$$
+f'(x) = 2x
+$$
+
+The intuition of the derivative of $f$ at a point $x_0$ is that it measures how *sensitive* the output is to a small change in the input around the neighborhood of $x_0$.
+
+We can translate the definition into code in a straight-forward way:
+
+```{julia}
+function d(f, x)
+    δ = 1e-6
+    return (f(x + δ) - f(x)) / δ
+end
+
+f(x) = x^2
+print(d(f, 2.0))
+```
+
+The code above is an example of *numeric differentiation*. While this approach isn't efficient or suitable
+for ML applications, it's sufficient for our first toy example.
+
+## Fitting a line
+
+The problem of linear regression is to fit the "best" line through a set of points. For
+our example we'll use a dataset with just one input variable `n` and one output variable `duration`.
+
+This is a real-world dataset I gathered by measuring the time it takes to train a particular
+ML model as a function of the number of training examples. While the time it takes for a training job
+to run might seem like the result of a complicated process, the relationship with the number of training
+examples is almost perfectly linear. It's a nice confirmation for me that linear relationships arise
+naturally in the real world and are not just found in statistics textbooks.
+
+```{julia}
+import CSV
+using DataFrames, MarkdownTables
+
+metrics = CSV.read("data/metrics.csv", DataFrame)
+print(size(metrics))
+markdown_table(metrics[1:5, [:n, :duration]])
+```
+
+We'll think of the input and output variables as the vectors $\textbf{X}$ and $\textbf{Y}$. We will also scale
+the raw data so that each of these vectors contains values only in the range $[0, 1]$. Our aim
+is to find the best parameters ($\theta_1$, $\theta_2$) for the line:
+$$
+\textbf{Y} = \theta_1 \textbf{X} + \theta_2
+$$
+
+```{julia}
+#| output: false
+Rn = Vector{Float64}
+
+scale(V) = (V .- minimum(V)) ./ (maximum(V) - minimum(V))
+
+X = scale(metrics[!, :n])
+Y = scale(metrics[!, :duration])
+
+```
+
+To actually find the parameters we need to define the notion of the "best fit". We can think of
+the line we're trying to fit as a prediction model. We can then measure its fit by computing
+the difference between the correct answer and the predicted answer for each data point and
+adding up the differences. We will also square each of the differences so that it doesn't matter
+if the prediction is off in either direction, only the magnitude is relevant.
+
+(TODO: why not just use the absolute value? Is it because historically it was easier to differentiate the squared
+loss?)
+
+Loss function
+
+```{julia}
+makeloss(X::Rn, Y::Rn) = θ::Rn -> sum((Y .- (θ[1] .+ θ[2] .* X)).^2)
+L = makeloss(X, Y)
+```
+
+Numeric gradient
+
+```{julia}
+function numgrad(f, θ::Rn)::Rn
+    step = 1e-6
+    δ = [0.0, 0.0]
+    δ[1] = (f([θ[1] + step, θ[2]])        - f(θ)) / step
+    δ[2] = (f([θ[1]       , θ[2] + step]) - f(θ)) / step
+    δ
+end
+
+```
+
+Descend
+
+```{julia}
+
+Trace = Tuple{Vector{Int}, Vector{Float64}}
+
+function descend(grad, loss, θ::Rn)::Tuple{Rn, Trace}
+    λ = 1e-4
+    epochs = []
+    losses::Rn = []
+
+    for i in 1:100000
+        l = loss(θ)
+        if i % 1000 == 0
+            push!(epochs, i)
+            push!(losses, l)
+        end
+        δ = grad(loss, θ)
+        θ = θ .- λ .* δ
+    end
+    θ, (epochs, losses)
+end
+```
+
+run the descent
+
+```{julia}
+θ, trace = descend(numgrad, L, [-1.0, -1.0])
+for (i, l) in zip(trace[1], trace[2])
+    print("epoch = $i, loss = $l\n")
+end
+
+print(θ)
+```
+
+## Automatic gradient
+
+In the example above we calculated the gradient by hand, but the magic of automatic differentiation is that a library
+can do this for you for (almost) *any function at all*, automatically. Let's explore this with another toy problem -- polynomial
+interpolation.
+
+## How does it work?
+
+## Neural networks
+
+
+## Further Reading
+
+:::{.callout-note}
+[Youtube] Andrej Karpathy, [*The spelled-out intro to neural networks and backpropagation: building micrograd*](https://www.youtube.com/watch?v=VMj-3S1tku0), Aug 2022.
+:::
+
+This is the video that made the whole concept click for me.
+
+:::{.callout-note}
+[arXiv] Atilim Gunes Baydin, et. al., [*Automatic differentiation in machine learning: a survey*](https://arxiv.org/abs/1502.05767), The Journal of Machine Learning Research, 2018. https://doi.org/10.48550/arXiv.1502.05767
+:::
+
+## Notes on Julia
+
+**Broadcasting**:
+
+```{julia}
+[1, 2, 3] .* [1, 2, 3]
+```
