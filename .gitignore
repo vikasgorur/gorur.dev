@@ -1,3 +1,4 @@
 .vscode
 /.quarto/
 ipynb_checkpoints
+__pycache__

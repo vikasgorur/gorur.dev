@@ -1,0 +1,71 @@
+---
+title: Relabeling Dice
+format:
+    html:
+        toc: true
+        mainfont: "Charter"
+        code-fold: false
+        callout-appearance: minimal
+---
+
+David J. C. MacKay, *Information Theory, Inference and Learning Algorithms* (2003).
+
+**Exercise 2.16**
+
+(a) Two ordinary dice with faces labelled 1, . . . , 6 are thrown. What is the probability distribution of the sum of the values? What is the probability distribution of the absolute difference between the values?
+
+```{python}
+import marimo as mo
+import numpy as np
+from collections import defaultdict
+
+
+def roll_dice(d1: list[int], d2: list[int], n: int) -> np.array:
+    counts = defaultdict(lambda: 0)
+    for i in range(n):
+        total = np.random.choice(d1) + np.random.choice(d2)
+        counts[total] += 1
+
+    return np.array([counts[k] for k in sorted(counts.keys())])
+
+
+N = 10000
+rolls = roll_dice(
+    [1, 2, 3, 4, 5, 6],
+    [1, 2, 3, 4, 5, 6],
+    N
+)
+```
+
+```{python}
+import matplotlib.pyplot as plt
+
+plt.bar(range(2, 13), rolls)
+```
+
+---
+
+(b) One hundred ordinary dice are thrown. What, roughly, is the probability distribution of the sum of the values? Sketch the probability distribution and estimate its mean and standard deviation.
+
+---
+
+(c) How can two cubical dice be labelled using the numbers {0, 1, 2, 3, 4, 5, 6} so that when the two dice are thrown the sum has a uniform probability distribution over the integers 1–12?
+
+```{python}
+flat_rolls = roll_dice(
+    [0, 0, 0, 6, 6, 6],
+    [1, 2, 3, 4, 5, 6],
+    N
+)
+```
+
+```{python}
+plt.bar(range(1, 13), flat_rolls)
+```
+
+---
+
+(d) Is there any way that one hundred dice could be labelled with integers such that the probability distribution of the sum is uniform?
+
+
+

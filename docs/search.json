@@ -68,5 +68,19 @@
     "title": "Vikas Gorur",
     "section": "Machine Learning",
     "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n\nLearning by Gradient Descent"
+  },
+  {
+    "objectID": "src/index.html#math-exercises",
+    "href": "src/index.html#math-exercises",
+    "title": "Vikas Gorur",
+    "section": "Math exercises",
+    "text": "Math exercises\nInteresting math exercises with code to solve or verify answers.\n\nRelabeling dice"
+  },
+  {
+    "objectID": "src/relabeling-dice.html",
+    "href": "src/relabeling-dice.html",
+    "title": "Relabeling Dice",
+    "section": "",
+    "text": "David J. C. MacKay, Information Theory, Inference and Learning Algorithms (2003).\nExercise 2.16\n\nTwo ordinary dice with faces labelled 1, . . . , 6 are thrown. What is the probability distribution of the sum of the values? What is the probability distribution of the absolute difference between the values?\n\n\nimport marimo as mo\nimport numpy as np\nfrom collections import defaultdict\n\n\ndef roll_dice(d1: list[int], d2: list[int], n: int) -&gt; np.array:\n    counts = defaultdict(lambda: 0)\n    for i in range(n):\n        total = np.random.choice(d1) + np.random.choice(d2)\n        counts[total] += 1\n\n    return np.array([counts[k] for k in sorted(counts.keys())])\n\n\nN = 10000\nrolls = roll_dice(\n    [1, 2, 3, 4, 5, 6],\n    [1, 2, 3, 4, 5, 6],\n    N\n)\n\n\nimport matplotlib.pyplot as plt\n\nplt.bar(range(2, 13), rolls)\n\n\n\n\n\n\n\n\n\n\nOne hundred ordinary dice are thrown. What, roughly, is the probability distribution of the sum of the values? Sketch the probability distribution and estimate its mean and standard deviation.\n\n\n\nHow can two cubical dice be labelled using the numbers {0, 1, 2, 3, 4, 5, 6} so that when the two dice are thrown the sum has a uniform probability distribution over the integers 1–12?\n\n\nflat_rolls = roll_dice(\n    [0, 0, 0, 6, 6, 6],\n    [1, 2, 3, 4, 5, 6],\n    N\n)\n\n\nplt.bar(range(1, 13), flat_rolls)\n\n\n\n\n\n\n\n\n\n\nIs there any way that one hundred dice could be labelled with integers such that the probability distribution of the sum is uniform?"
   }
 ]

@@ -14,3 +14,9 @@ Engineering at [Airbase](https://www.airbase.com/), previously Twitter, Blurb, G
 This is my attempt to build the "tech tree" of ML, starting from the absolute basics and ending up somewhere around GPT-4.
 
 - [Learning by Gradient Descent](learning-by-gradient-descent.qmd)
+
+## Math exercises
+
+Interesting math exercises with code to solve or verify answers.
+
+- [Relabeling dice](relabeling-dice.qmd)
