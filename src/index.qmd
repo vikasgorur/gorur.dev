@@ -19,4 +19,4 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 
 Interesting math exercises with code to solve or verify answers.
 
-- [Relabeling dice](relabeling-dice.qmd)
+- [Counting is Hard](counting-is-hard.qmd)
