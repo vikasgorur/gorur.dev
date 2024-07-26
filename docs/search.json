@@ -1,5 +1,54 @@
 [
   {
+    "objectID": "src/relabeling-dice.html",
+    "href": "src/relabeling-dice.html",
+    "title": "Relabeling Dice",
+    "section": "",
+    "text": "David J. C. MacKay, Information Theory, Inference and Learning Algorithms (2003).\nExercise 2.16\n\nTwo ordinary dice with faces labelled 1, . . . , 6 are thrown. What is the probability distribution of the sum of the values? What is the probability distribution of the absolute difference between the values?\n\n\nimport marimo as mo\nimport numpy as np\nfrom collections import defaultdict\n\n\ndef roll_dice(d1: list[int], d2: list[int], n: int) -&gt; np.array:\n    counts = defaultdict(lambda: 0)\n    for i in range(n):\n        total = np.random.choice(d1) + np.random.choice(d2)\n        counts[total] += 1\n\n    return np.array([counts[k] for k in sorted(counts.keys())])\n\n\nN = 10000\nrolls = roll_dice(\n    [1, 2, 3, 4, 5, 6],\n    [1, 2, 3, 4, 5, 6],\n    N\n)\n\n\nimport matplotlib.pyplot as plt\n\nplt.bar(range(2, 13), rolls)\n\n\n\n\n\n\n\n\n\n\nOne hundred ordinary dice are thrown. What, roughly, is the probability distribution of the sum of the values? Sketch the probability distribution and estimate its mean and standard deviation.\n\n\n\nHow can two cubical dice be labelled using the numbers {0, 1, 2, 3, 4, 5, 6} so that when the two dice are thrown the sum has a uniform probability distribution over the integers 1–12?\n\n\nflat_rolls = roll_dice(\n    [0, 0, 0, 6, 6, 6],\n    [1, 2, 3, 4, 5, 6],\n    N\n)\n\n\nplt.bar(range(1, 13), flat_rolls)\n\n\n\n\n\n\n\n\n\n\nIs there any way that one hundred dice could be labelled with integers such that the probability distribution of the sum is uniform?"
+  },
+  {
+    "objectID": "src/index.html",
+    "href": "src/index.html",
+    "title": "Vikas Gorur",
+    "section": "",
+    "text": "Engineering at Airbase, previously Twitter, Blurb, Gluster.\n@vikasgorur"
+  },
+  {
+    "objectID": "src/index.html#machine-learning",
+    "href": "src/index.html#machine-learning",
+    "title": "Vikas Gorur",
+    "section": "Machine Learning",
+    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n\nLearning by Gradient Descent"
+  },
+  {
+    "objectID": "src/index.html#math-exercises",
+    "href": "src/index.html#math-exercises",
+    "title": "Vikas Gorur",
+    "section": "Math exercises",
+    "text": "Math exercises\nInteresting math exercises with code to solve or verify answers.\n\nCounting is Hard"
+  },
+  {
+    "objectID": "src/counting-is-hard.html",
+    "href": "src/counting-is-hard.html",
+    "title": "Counting is Hard",
+    "section": "",
+    "text": "George Casella, Roger L. Berger, Statistical Inference, 2nd edition, 2002. Exercise 1.20.\nMy telephone rings 12 times each week, the calls being randomly distributed among the 7 days. What is the probability that I get atleast one call each day?\nLast updated: Jul 26, 2024.\nThis problem seems simple enough at first. Each of the 12 phone calls can independently happen on any of the 7 days, so the total number of ways to distribute the phone calls is \\(7^{12}\\).\nWe want each day to have atleast one phone call, so let’s first choose 7 out of 12 calls and distribute them one per day. The number of ways to do this is: \\({12 \\choose 7} \\cdot 7!\\). Each of the remaining 5 calls can happen on any of the 7 days, so the number of ways is \\(7^5\\). Putting it all together the probability we want is:\n\\[\n\\frac{{12 \\choose 7} \\cdot 7! \\cdot 7^5}{7^{12}}\n\\]\nimport math\n\nmath.comb(12, 7) * math.factorial(7) * 7**5 / 7**12\n\n4.846960025159585\nWell, that’s not right. I tried a few other ways to arrive at an answer but couldn’t be sure that any of them were correct. So I gave up and wrote code instead:\nimport fastrand\n\ndef phonecalls():\n    N = 1_000_000\n    count = 0\n    week = [0, 0, 0, 0, 0, 0, 0]\n\n    for i in range(N):\n        for _ in range(12):\n            week[fastrand.pcg32randint(0, 6)] += 1\n\n        if week.count(0) == 0:\n            count += 1\n\n        week = [0, 0, 0, 0, 0, 0, 0]\n    \n    return count / N\n\nphonecalls()\n\n0.228721\nI looked up the answer in the solutions manual for the textbook. It says:\nThis answer doesn’t feel very satisfying. Even if I’d come up with it myself, I would feel more confident about the correctness of my code than this answer. Why is it so complicated?\nI’m left with more questions about counting:"
+  },
+  {
+    "objectID": "src/counting-is-hard.html#a-performance-lesson",
+    "href": "src/counting-is-hard.html#a-performance-lesson",
+    "title": "Counting is Hard",
+    "section": "A performance lesson",
+    "text": "A performance lesson\nI initially wrote the code using NumPy but after benchmarking found that: - The vectors aren’t big enough in this case so the overhead of NumPy dominates. - Most of the time is spent in generating the random numbers.\nThe second point led me to discover the library fastrand and its accompanying paper. The impact of just swapping out the random number generator is below:\n\n\n\nmethod\ntime\n\n\n\n\nrandom.randint\n3460 ms\n\n\nfastrand\n770 ms"
+  },
+  {
+    "objectID": "src/counting-is-hard.html#further-reading",
+    "href": "src/counting-is-hard.html#further-reading",
+    "title": "Counting is Hard",
+    "section": "Further reading",
+    "text": "Further reading\n\n\n\n\n\n\nNote\n\n\n\n\nDaniel Lemire, Fast Random Integer Generation in an Interval, ACM Transactions on Modeling and Computer Simulation, Volume 29 Issue 1, February 2019.\n\n\n\nThe paper that describes the algorithm implemented by the fastrand library. Its key insight is that bounded random numbers can be generated by doing fewer expensive integer divisions."
+  },
+  {
     "objectID": "src/learning-by-gradient-descent.html",
     "href": "src/learning-by-gradient-descent.html",
     "title": "Learning by Gradient Descent",
@@ -11,7 +60,7 @@
     "href": "src/learning-by-gradient-descent.html#problem-how-long-will-this-job-run",
     "title": "Learning by Gradient Descent",
     "section": "Problem: how long will this job run?",
-    "text": "Problem: how long will this job run?\nA note about finding problems. When I used to endlessly consume ML textbooks, videos, blog posts, I always came away a bit dissatisfied and feeling like I hadn’t really learned anything. Will the method I just learned work on anything other than the Iris dataset from 1936? Learning that way skipped over one of the hard parts of doing ML: figuring out what kind of model would even work for a given problem. If you have felt the same way, I encourage you to find problems and datasets from your own life, or atleast find a different dataset on your own and try to apply your newly learned techniques to it.\nFor this post I’ve assembled a dataset from a problem I encountered myself. Assume there is an ML training job that you want to run on datasets of varying sizes. It’s not important what the job does. The only intuition we need is the reasonable expectation that the running time of the job is proportional to the number of training examples in a given run. We can scatter plot the data and confirm this intuition.\n\nimport CSV\nusing DataFrames, Plots\n\nmetrics = CSV.read(\"data/metrics.csv\", DataFrame)\n\n\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGiven that we have one continuous input variable n and we wish to predict another continuous variable duration, the simplest model to try is a line that is closest to all the points. For reasons of convention we’ll denote our input as the vector \\({\\textbf X}\\) and the output as the vector \\({\\textbf Y}\\). We’ll give these values the Julia type Rn to state that they are real-valued vectors of some size n, or in math terms, belong to the set \\(R^n\\).\n(Note that we’re scaling both \\({\\textbf X}\\) and \\({\\textbf Y}\\) values to be in the range \\([0, 1]\\). This is necessary for most ML algorithms to work well, but I don’t understand it deeply enough to explain in this post.)\n\nRn = Vector{Float64}\n\nscale(V) = (V .- minimum(V)) ./ (maximum(V) - minimum(V))\n\nX::Rn = scale(metrics[!, :n])\nY::Rn = scale(metrics[!, :duration])\n\nNow we can write our model as:\n\\[\n{\\textbf Y} = \\theta_1 + \\theta_2 {\\textbf X}\n\\]\nThe corresponding functions in Julia, for both a single input x and a vector input X.\n\nprediction(x::Float64, θ::Rn) = θ[1] .+ θ[2] * x\nprediction(X::Rn, θ::Rn) = θ[1] .+ θ[2] * X"
+    "text": "Problem: how long will this job run?\nA note about finding problems. When I used to endlessly consume ML textbooks, videos, blog posts, I always came away a bit dissatisfied and feeling like I hadn’t really learned anything. Will the method I just learned work on anything other than the Iris dataset from 1936? Learning that way skipped over one of the hard parts of doing ML: figuring out what kind of model would even work for a given problem. If you have felt the same way, I encourage you to find problems and datasets from your own life, or atleast find a different dataset on your own and try to apply your newly learned techniques to it.\nFor this post I’ve assembled a dataset from a problem I encountered myself. Assume there is an ML training job that you want to run on datasets of varying sizes. It’s not important what the job does. The only intuition we need is the reasonable expectation that the running time of the job is proportional to the number of training examples in a given run. We can scatter plot the data and confirm this intuition.\n\nimport CSV\nusing DataFrames, Plots\n\nmetrics = CSV.read(\"data/metrics.csv\", DataFrame)\n\n\n\n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n  \n    \n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGKS: dlopen(/Users/vikasprasad/.julia/artifacts/edbc277786f6302d431e3bf6cec5e21d9ee95e90/lib/cairoplugin.so, 0x0001): Library not loaded: @rpath/libtiff.6.dylib\n  Referenced from: &lt;4C4C4442-5555-3144-A1AA-51DB50BFDCA6&gt; /Users/vikasprasad/.julia/artifacts/edbc277786f6302d431e3bf6cec5e21d9ee95e90/lib/cairoplugin.so\n  Reason: tried: '/Users/vikasprasad/.julia/artifacts/edbc277786f6302d431e3bf6cec5e21d9ee95e90/lib/./libtiff.6.dylib' (no such file), '/Users/vikasprasad/.julia/artifacts/edbc277786f6302d431e3bf6cec5e21d9ee95e90/lib/./libtiff.6.dylib' (no such file), '/workspace/destdir/lib/libtiff.6.dylib' (no such file), '/System/Volumes/Preboot/Cryptexes/OS/workspace/destdir/lib/libtiff.6.dylib' (no such file), '/Users/vikasprasad/.julia/artifacts/edbc277786f6302d431e3bf6cec5e21d9ee95e90/lib/./libtiff.6.dylib' (no such file), '/Users/vikasprasad/.julia/juliaup/julia-1.10.2+0.aarch64.apple.darwin14/lib/libtiff.6.dylib' (no such file), '/usr/local/lib/libtiff.6.dylib' (no such file), '/usr/lib/libtiff.6.dylib' (no such file, not in dyld cache)\n\n\nGiven that we have one continuous input variable n and we wish to predict another continuous variable duration, the simplest model to try is a line that is closest to all the points. For reasons of convention we’ll denote our input as the vector \\({\\textbf X}\\) and the output as the vector \\({\\textbf Y}\\). We’ll give these values the Julia type Rn to state that they are real-valued vectors of some size n, or in math terms, belong to the set \\(R^n\\).\n(Note that we’re scaling both \\({\\textbf X}\\) and \\({\\textbf Y}\\) values to be in the range \\([0, 1]\\). This is necessary for most ML algorithms to work well, but I don’t understand it deeply enough to explain in this post.)\n\nRn = Vector{Float64}\n\nscale(V) = (V .- minimum(V)) ./ (maximum(V) - minimum(V))\n\nX::Rn = scale(metrics[!, :n])\nY::Rn = scale(metrics[!, :duration])\n\nNow we can write our model as:\n\\[\n{\\textbf Y} = \\theta_1 + \\theta_2 {\\textbf X}\n\\]\nThe corresponding functions in Julia, for both a single input x and a vector input X.\n\nprediction(x::Float64, θ::Rn) = θ[1] .+ θ[2] * x\nprediction(X::Rn, θ::Rn) = θ[1] .+ θ[2] * X"
   },
   {
     "objectID": "src/learning-by-gradient-descent.html#learning-the-parameters",
@@ -54,68 +103,5 @@
     "title": "Learning by Gradient Descent",
     "section": "Notes on Julia",
     "text": "Notes on Julia\nIf you haven’t seen Julia code before, a few things to note:\n\nYou can use any Unicode character like θ, λ as a variable name.\nJulia supports broadcasting of any operator or function across arrays. Specifically in this post, if X and Y are arrays, X .- Y performs element-wise subtraction. The same applies to .* and so on.\nYou can define functions in Julia as single-line “equations”. For example, hypotenuse(a, b) = sqrt(a^2 + b^2).\nYou can define multiple versions of a function that differ in the types of their arguments. We did this for the prediction function."
-  },
-  {
-    "objectID": "src/index.html",
-    "href": "src/index.html",
-    "title": "Vikas Gorur",
-    "section": "",
-    "text": "Engineering at Airbase, previously Twitter, Blurb, Gluster.\n@vikasgorur"
-  },
-  {
-    "objectID": "src/index.html#machine-learning",
-    "href": "src/index.html#machine-learning",
-    "title": "Vikas Gorur",
-    "section": "Machine Learning",
-    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n\nLearning by Gradient Descent"
-  },
-  {
-    "objectID": "src/index.html#math-exercises",
-    "href": "src/index.html#math-exercises",
-    "title": "Vikas Gorur",
-    "section": "Math exercises",
-    "text": "Math exercises\nInteresting math exercises with code to solve or verify answers.\n\nCounting is Hard"
-  },
-  {
-    "objectID": "src/relabeling-dice.html",
-    "href": "src/relabeling-dice.html",
-    "title": "Relabeling Dice",
-    "section": "",
-    "text": "David J. C. MacKay, Information Theory, Inference and Learning Algorithms (2003).\nExercise 2.16\n\nTwo ordinary dice with faces labelled 1, . . . , 6 are thrown. What is the probability distribution of the sum of the values? What is the probability distribution of the absolute difference between the values?\n\n\nimport marimo as mo\nimport numpy as np\nfrom collections import defaultdict\n\n\ndef roll_dice(d1: list[int], d2: list[int], n: int) -&gt; np.array:\n    counts = defaultdict(lambda: 0)\n    for i in range(n):\n        total = np.random.choice(d1) + np.random.choice(d2)\n        counts[total] += 1\n\n    return np.array([counts[k] for k in sorted(counts.keys())])\n\n\nN = 10000\nrolls = roll_dice(\n    [1, 2, 3, 4, 5, 6],\n    [1, 2, 3, 4, 5, 6],\n    N\n)\n\n\nimport matplotlib.pyplot as plt\n\nplt.bar(range(2, 13), rolls)\n\n\n\n\n\n\n\n\n\n\nOne hundred ordinary dice are thrown. What, roughly, is the probability distribution of the sum of the values? Sketch the probability distribution and estimate its mean and standard deviation.\n\n\n\nHow can two cubical dice be labelled using the numbers {0, 1, 2, 3, 4, 5, 6} so that when the two dice are thrown the sum has a uniform probability distribution over the integers 1–12?\n\n\nflat_rolls = roll_dice(\n    [0, 0, 0, 6, 6, 6],\n    [1, 2, 3, 4, 5, 6],\n    N\n)\n\n\nplt.bar(range(1, 13), flat_rolls)\n\n\n\n\n\n\n\n\n\n\nIs there any way that one hundred dice could be labelled with integers such that the probability distribution of the sum is uniform?"
-  },
-  {
-    "objectID": "src/counting-phone-calls.html",
-    "href": "src/counting-phone-calls.html",
-    "title": "Counting Phone Calls",
-    "section": "",
-    "text": "My telephone rings 12 times each week, the calls being randomly distributed among the 7 days. What is the probability that I get atleast one call each day?\n\nfunction phonecalls()\n    # True if there is at least one call per day\n    oneperday(days::Vector{Int}) = !any(d -&gt; d == 0, days)\n\n    N = 10000000\n    days = zeros(Int, 7)\n    count = 0\n    for _ in 1:N\n        for _ in 1:12\n            days[rand(1:7)] += 1\n        end\n        if oneperday(days)\n            count += 1\n        end\n        fill!(days, 0)\n    end\n    count / N\nend\n\nphonecalls()\n\n0.2284695\n\n\nTotal number of ways to assign the calls: \\(7^{12}\\)\nAtleast one per day:\n\\[\n{\\binom{12}{7} \\cdot 7! \\cdot 7^5}\n\\]"
-  },
-  {
-    "objectID": "src/counting-is-hard.html",
-    "href": "src/counting-is-hard.html",
-    "title": "Counting is Hard",
-    "section": "",
-    "text": "George Casella, Roger L. Berger, Statistical Inference, 2nd edition, 2002. Exercise 1.20.\nMy telephone rings 12 times each week, the calls being randomly distributed among the 7 days. What is the probability that I get atleast one call each day?\nLast updated: Jul 23, 2024.\nThis problem seems simple enough at first. Each of the 12 phone calls can independently happen on any of the 7 days, so the total number of ways to distribute the phone calls is \\(7^{12}\\).\nWe want each day to have atleast one phone call, so let’s first choose 7 out of 12 calls and distribute them one per day. The number of ways to do this is: \\({12 \\choose 7} \\cdot 7!\\). Each of the remaining 5 calls can happen on any of the 7 days, so the number of ways is \\(7^5\\). Putting it all together the probability we want is:\n\\[\n\\frac{{12 \\choose 7} \\cdot 7! \\cdot 7^5}{7^{12}}\n\\]\nimport math\n\nmath.comb(12, 7) * math.factorial(7) * 7**5 / 7**12\n\n4.846960025159585\nWell, that’s not right. I tried a few other ways to arrive at an answer but couldn’t be sure that any of them were correct. So I gave up and wrote code instead:\nimport fastrand\n\ndef phonecalls():\n    N = 1_000_000\n    count = 0\n    week = [0, 0, 0, 0, 0, 0, 0]\n\n    for i in range(N):\n        for _ in range(12):\n            week[fastrand.pcg32randint(0, 6)] += 1\n\n        if week.count(0) == 0:\n            count += 1\n\n        week = [0, 0, 0, 0, 0, 0, 0]\n    \n    return count / N\n\nphonecalls()\n\n0.227108\nI looked up the answer in the solutions manual for the textbook. It says:\nThis answer doesn’t feel very satisfying. Even if I’d come up with it myself, I would feel more confident about the correctness of my code than this answer. Why is it so complicated?\nI’m left with more questions about counting:"
-  },
-  {
-    "objectID": "src/counting-is-hard.html#performance-notes",
-    "href": "src/counting-is-hard.html#performance-notes",
-    "title": "Counting is Hard",
-    "section": "Performance notes",
-    "text": "Performance notes\nI initially wrote the code using NumPy but turns out that isn’t the fastest way. I was somewhat surprised to find that the random number generation is the slowest part of the code. That led me to discover the library fastrand which implements the paper Daniel Lemire, Fast Random Integer Generation in an Interval, ACM Transactions on Modeling and Computer Simulation, Volume 29 Issue 1, February 2019.\nI naive: 14.6s\n\nuse np.nonzero instead of writing a function using any() [14.2s]\nuse fastrand instead of np.random.randint [5.18s]\ncopy a previously zeroed array instead of zero’ing the existing one [4.7s]\n\nTwo weeks where the number of calls received on each weekday is the same have to be considered indistinguishable. In other words if we number the calls {a b c d e f g h i j k l} then\n[a b c d e] [f g] [h] [i] [j] [k] [l] and [a b c d e] [h i] [f] [g] [j] [k] [l] are the same."
-  },
-  {
-    "objectID": "src/counting-is-hard.html#a-performance-lesson",
-    "href": "src/counting-is-hard.html#a-performance-lesson",
-    "title": "Counting is Hard",
-    "section": "A performance lesson",
-    "text": "A performance lesson\nI initially wrote the code using NumPy but after benchmarking found that: - The vectors aren’t big enough in this case so the overhead of NumPy dominates. - Most of the time is spent in generating the random numbers.\nThe second point led me to discover the library fastrand and its accompanying paper. The impact of just swapping out the random number generator is below:\n\n\n\nmethod\ntime\n\n\n\n\nrandom.randint\n3460 ms\n\n\nfastrand\n770 ms"
-  },
-  {
-    "objectID": "src/counting-is-hard.html#further-reading",
-    "href": "src/counting-is-hard.html#further-reading",
-    "title": "Counting is Hard",
-    "section": "Further reading",
-    "text": "Further reading\n\n\n\n\n\n\nNote\n\n\n\n\nDaniel Lemire, Fast Random Integer Generation in an Interval, ACM Transactions on Modeling and Computer Simulation, Volume 29 Issue 1, February 2019.\n\n\n\nThe paper that describes the algorithm implemented by the fastrand library. Its key insight is that bounded random numbers can be generated by doing fewer expensive integer divisions."
   }
 ]
