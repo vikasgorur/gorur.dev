@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.6.3"
+__generated_with = "0.7.5"
 app = marimo.App(width="medium")
 
 
@@ -10,7 +10,7 @@ def __():
     import numpy as np
     import pandas as pd
 
-    candidates = pd.read_csv("src/data/candidates.csv")
+    candidates = pd.read_csv("data/candidates.csv")
     candidates
     return candidates, mo, np, pd
 
@@ -28,6 +28,12 @@ def __(candidates):
     def itop(i: int) -> str:
         return INDEXES[i]
     return INDEXES, PLAYERS, itop, ptoi
+
+
+@app.cell
+def __(ptoi):
+    ptoi("Abasov")
+    return
 
 
 @app.cell
@@ -51,7 +57,7 @@ def __(PLAYERS, candidates, np, pd, ptoi):
 
 
 @app.cell
-def __(PLAYERS, candidates, pd, ptoi, results_matrix):
+def __(PLAYERS, candidates, pd, pprint, ptoi, results_matrix):
     def player_scores(df: pd.DataFrame) -> dict[str, float]:
         # For each player, store their index in a dict
         A = results_matrix(df)
@@ -63,7 +69,7 @@ def __(PLAYERS, candidates, pd, ptoi, results_matrix):
         return scores
 
 
-    player_scores(candidates)
+    pprint(sorted(player_scores(candidates).items(), key=lambda item: item[1], reverse=True))
     return player_scores,
 
 
@@ -91,38 +97,21 @@ def __(A, np):
         return v
 
 
-    power(A, 32)
-    return power,
+    qq = power(A, 32)
+    return power, qq
 
 
 @app.cell
-def __(itop, v):
-    q = v[:, 0]
+def __(itop, qq):
     quality = {}
-    for i, q_ in enumerate(q):
+    for i, q_ in enumerate(qq):
         quality[itop(i)] = q_
 
     # Sort by values
-    quality
-    return i, q, q_, quality
+    from pprint import pprint
 
-
-@app.cell
-def __():
-    N = 5
-    B = 2.0
-    K = 10.0
-
-    import math
-
-
-    def pn(n):
-        "prob. that black is drawn n times"
-        return math.comb(N, n) * (B / K) ** n * (1 - B / K) ** (N - n)
-
-
-    N*(B/K)
-    return B, K, N, math, pn
+    pprint(sorted(quality.items(), key=lambda item: item[1], reverse=True))
+    return i, pprint, q_, quality
 
 
 if __name__ == "__main__":
