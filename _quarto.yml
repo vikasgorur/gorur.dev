@@ -2,4 +2,8 @@ project:
   type: website
   output-dir: docs
   render:
-    - "src/*.qmd"
+    - src/index.qmd
+    - src/chessrank.qmd
+    - src/learning-by-gradient-descent.qmd
+    - src/counting-is-hard.qmd
+
