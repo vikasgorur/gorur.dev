@@ -1,17 +1,11 @@
 ---
 title: "Learning by Gradient Descent"
-jupyter: julia-1.10
-format:
-    html:
-        toc: true
-        mainfont: "Charter"
-        code-fold: false
-        callout-appearance: minimal
+jupyter: python3
 ---
 
-*This is one of the posts in a series that aims to build an understanding of Large Language Models (LLMs) starting from the absolute basics. The only background knowledge assumed is some coding ability and pre-college math. All the code is written in [Julia](https://julialang.org/), but I try to ensure that deep familiarity with Julia is not necessary to follow along.*
+*This is one of the posts in a series that aims to build an understanding of Large Language Models (LLMs) starting from the absolute basics. The only background knowledge assumed is some coding ability and pre-college math.*
 
-Last updated: May 23, 2024.
+Last updated: Aug 19, 2024.
 
 ---
 
@@ -19,7 +13,7 @@ When we first learn programming, we learn to give the computer precise instructi
 
 > Computational processes are abstract beings that inhabit computers. As they evolve, processes manipulate other abstract things called data. The evolution of a process is directed by a pattern of rules called a program. People create programs to direct processes. In effect, we conjure the spirits of the computer with our spells.
 
--- [*Structure and Interpretation of Computer Programs*](https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-9.html#%_chap_1)
+-- [*Structure and Interpretation of Computer Programs*](https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-9.html#%25_chap_1)
 
 Machine learning is a radically different way of using computers to solve problems. We assume that in some platonic realm there exists a function that perfectly solves our problem. We try to approximate this function with a family of functions and call it our *model*. We pick a specific member of that family by learning the *parameters* of the model using training data.
 
@@ -29,38 +23,38 @@ Machine learning is a radically different way of using computers to solve proble
 
 For this post I've assembled a dataset from a problem I encountered myself. Assume there is an ML training job that you want to run on datasets of varying sizes. It's not important what the job does. The only intuition we need is the reasonable expectation that the running time of the job is proportional to the number of training examples in a given run. We can scatter plot the data and confirm this intuition.
 
-```{julia}
+```{python}
 #| output: false
-import CSV
-using DataFrames, Plots
+import pandas as pd
 
-metrics = CSV.read("data/metrics.csv", DataFrame)
+metrics = pd.read_csv("data/metrics.csv")
 ```
-```{julia}
+```{python}
 #| echo: false
-plot(
-    metrics[!, :n],
-    metrics[!, :duration],
-    label="",
-    xlabel="Number of examples",
-    xticks=([0, 3000, 6000, 9000, 12000], ["0", "3000", "6000", "9000", "12000"]),
-    ylabel="Duration (seconds)",
-    seriestype=:scatter
-)
+
+import matplotlib.pyplot as plt
+
+# plot metrics[n] against metrics[duration]
+plt.scatter(metrics["n"], metrics["duration"])
+plt.xticks([0, 3000, 6000, 9000, 12000], ["0", "3000", "6000", "9000", "12000"])
+plt.xlabel("Number of examples")
+plt.ylabel("Duration (seconds)")
+plt.show()
 ```
 
 Given that we have one continuous input variable `n` and we wish to predict another continuous variable `duration`, the simplest model to try is a *line* that is closest to all the points. For reasons of convention we'll denote our input as the vector ${\textbf X}$ and the output as the vector ${\textbf Y}$. We'll give these values the Julia type `Rn` to state that they are real-valued vectors of some size `n`, or in math terms, belong to the set $R^n$.
 
 (Note that we're scaling both ${\textbf X}$ and ${\textbf Y}$ values to be in the range $[0, 1]$. This is necessary for most ML algorithms to work well, but I don't understand it deeply enough to explain in this post.)
 
-```{julia}
-#| output: false
-Rn = Vector{Float64}
+```{python}
+#| output: true
 
-scale(V) = (V .- minimum(V)) ./ (maximum(V) - minimum(V))
+def scale(v):
+    return (v - v.min()) / (v.max() - v.min())
 
-X::Rn = scale(metrics[!, :n])
-Y::Rn = scale(metrics[!, :duration])
+
+X = scale(metrics["n"].to_numpy())
+Y = scale(metrics["duration"].to_numpy())
 ```
 
 Now we can write our model as:
@@ -71,11 +65,11 @@ $$
 
 The corresponding functions in Julia, for both a single input `x` and a vector input `X`.
 
-```{julia}
+```{python}
 #| output: false
 
-prediction(x::Float64, θ::Rn) = θ[1] .+ θ[2] * x
-prediction(X::Rn, θ::Rn) = θ[1] .+ θ[2] * X
+def prediction(X, θ):
+    return θ[0] + θ[1] * X
 ```
 
 ## Learning the parameters
@@ -101,9 +95,11 @@ $$
 L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_1 + \theta_2 X_i)^2
 $$
 
-```{julia}
+```{python}
 #| output: false
-loss(X::Rn, Y::Rn, θ::Rn) = sum((Y - prediction(X, θ)).^2)
+
+def loss(X, Y, θ):
+    return ((Y - prediction(X, θ)) ** 2).sum()
 ```
 
 Why are we squaring each of the terms? Why aren't we just using the absolute value of the difference? I'm sure there are many reasons for it, but one of them is that we are going to differentiate this function to find its minimum.
@@ -126,18 +122,18 @@ We can derive expressions for the gradient by normal calculus:
 \frac{\partial L}{\partial \theta_2} &=& \sum_{i = 0}^{n} 2 \cdot ({\hat y}_i - y_i) \cdot x_i \\
 \end{eqnarray}
 
-In code we'll call this the `full_gradient`, since we're using the entire dataset to compute it. Ignore the last parameter (`_::Int`) for now, it'll become relevant soon enough.
+In code we'll call this the `full_gradient`, since we're using the entire dataset to compute it. Ignore the last parameter (`_`) for now, it'll become relevant soon enough.
 
-```{julia}
+```{python}
 #| output: false
-function full_gradient(X::Rn, Y::Rn, θ::Rn, _::Int)
-    δ = zeros(2)
-    for i in eachindex(X)
-        δ[1] += 2 * (prediction(X[i], θ) - Y[i])
-        δ[2] += 2 * (prediction(X[i], θ) - Y[i]) * X[i]
-    end
-    δ
-end
+import numpy as np
+
+def full_gradient(X, Y, θ, _):
+    return np.array([
+        2 * (prediction(X, θ) - Y),
+        2 * (prediction(X, θ) - Y) * X
+    ]).sum(axis=1)
+
 ```
 
 The `descend` function below iteratively updates the parameters based on the gradient. The key line of code is:
@@ -149,52 +145,49 @@ The `descend` function below iteratively updates the parameters based on the gra
 
 The `descend` function also does a couple of other things: (1) record the value of the loss periodically (2) bail out when the loss starts to converge.
 
-```{julia}
+```{python}
 #| output: false
-Trace = Tuple{Vector{Int}, Vector{Float64}}
 
-function descend(gradient, λ)::Tuple{Rn, Trace}
-    θ = [-1.0, 1.0]    # Initial values of params, picked arbitrarily.
+def descend(gradient, λ):
+    θ = np.array([-1.0, 1.0])    # Initial values of params, picked arbitrarily.
     iters = []
-    losses::Rn = []
+    losses = []
 
     l = loss(X, Y, θ)
-    for i in 1:100000
+    for i in range(100000):
         prev_loss = l
         l = loss(X, Y, θ)
 
         # Bail out if the loss has converged
-        if i > 1 && abs(prev_loss - l) < 1e-6
+        if i > 1 and abs(prev_loss - l) < 1e-6:
+            print(f"i = {i}, bailing out, l = {l}, prev = {prev_loss}")
             break
-        end
 
         # Record progress
-        if i == 1 || i % 100 == 0
-            push!(iters, i)
-            push!(losses, l)
-        end
+        if i == 1 or i % 100 == 0:
+            iters.append(i)
+            losses.append(l)
 
         # Compute gradient and update params
-        δ = gradient(X, Y, θ, i)
-        θ = θ .- λ .* δ
-    end
-    θ, (iters, losses)
-end
+        δ = full_gradient(X, Y, θ, i)
+        θ = θ - λ * δ
+
+    return θ, (iters, losses)
 ```
 
 Running the descent gives:
-```{julia}
-function run_descent(g, λ)::Tuple{Rn, Trace}
+
+```{python}
+
+def run_descent(g, λ):
     θ, (iters, losses) = descend(g, λ)
-    for i in eachindex(iters)
-        println("iteration = $(iters[i]), loss = $(losses[i])")
-    end
+    for i in range(len(iters)):
+        print(f"iteration = {iters[i]}, loss = {losses[i]}")
 
-    println("\nLearned parameters: $(θ)")
-    θ, (iters, losses)
-end
+    print(f"\nLearned parameters: {θ}")
+    return θ, (iters, losses)
 
-θ_full, trace_full = run_descent(full_gradient, 0.0001)
+θ_full, trace_full = run_descent(full_gradient, 0.00001)
 ```
 
 ## Stochastic gradient
@@ -205,38 +198,43 @@ The gradient computed this way is called the *stochastic* gradient because it's 
 
 We implement this in code by getting rid of the loop from `full_gradient` and instead passing in the index (`i`) of the training example we want to use to compute the gradient.
 
-```{julia}
+```{python}
 #| output: false
-function stochastic_gradient(X::Rn, Y::Rn, θ::Rn, i::Int)
-    δ = zeros(2)
-    i = i % length(X) + 1
-    δ[1] += 2 * (prediction(X[i], θ) - Y[i])
-    δ[2] += 2 * (prediction(X[i], θ) - Y[i]) * X[i]
-    δ
-end
+
+def stochastic_gradient(X, Y, θ, i):
+    δ = np.zeros(2)
+    i = i % len(X)
+
+    δ[0] = 2 * (prediction(X[i], θ) - Y[i])
+    δ[1] = 2 * (prediction(X[i], θ) - Y[i]) * X[i]
+    return δ
 ```
 
 Running the descent gives:
 
-```{julia}
-θ_stochastic, trace_stochastic = run_descent(stochastic_gradient, 0.004)
+```{python}
+θ_stochastic, trace_stochastic = run_descent(stochastic_gradient, 0.001)
 ```
 
-It's pretty close to the answer we got from using the full gradient! Note that we had to use a different learning rate (`0.004`) to get this to converge. We can plot both lines against the data to see how well they fit and how close they are to each other.
+It's pretty close to the answer we got from using the full gradient! Note that we had to use a different learning rate (`0.001`) to get this to converge. We can plot both lines against the data to see how well they fit and how close they are to each other.
 
-```{julia}
+```{python}
 #| echo: false
-using Plots
+
+import matplotlib.pyplot as plt
 
 # Plot X and Y points
-plot(X, Y, seriestype=:scatter, label="Data (scaled)")
+plt.scatter(X, Y, label="Data (scaled)")
 
 # Plot the regression line
-x = range(0, stop=1, length=100)
-y_batch = θ_full[1] .+ θ_full[2] .* x
-y_stochastic = θ_stochastic[1] .+ θ_stochastic[2] .* x
-plot!(x, y_batch, seriestype=:line, label="Model (full gradient)")
-plot!(x, y_stochastic, seriestype=:line, label="Model (stochastic gradient)")
+x = np.linspace(0, 1, 100)
+y_batch = θ_full[0] + θ_full[1] * x
+y_stochastic = θ_stochastic[0] + θ_stochastic[1] * x
+plt.plot(x, y_batch, label="Model (full gradient)")
+plt.plot(x, y_stochastic, label="Model (stochastic gradient)")
+
+plt.legend()
+plt.show()
 ```
 
 Estimating the gradient using a fraction of the dataset makes large-scale machine learning possible. A real-world neural network like GPT-3 has 175 *billion* parameters, the vectors involved have dimensions in the tens of thousands, and the number of training examples is in the billions. It would be practically impossible to train a model like that by computing the full gradient on each iteration.
@@ -271,11 +269,7 @@ Section 7.1 contains a detailed discussion of gradient descent methods, includin
 
 Section 3.3 describes many motivations for using stochastic gradient descent and why it works so well.
 
-## Notes on Julia
+## Notes on NumPy
 
-If you haven't seen Julia code before, a few things to note:
 
-- You can use any Unicode character like `θ`, `λ` as a variable name.
-- Julia supports [broadcasting](https://docs.julialang.org/en/v1/manual/arrays/#Broadcasting) of any operator or function across arrays. Specifically in this post, if `X` and `Y` are arrays, `X .- Y` performs element-wise subtraction. The same applies to `.*` and so on.
-- You can define functions in Julia as single-line "equations". For example, `hypotenuse(a, b) = sqrt(a^2 + b^2)`.
-- You can define multiple versions of a function that differ in the types of their arguments. We did this for the `prediction` function.
+

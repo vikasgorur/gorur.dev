@@ -1,10 +1,6 @@
 ---
 title: "Counting is Hard"
 jupyter: python3
-format:
-    html:
-        mainfont: "Palatino"
-        code-fold: false
 ---
 
 George Casella, Roger L. Berger, *Statistical Inference*, 2nd edition, 2002. Exercise 1.20.

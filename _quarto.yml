@@ -7,3 +7,21 @@ project:
     - src/learning-by-gradient-descent.qmd
     - src/counting-is-hard.qmd
 
+website:
+  navbar:
+    background: primary
+    left:
+      - text: "Home"
+        href: src/index.qmd
+      
+format:
+  html:
+    theme: journal
+    fontsize: 1.2em
+    toc: true
+    include-in-header:
+      - text: |
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap">
+    mainfont: "Vollkorn"
+    code-fold: false
+    callout-appearance: minimal
