@@ -3,25 +3,50 @@ title: "Learning by Gradient Descent"
 jupyter: python3
 ---
 
-*This is one of the posts in a series that aims to build an understanding of Large Language Models (LLMs) starting from the absolute basics. The only background knowledge assumed is some coding ability and pre-college math.*
+*This is one of the posts in a series that aims to build an understanding of
+Large Language Models (LLMs) starting from the absolute basics. The only
+background knowledge assumed is some coding ability and pre-college math.*
 
-Last updated: Aug 19, 2024.
+Last updated: Aug 31, 2024.
 
 ---
 
-When we first learn programming, we learn to give the computer precise instructions to solve a problem. A program is an encoding of procedural knowledge:
+When we first learn programming, we learn to give the computer precise
+instructions to solve a problem. A program is an encoding of procedural
+knowledge:
 
-> Computational processes are abstract beings that inhabit computers. As they evolve, processes manipulate other abstract things called data. The evolution of a process is directed by a pattern of rules called a program. People create programs to direct processes. In effect, we conjure the spirits of the computer with our spells.
+> Computational processes are abstract beings that inhabit computers. As they
+evolve, processes manipulate other abstract things called data. The evolution of
+a process is directed by a pattern of rules called a program. People create
+programs to direct processes. In effect, we conjure the spirits of the computer
+with our spells.
 
 -- [*Structure and Interpretation of Computer Programs*](https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-9.html#%25_chap_1)
 
-Machine learning is a radically different way of using computers to solve problems. We assume that in some platonic realm there exists a function that perfectly solves our problem. We try to approximate this function with a family of functions and call it our *model*. We pick a specific member of that family by learning the *parameters* of the model using training data.
+Machine learning is a radically different way of using computers to solve
+problems. We assume that in some platonic realm there exists a function that
+perfectly solves our problem. We try to approximate this function with a family
+of functions and call it our *model*. We pick a specific member of that family
+by learning the *parameters* of the model using training data.
 
 ## Problem: how long will this job run?
 
-*A note about finding problems*. When I used to endlessly consume ML textbooks, videos, blog posts, I always came away a bit dissatisfied and feeling like I hadn't really learned anything. Will the method I just learned work on anything other than the [Iris](https://en.wikipedia.org/wiki/Iris_flower_data_set) dataset from 1936? Learning that way skipped over one of the hard parts of doing ML: figuring out what kind of model would even work for a given problem. If you have felt the same way, I encourage you to find problems and datasets from your own life, or atleast find a different dataset on your own and try to apply your newly learned techniques to it.
+*A note about finding problems*. When I used to endlessly consume ML textbooks,
+videos, blog posts, I always came away a bit dissatisfied and feeling like I
+hadn't really learned anything. Will the method I just learned work on anything
+other than the [Iris](https://en.wikipedia.org/wiki/Iris_flower_data_set)
+dataset from 1936? Learning that way skipped over one of the hard parts of doing
+ML: figuring out what kind of model would even work for a given problem. If you
+have felt the same way, I encourage you to find problems and datasets from your
+own life, or atleast find a different dataset on your own and try to apply your
+newly learned techniques to it.
 
-For this post I've assembled a dataset from a problem I encountered myself. Assume there is an ML training job that you want to run on datasets of varying sizes. It's not important what the job does. The only intuition we need is the reasonable expectation that the running time of the job is proportional to the number of training examples in a given run. We can scatter plot the data and confirm this intuition.
+For this post I've assembled a dataset from a problem I encountered myself.
+Assume there is an ML training job that you want to run on datasets of varying
+sizes. It's not important what the job does. The only intuition we need is the
+reasonable expectation that the running time of the job is proportional to the
+number of training examples in a given run. We can scatter plot the data and
+confirm this intuition.
 
 ```{python}
 #| output: false
@@ -42,9 +67,15 @@ plt.ylabel("Duration (seconds)")
 plt.show()
 ```
 
-Given that we have one continuous input variable `n` and we wish to predict another continuous variable `duration`, the simplest model to try is a *line* that is closest to all the points. For reasons of convention we'll denote our input as the vector ${\textbf X}$ and the output as the vector ${\textbf Y}$. We'll give these values the Julia type `Rn` to state that they are real-valued vectors of some size `n`, or in math terms, belong to the set $R^n$.
+Given that we have one continuous input variable `n` and we wish to predict
+another continuous variable `duration`, the simplest model to try is a *line*
+that is closest to all the points. For reasons of convention we'll denote our
+input as the vector ${\textbf X}$ and the output as the vector
+${\textbf Y}.$
 
-(Note that we're scaling both ${\textbf X}$ and ${\textbf Y}$ values to be in the range $[0, 1]$. This is necessary for most ML algorithms to work well, but I don't understand it deeply enough to explain in this post.)
+(Note that we're scaling both ${\textbf X}$ and ${\textbf Y}$ values to be in
+the range $[0, 1]$. This is necessary for most ML algorithms to work well, but I
+don't understand it deeply enough to explain in this post.)
 
 ```{python}
 #| output: true
@@ -60,10 +91,10 @@ Y = scale(metrics["duration"].to_numpy())
 Now we can write our model as:
 
 $$
-{\textbf Y} = \theta_1 + \theta_2 {\textbf X}
+{\textbf Y} = \theta_0 + \theta_1 {\textbf X}
 $$
 
-The corresponding functions in Julia, for both a single input `x` and a vector input `X`.
+In Python:
 
 ```{python}
 #| output: false
@@ -72,17 +103,32 @@ def prediction(X, θ):
     return θ[0] + θ[1] * X
 ```
 
+Note that we're multiplying a vector `X` with a scalar `θ[1]`. This works
+because NumPy supports *broadcasting*; see notes at the end of this post.
+
 ## Learning the parameters
 
-The model above describes an infinite number of lines. To find a specific line that best fits the available data, we need to find the values of $\theta_1$ and $\theta_2$. We're also making the assumption that such a line will help us predict the output variable on unseen *future* data. For more complicated models this is not true by default and special measures need to be taken to reduce *overfitting*.
+The model above describes an infinite number of lines. To find a specific line
+that best fits the available data, we need to find the values of $\theta_0$ and
+$\theta_1$. We're also making the assumption that such a line will help us
+predict the output variable on unseen *future* data. For more complicated models
+this is not true by default and special measures need to be taken to reduce
+*overfitting*.
 
-How can we find the parameter values? The answer is one of the most important ideas in ML:
+How can we find the parameter values? The answer is one of the most important
+ideas in ML:
 
 **The parameters of a model are found by minimizing a loss function**.
 
-The loss function (also called the *cost* or *objective*) is a measure of how well a model fits its training data. Thus it is a function of both the parameters of the model and the training data.
+The loss function (also called the *cost* or *objective*) is a measure of how
+well a model fits its training data. Thus it is a function of both the
+parameters of the model and the training data.
 
-In our problem we want the loss value to be 0 if the prediction values (denote as ${\hat {\textbf Y}}$) exactly match the training values ${\textbf Y}$. This is not possible because our data points don't all lie on a single line. The next best thing therefore is to find parameter values such that the loss is the lowest value possible.
+In our problem we want the loss value to be 0 if the prediction values (denote
+as ${\hat {\textbf Y}}$) exactly match the training values ${\textbf Y}$. This
+is not possible because our data points don't all lie on a single line. The next
+best thing therefore is to find parameter values such that the loss is the
+lowest value possible.
 
 We thus want our loss function to have the following reasonable properties:
 
@@ -92,7 +138,7 @@ We thus want our loss function to have the following reasonable properties:
 We can thus derive the following loss function:
 
 $$
-L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_1 + \theta_2 X_i)^2
+L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_0 + \theta_1 X_i)^2
 $$
 
 ```{python}
@@ -102,24 +148,39 @@ def loss(X, Y, θ):
     return ((Y - prediction(X, θ)) ** 2).sum()
 ```
 
-Why are we squaring each of the terms? Why aren't we just using the absolute value of the difference? I'm sure there are many reasons for it, but one of them is that we are going to differentiate this function to find its minimum.
+Why are we squaring each of the terms? Why aren't we just using the absolute
+value of the difference? I'm sure there are many reasons for it, but one of them
+is that we are going to differentiate this function to find its minimum.
 
 ## Gradient descent
 
-The problem of finding the right $\theta$ to fit a line has an exact mathematical solution, but we're going to find it the ML way using the technique of *gradient descent*.
+The problem of finding the right $\theta$ to fit a line has an exact
+mathematical solution, but we're going to find it the ML way using the technique
+of *gradient descent*.
 
-We start with arbitrary values for $\theta$ and iteratively change them such that the loss gets smaller. If you imagine the loss function as a 3d surface (in this case it looks like a bowl), we start somewhere on that surface and continuously try to move downhill.
+We start with arbitrary values for $\theta$ and iteratively change them such
+that the loss gets smaller. If you imagine the loss function as a 3d surface (in
+this case it looks like a bowl), we start somewhere on that surface and
+continuously try to move downhill.
 
-Recall that the derivative of a function is how much its value changes when its input changes by a little bit. If the derivative at a point is positive, it means a small positive change in the input causes the function to increase. If the derivative is negative, a small positive change in the input causes the function to decrease.
+Recall that the derivative of a function is how much its value changes when its
+input changes by a little bit. If the derivative at a point is positive, it
+means a small positive change in the input causes the function to increase. If
+the derivative is negative, a small positive change in the input causes the
+function to decrease.
 
-Thus if our goal is to minimize $L(\theta)$, we should modify each parameter at each step by an amount that's proportional to the derivative of the loss, but negated. Since there are many parameters we want the partial derivative of the loss with respect to each parameter, and all these derivatives considered together is the *gradient*.
+Thus if our goal is to minimize $L(\theta)$, we should modify each parameter at
+each step by an amount that's proportional to the derivative of the loss, but
+negated. Since there are many parameters we want the partial derivative of the
+loss with respect to each parameter, and all these derivatives considered
+together is the *gradient*.
 
 We can derive expressions for the gradient by normal calculus:
 
 \begin{eqnarray}
-\frac{\partial L}{\partial \theta_1} &=& \sum_{i = 0}^{n} 2 ({\hat y}_i - y_i) \\
+\frac{\partial L}{\partial \theta_0} &=& \sum_{i = 0}^{n} 2 ({\hat y}_i - y_i) \\
 
-\frac{\partial L}{\partial \theta_2} &=& \sum_{i = 0}^{n} 2 \cdot ({\hat y}_i - y_i) \cdot x_i \\
+\frac{\partial L}{\partial \theta_1} &=& \sum_{i = 0}^{n} 2 \cdot ({\hat y}_i - y_i) \cdot x_i \\
 \end{eqnarray}
 
 In code we'll call this the `full_gradient`, since we're using the entire dataset to compute it. Ignore the last parameter (`_`) for now, it'll become relevant soon enough.
@@ -130,20 +191,24 @@ import numpy as np
 
 def full_gradient(X, Y, θ, _):
     return np.array([
-        2 * (prediction(X, θ) - Y),
-        2 * (prediction(X, θ) - Y) * X
-    ]).sum(axis=1)
+        np.sum(2 * (prediction(X, θ) - Y)),
+        np.sum(2 * (prediction(X, θ) - Y) * X)
+    ])
 
 ```
 
 The `descend` function below iteratively updates the parameters based on the gradient. The key line of code is:
-```julia
-θ = θ .- λ .* δ
+```
+θ = θ - λ * δ
 ```
 
-`λ` here is called the *learning rate*. It's the size of the step the algorithm takes when descending the gradient. Picking the right value of `λ` is a topic on its own, but for this example I just did trial and error until I found a learning rate that works.
+`λ` here is called the *learning rate*. It's the size of the step the algorithm
+takes when descending the gradient. Picking the right value of `λ` is a topic on
+its own, but for this example I just did trial and error until I found a
+learning rate that works.
 
-The `descend` function also does a couple of other things: (1) record the value of the loss periodically (2) bail out when the loss starts to converge.
+The `descend` function also does a couple of other things: (1) record the value
+of the loss periodically (2) bail out when the loss starts to converge.
 
 ```{python}
 #| output: false
@@ -160,7 +225,8 @@ def descend(gradient, λ):
 
         # Bail out if the loss has converged
         if i > 1 and abs(prev_loss - l) < 1e-6:
-            print(f"i = {i}, bailing out, l = {l}, prev = {prev_loss}")
+            iters.append(i)
+            losses.append(l)
             break
 
         # Record progress
@@ -182,7 +248,7 @@ Running the descent gives:
 def run_descent(g, λ):
     θ, (iters, losses) = descend(g, λ)
     for i in range(len(iters)):
-        print(f"iteration = {iters[i]}, loss = {losses[i]}")
+        print(f"i = {iters[i]:<12} loss {losses[i]:>12.8f}")
 
     print(f"\nLearned parameters: {θ}")
     return θ, (iters, losses)
@@ -192,11 +258,16 @@ def run_descent(g, λ):
 
 ## Stochastic gradient
 
-There's a massive improvement possible to the above method that sounds crazy the first time you hear it: what if instead of using the entire dataset to compute the gradient, we used just a *single training example*?
+There's a massive improvement possible to the above method that sounds crazy the
+first time you hear it: what if instead of using the entire dataset to compute
+the gradient, we used just a *single training example*?
 
-The gradient computed this way is called the *stochastic* gradient because it's a random messy estimate of the true (full) gradient.
+The gradient computed this way is called the *stochastic* gradient because it's
+a random messy estimate of the true (full) gradient.
 
-We implement this in code by getting rid of the loop from `full_gradient` and instead passing in the index (`i`) of the training example we want to use to compute the gradient.
+We implement this in code by getting rid of the loop from `full_gradient` and
+instead passing in the index (`i`) of the training example we want to use to
+compute the gradient.
 
 ```{python}
 #| output: false
@@ -216,7 +287,10 @@ Running the descent gives:
 θ_stochastic, trace_stochastic = run_descent(stochastic_gradient, 0.001)
 ```
 
-It's pretty close to the answer we got from using the full gradient! Note that we had to use a different learning rate (`0.001`) to get this to converge. We can plot both lines against the data to see how well they fit and how close they are to each other.
+It's pretty close to the answer we got from using the full gradient! Note that
+we had to use a different learning rate (`0.001`) to get this to converge. We
+can plot both lines against the data to see how well they fit and how close they
+are to each other.
 
 ```{python}
 #| echo: false
@@ -237,13 +311,23 @@ plt.legend()
 plt.show()
 ```
 
-Estimating the gradient using a fraction of the dataset makes large-scale machine learning possible. A real-world neural network like GPT-3 has 175 *billion* parameters, the vectors involved have dimensions in the tens of thousands, and the number of training examples is in the billions. It would be practically impossible to train a model like that by computing the full gradient on each iteration.
+Estimating the gradient using a fraction of the dataset makes large-scale
+machine learning possible. A real-world neural network like GPT-3 has 175
+*billion* parameters, the vectors involved have dimensions in the tens of
+thousands, and the number of training examples is in the billions. It would be
+practically impossible to train a model like that by computing the full gradient
+on each iteration.
 
-The optimization methods used to train such models are far more sophisticated (e.g., [Adam](https://arxiv.org/abs/1412.6980)) but they retain the core idea that a fuzzy estimate of the gradient derived from a subset of the data is enough to reach an acceptable minimum of the loss function.
+The optimization methods used to train such models are far more sophisticated
+(e.g., [Adam](https://arxiv.org/abs/1412.6980)) but they retain the core idea
+that a fuzzy estimate of the gradient derived from a subset of the data is
+enough to reach an acceptable minimum of the loss function.
 
 ## Why does it work?
 
-Why does this method of stochastic gradient descent work so well, even for loss functions that are unimaginably complex? These are the answers I've been able to gather so far:
+Why does this method of stochastic gradient descent work so well, even for loss
+functions that are unimaginably complex? These are the answers I've been able to
+gather so far:
 
 - Many loss functions in ML are designed to be *convex* (bowl-shaped).
 - There is redundancy in the data. If there are say 10 points all close together, the gradient calculated using just one of those points will be pretty close to the one calculated using all 10 points.
@@ -271,5 +355,9 @@ Section 3.3 describes many motivations for using stochastic gradient descent and
 
 ## Notes on NumPy
 
+NumPy supports vectorized versions of many operations. Two common cases of this are:
+(1) a scalar with an array, like `2 * X` which multiplies each element of `X` by `2`
+(2) two arrays of the same shape, like `Y - X` which does an element-wise subtraction.
 
-
+In the more general case NumPy also supports broadcasting where a smaller array is duplicated
+sufficiently to operate element-wise against a larger array.

@@ -100,7 +100,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&amp;display=swap">
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -199,7 +198,7 @@ window.Quarto = {
 
 
 <p><em>This is one of the posts in a series that aims to build an understanding of Large Language Models (LLMs) starting from the absolute basics. The only background knowledge assumed is some coding ability and pre-college math.</em></p>
-<p>Last updated: Aug 19, 2024.</p>
+<p>Last updated: Aug 31, 2024.</p>
 <hr>
 <p>When we first learn programming, we learn to give the computer precise instructions to solve a problem. A program is an encoding of procedural knowledge:</p>
 <blockquote class="blockquote">
@@ -211,12 +210,12 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="problem-how-long-will-this-job-run">Problem: how long will this job run?</h2>
 <p><em>A note about finding problems</em>. When I used to endlessly consume ML textbooks, videos, blog posts, I always came away a bit dissatisfied and feeling like I hadn’t really learned anything. Will the method I just learned work on anything other than the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris</a> dataset from 1936? Learning that way skipped over one of the hard parts of doing ML: figuring out what kind of model would even work for a given problem. If you have felt the same way, I encourage you to find problems and datasets from your own life, or atleast find a different dataset on your own and try to apply your newly learned techniques to it.</p>
 <p>For this post I’ve assembled a dataset from a problem I encountered myself. Assume there is an ML training job that you want to run on datasets of varying sizes. It’s not important what the job does. The only intuition we need is the reasonable expectation that the running time of the job is proportional to the number of training examples in a given run. We can scatter plot the data and confirm this intuition.</p>
-<div id="4adb749c" class="cell" data-execution_count="1">
+<div id="f6e56817" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> pd.read_csv(<span class="st">"data/metrics.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b6e17e37" class="cell" data-execution_count="2">
+<div id="75ec745e" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -225,9 +224,9 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Given that we have one continuous input variable <code>n</code> and we wish to predict another continuous variable <code>duration</code>, the simplest model to try is a <em>line</em> that is closest to all the points. For reasons of convention we’ll denote our input as the vector <span class="math inline">\({\textbf X}\)</span> and the output as the vector <span class="math inline">\({\textbf Y}\)</span>. We’ll give these values the Julia type <code>Rn</code> to state that they are real-valued vectors of some size <code>n</code>, or in math terms, belong to the set <span class="math inline">\(R^n\)</span>.</p>
+<p>Given that we have one continuous input variable <code>n</code> and we wish to predict another continuous variable <code>duration</code>, the simplest model to try is a <em>line</em> that is closest to all the points. For reasons of convention we’ll denote our input as the vector <span class="math inline">\({\textbf X}\)</span> and the output as the vector <span class="math inline">\({\textbf Y}.\)</span></p>
 <p>(Note that we’re scaling both <span class="math inline">\({\textbf X}\)</span> and <span class="math inline">\({\textbf Y}\)</span> values to be in the range <span class="math inline">\([0, 1]\)</span>. This is necessary for most ML algorithms to work well, but I don’t understand it deeply enough to explain in this post.)</p>
-<div id="0a8f30ae" class="cell" data-execution_count="3">
+<div id="2f821a8a" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scale(v):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (v <span class="op">-</span> v.<span class="bu">min</span>()) <span class="op">/</span> (v.<span class="bu">max</span>() <span class="op">-</span> v.<span class="bu">min</span>())</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -237,17 +236,18 @@ window.Quarto = {
 </div>
 <p>Now we can write our model as:</p>
 <p><span class="math display">\[
-{\textbf Y} = \theta_1 + \theta_2 {\textbf X}
+{\textbf Y} = \theta_0 + \theta_1 {\textbf X}
 \]</span></p>
-<p>The corresponding functions in Julia, for both a single input <code>x</code> and a vector input <code>X</code>.</p>
-<div id="70b7961a" class="cell" data-execution_count="4">
+<p>In Python:</p>
+<div id="aeed719a" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prediction(X, θ):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> θ[<span class="dv">0</span>] <span class="op">+</span> θ[<span class="dv">1</span>] <span class="op">*</span> X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Note that we’re multiplying a vector <code>X</code> with a scalar <code>θ[1]</code>. This works because NumPy supports <em>broadcasting</em>; see notes at the end of this post.</p>
 </section>
 <section id="learning-the-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="learning-the-parameters">Learning the parameters</h2>
-<p>The model above describes an infinite number of lines. To find a specific line that best fits the available data, we need to find the values of <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span>. We’re also making the assumption that such a line will help us predict the output variable on unseen <em>future</em> data. For more complicated models this is not true by default and special measures need to be taken to reduce <em>overfitting</em>.</p>
+<p>The model above describes an infinite number of lines. To find a specific line that best fits the available data, we need to find the values of <span class="math inline">\(\theta_0\)</span> and <span class="math inline">\(\theta_1\)</span>. We’re also making the assumption that such a line will help us predict the output variable on unseen <em>future</em> data. For more complicated models this is not true by default and special measures need to be taken to reduce <em>overfitting</em>.</p>
 <p>How can we find the parameter values? The answer is one of the most important ideas in ML:</p>
 <p><strong>The parameters of a model are found by minimizing a loss function</strong>.</p>
 <p>The loss function (also called the <em>cost</em> or <em>objective</em>) is a measure of how well a model fits its training data. Thus it is a function of both the parameters of the model and the training data.</p>
@@ -259,9 +259,9 @@ window.Quarto = {
 </ul>
 <p>We can thus derive the following loss function:</p>
 <p><span class="math display">\[
-L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_1 + \theta_2 X_i)^2
+L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_0 + \theta_1 X_i)^2
 \]</span></p>
-<div id="35e30f43" class="cell" data-execution_count="5">
+<div id="072ee145" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(X, Y, θ):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((Y <span class="op">-</span> prediction(X, θ)) <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -275,25 +275,25 @@ L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_1 + \theta_
 <p>Thus if our goal is to minimize <span class="math inline">\(L(\theta)\)</span>, we should modify each parameter at each step by an amount that’s proportional to the derivative of the loss, but negated. Since there are many parameters we want the partial derivative of the loss with respect to each parameter, and all these derivatives considered together is the <em>gradient</em>.</p>
 <p>We can derive expressions for the gradient by normal calculus:</p>
 <p><span class="math display">\[\begin{eqnarray}
-\frac{\partial L}{\partial \theta_1} &amp;=&amp; \sum_{i = 0}^{n} 2 ({\hat y}_i - y_i) \\
+\frac{\partial L}{\partial \theta_0} &amp;=&amp; \sum_{i = 0}^{n} 2 ({\hat y}_i - y_i) \\
 
-\frac{\partial L}{\partial \theta_2} &amp;=&amp; \sum_{i = 0}^{n} 2 \cdot ({\hat y}_i - y_i) \cdot x_i \\
+\frac{\partial L}{\partial \theta_1} &amp;=&amp; \sum_{i = 0}^{n} 2 \cdot ({\hat y}_i - y_i) \cdot x_i \\
 \end{eqnarray}\]</span></p>
 <p>In code we’ll call this the <code>full_gradient</code>, since we’re using the entire dataset to compute it. Ignore the last parameter (<code>_</code>) for now, it’ll become relevant soon enough.</p>
-<div id="702c857b" class="cell" data-execution_count="6">
+<div id="6befff25" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> full_gradient(X, Y, θ, _):</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span> <span class="op">*</span> (prediction(X, θ) <span class="op">-</span> Y),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        <span class="dv">2</span> <span class="op">*</span> (prediction(X, θ) <span class="op">-</span> Y) <span class="op">*</span> X</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    ]).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        np.<span class="bu">sum</span>(<span class="dv">2</span> <span class="op">*</span> (prediction(X, θ) <span class="op">-</span> Y)),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        np.<span class="bu">sum</span>(<span class="dv">2</span> <span class="op">*</span> (prediction(X, θ) <span class="op">-</span> Y) <span class="op">*</span> X)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>descend</code> function below iteratively updates the parameters based on the gradient. The key line of code is:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>θ <span class="op">=</span> θ <span class="op">.-</span> λ <span class="op">.*</span> δ</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>θ = θ - λ * δ</code></pre>
 <p><code>λ</code> here is called the <em>learning rate</em>. It’s the size of the step the algorithm takes when descending the gradient. Picking the right value of <code>λ</code> is a topic on its own, but for this example I just did trial and error until I found a learning rate that works.</p>
 <p>The <code>descend</code> function also does a couple of other things: (1) record the value of the loss periodically (2) bail out when the loss starts to converge.</p>
-<div id="39016b8c" class="cell" data-execution_count="7">
+<div id="88d638cc" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> descend(gradient, λ):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    θ <span class="op">=</span> np.array([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.0</span>])    <span class="co"># Initial values of params, picked arbitrarily.</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    iters <span class="op">=</span> []</span>
@@ -306,40 +306,41 @@ L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_1 + \theta_
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Bail out if the loss has converged</span></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">&gt;</span> <span class="dv">1</span> <span class="kw">and</span> <span class="bu">abs</span>(prev_loss <span class="op">-</span> l) <span class="op">&lt;</span> <span class="fl">1e-6</span>:</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"i = </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">, bailing out, l = </span><span class="sc">{</span>l<span class="sc">}</span><span class="ss">, prev = </span><span class="sc">{</span>prev_loss<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Record progress</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> i <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            iters.append(i)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>            losses.append(l)</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Compute gradient and update params</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        δ <span class="op">=</span> full_gradient(X, Y, θ, i)</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        θ <span class="op">=</span> θ <span class="op">-</span> λ <span class="op">*</span> δ</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> θ, (iters, losses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>            iters.append(i)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>            losses.append(l)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Record progress</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> i <span class="op">%</span> <span class="dv">100</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>            iters.append(i)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            losses.append(l)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Compute gradient and update params</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        δ <span class="op">=</span> full_gradient(X, Y, θ, i)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        θ <span class="op">=</span> θ <span class="op">-</span> λ <span class="op">*</span> δ</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> θ, (iters, losses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Running the descent gives:</p>
-<div id="16668bdc" class="cell" data-execution_count="8">
+<div id="c85e8149" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_descent(g, λ):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    θ, (iters, losses) <span class="op">=</span> descend(g, λ)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(iters)):</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"iteration = </span><span class="sc">{</span>iters[i]<span class="sc">}</span><span class="ss">, loss = </span><span class="sc">{</span>losses[i]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"i = </span><span class="sc">{</span>iters[i]<span class="sc">:&lt;12}</span><span class="ss"> loss </span><span class="sc">{</span>losses[i]<span class="sc">:&gt;12.8f}</span><span class="ss">"</span>)</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Learned parameters: </span><span class="sc">{θ}</span><span class="ss">"</span>)</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> θ, (iters, losses)</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>θ_full, trace_full <span class="op">=</span> run_descent(full_gradient, <span class="fl">0.00001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>i = 564, bailing out, l = 0.5635438421490638, prev = 0.5635448256267925
-iteration = 0, loss = 785.2017903892629
-iteration = 1, loss = 760.9808547197216
-iteration = 100, loss = 34.676846469498926
-iteration = 200, loss = 2.0468144605161855
-iteration = 300, loss = 0.6281350601009863
-iteration = 400, loss = 0.5664087239079463
-iteration = 500, loss = 0.5636792116936536
+<pre><code>i = 0            loss 785.20179039
+i = 1            loss 760.98085472
+i = 100          loss  34.67684647
+i = 200          loss   2.04681446
+i = 300          loss   0.62813506
+i = 400          loss   0.56640872
+i = 500          loss   0.56367921
+i = 564          loss   0.56354384
 
 Learned parameters: [0.00303936 1.04948881]</code></pre>
 </div>
@@ -350,7 +351,7 @@ Learned parameters: [0.00303936 1.04948881]</code></pre>
 <p>There’s a massive improvement possible to the above method that sounds crazy the first time you hear it: what if instead of using the entire dataset to compute the gradient, we used just a <em>single training example</em>?</p>
 <p>The gradient computed this way is called the <em>stochastic</em> gradient because it’s a random messy estimate of the true (full) gradient.</p>
 <p>We implement this in code by getting rid of the loop from <code>full_gradient</code> and instead passing in the index (<code>i</code>) of the training example we want to use to compute the gradient.</p>
-<div id="546fbeab" class="cell" data-execution_count="9">
+<div id="b4b86f7c" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stochastic_gradient(X, Y, θ, i):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    δ <span class="op">=</span> np.zeros(<span class="dv">2</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> i <span class="op">%</span> <span class="bu">len</span>(X)</span>
@@ -360,19 +361,19 @@ Learned parameters: [0.00303936 1.04948881]</code></pre>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> δ</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Running the descent gives:</p>
-<div id="80294b41" class="cell" data-execution_count="10">
+<div id="6488b3d2" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>θ_stochastic, trace_stochastic <span class="op">=</span> run_descent(stochastic_gradient, <span class="fl">0.001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>i = 115, bailing out, l = 0.5622445960982152, prev = 0.5622455653604557
-iteration = 0, loss = 785.2017903892629
-iteration = 1, loss = 242.72688291676087
-iteration = 100, loss = 0.5622634641569464
+<pre><code>i = 0            loss 785.20179039
+i = 1            loss 242.72688292
+i = 100          loss   0.56226346
+i = 115          loss   0.56224460
 
 Learned parameters: [0.00268266 1.05993278]</code></pre>
 </div>
 </div>
 <p>It’s pretty close to the answer we got from using the full gradient! Note that we had to use a different learning rate (<code>0.001</code>) to get this to converge. We can plot both lines against the data to see how well they fit and how close they are to each other.</p>
-<div id="a2510bcd" class="cell" data-execution_count="11">
+<div id="cd3e592e" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -437,6 +438,8 @@ Learned parameters: [0.00268266 1.05993278]</code></pre>
 </section>
 <section id="notes-on-numpy" class="level2">
 <h2 class="anchored" data-anchor-id="notes-on-numpy">Notes on NumPy</h2>
+<p>NumPy supports vectorized versions of many operations. Two common cases of this are: (1) a scalar with an array, like <code>2 * X</code> which multiplies each element of <code>X</code> by <code>2</code> (2) two arrays of the same shape, like <code>Y - X</code> which does an element-wise subtraction.</p>
+<p>In the more general case NumPy also supports broadcasting where a smaller array is duplicated sufficiently to operate element-wise against a larger array.</p>
 
 
 </section>

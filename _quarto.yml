@@ -19,9 +19,6 @@ format:
     theme: journal
     fontsize: 1.2em
     toc: true
-    include-in-header:
-      - text: |
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap">
-    mainfont: "Vollkorn"
+    mainfont: "Charter"
     code-fold: false
     callout-appearance: minimal
