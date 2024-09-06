@@ -78,8 +78,8 @@ def __():
 
 
 @app.cell
-def __(BOOTS, caesar_encrypt, clean_text, np):
-    CIPHER = caesar_encrypt(clean_text(BOOTS), np.random.randint(0, 25))
+def __(BOOTS, caesar_encrypt, clean_text):
+    CIPHER = caesar_encrypt(clean_text(BOOTS), 3)
     CIPHER
     return CIPHER,
 
@@ -95,14 +95,14 @@ def __(HOLMES, caesar_decrypt, kl_divergence, letter_pmf):
     import numpy as np
 
 
-    def try_decrypt(cipher: str) -> dict[int, float]:
+    def try_decrypt(cipher: str) -> (int, str):
         divergences = np.zeros(26)
         for key in range(0, 26):
             divergences[key] = kl_divergence(letter_pmf(caesar_decrypt(cipher, key)), HOLMES)
 
         # Find the min value key
         correct_key = np.argmin(divergences)
-        return caesar_decrypt(cipher, correct_key)
+        return correct_key, caesar_decrypt(cipher, correct_key)
     return np, try_decrypt
 
 

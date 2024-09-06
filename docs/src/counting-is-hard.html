@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Counting is Hard</title>
+<title>Counting is hard</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -100,7 +100,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&amp;display=swap">
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -176,7 +175,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Counting is Hard</h1>
+<h1 class="title">Counting is hard</h1>
 </div>
 
 
@@ -202,7 +201,7 @@ window.Quarto = {
 <p><span class="math display">\[
 \frac{{12 \choose 7} \cdot 7! \cdot 7^5}{7^{12}}
 \]</span></p>
-<div id="8264d25b" class="cell" data-execution_count="1">
+<div id="45a0dd83" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>math.comb(<span class="dv">12</span>, <span class="dv">7</span>) <span class="op">*</span> math.factorial(<span class="dv">7</span>) <span class="op">*</span> <span class="dv">7</span><span class="op">**</span><span class="dv">5</span> <span class="op">/</span> <span class="dv">7</span><span class="op">**</span><span class="dv">12</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -211,7 +210,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Well, that’s not right. I tried a few other ways to arrive at an answer but couldn’t be sure that any of them were correct. So I gave up and wrote code instead:</p>
-<div id="96fd0505" class="cell" data-execution_count="2">
+<div id="a0a2c427" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastrand</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> phonecalls():</span>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Learning by Gradient Descent</title>
+<title>Learning by gradient descent</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -180,7 +180,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Learning by Gradient Descent</h1>
+<h1 class="title">Learning by gradient descent</h1>
 </div>
 
 
@@ -210,12 +210,12 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="problem-how-long-will-this-job-run">Problem: how long will this job run?</h2>
 <p><em>A note about finding problems</em>. When I used to endlessly consume ML textbooks, videos, blog posts, I always came away a bit dissatisfied and feeling like I hadn’t really learned anything. Will the method I just learned work on anything other than the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">Iris</a> dataset from 1936? Learning that way skipped over one of the hard parts of doing ML: figuring out what kind of model would even work for a given problem. If you have felt the same way, I encourage you to find problems and datasets from your own life, or atleast find a different dataset on your own and try to apply your newly learned techniques to it.</p>
 <p>For this post I’ve assembled a dataset from a problem I encountered myself. Assume there is an ML training job that you want to run on datasets of varying sizes. It’s not important what the job does. The only intuition we need is the reasonable expectation that the running time of the job is proportional to the number of training examples in a given run. We can scatter plot the data and confirm this intuition.</p>
-<div id="f6e56817" class="cell" data-execution_count="1">
+<div id="6d0f9d88" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> pd.read_csv(<span class="st">"data/metrics.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="75ec745e" class="cell" data-execution_count="2">
+<div id="a965a1b7" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -226,7 +226,7 @@ window.Quarto = {
 </div>
 <p>Given that we have one continuous input variable <code>n</code> and we wish to predict another continuous variable <code>duration</code>, the simplest model to try is a <em>line</em> that is closest to all the points. For reasons of convention we’ll denote our input as the vector <span class="math inline">\({\textbf X}\)</span> and the output as the vector <span class="math inline">\({\textbf Y}.\)</span></p>
 <p>(Note that we’re scaling both <span class="math inline">\({\textbf X}\)</span> and <span class="math inline">\({\textbf Y}\)</span> values to be in the range <span class="math inline">\([0, 1]\)</span>. This is necessary for most ML algorithms to work well, but I don’t understand it deeply enough to explain in this post.)</p>
-<div id="2f821a8a" class="cell" data-execution_count="3">
+<div id="a15b42b9" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scale(v):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (v <span class="op">-</span> v.<span class="bu">min</span>()) <span class="op">/</span> (v.<span class="bu">max</span>() <span class="op">-</span> v.<span class="bu">min</span>())</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -239,7 +239,7 @@ window.Quarto = {
 {\textbf Y} = \theta_0 + \theta_1 {\textbf X}
 \]</span></p>
 <p>In Python:</p>
-<div id="aeed719a" class="cell" data-execution_count="4">
+<div id="cc553a1f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prediction(X, θ):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> θ[<span class="dv">0</span>] <span class="op">+</span> θ[<span class="dv">1</span>] <span class="op">*</span> X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -261,7 +261,7 @@ window.Quarto = {
 <p><span class="math display">\[
 L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_0 + \theta_1 X_i)^2
 \]</span></p>
-<div id="072ee145" class="cell" data-execution_count="5">
+<div id="c03e6ee4" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(X, Y, θ):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ((Y <span class="op">-</span> prediction(X, θ)) <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -280,7 +280,7 @@ L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_0 + \theta_
 \frac{\partial L}{\partial \theta_1} &amp;=&amp; \sum_{i = 0}^{n} 2 \cdot ({\hat y}_i - y_i) \cdot x_i \\
 \end{eqnarray}\]</span></p>
 <p>In code we’ll call this the <code>full_gradient</code>, since we’re using the entire dataset to compute it. Ignore the last parameter (<code>_</code>) for now, it’ll become relevant soon enough.</p>
-<div id="6befff25" class="cell" data-execution_count="6">
+<div id="fc04da69" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> full_gradient(X, Y, θ, _):</span>
@@ -293,7 +293,7 @@ L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_0 + \theta_
 <pre><code>θ = θ - λ * δ</code></pre>
 <p><code>λ</code> here is called the <em>learning rate</em>. It’s the size of the step the algorithm takes when descending the gradient. Picking the right value of <code>λ</code> is a topic on its own, but for this example I just did trial and error until I found a learning rate that works.</p>
 <p>The <code>descend</code> function also does a couple of other things: (1) record the value of the loss periodically (2) bail out when the loss starts to converge.</p>
-<div id="88d638cc" class="cell" data-execution_count="7">
+<div id="c1c79d16" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> descend(gradient, λ):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    θ <span class="op">=</span> np.array([<span class="op">-</span><span class="fl">1.0</span>, <span class="fl">1.0</span>])    <span class="co"># Initial values of params, picked arbitrarily.</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    iters <span class="op">=</span> []</span>
@@ -322,7 +322,7 @@ L(\theta, {\textbf X}, {\textbf Y}) = \sum_{i = 1}^{n} (Y_i - \theta_0 + \theta_
 <span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> θ, (iters, losses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Running the descent gives:</p>
-<div id="c85e8149" class="cell" data-execution_count="8">
+<div id="32f2216d" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_descent(g, λ):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    θ, (iters, losses) <span class="op">=</span> descend(g, λ)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(iters)):</span>
@@ -351,7 +351,7 @@ Learned parameters: [0.00303936 1.04948881]</code></pre>
 <p>There’s a massive improvement possible to the above method that sounds crazy the first time you hear it: what if instead of using the entire dataset to compute the gradient, we used just a <em>single training example</em>?</p>
 <p>The gradient computed this way is called the <em>stochastic</em> gradient because it’s a random messy estimate of the true (full) gradient.</p>
 <p>We implement this in code by getting rid of the loop from <code>full_gradient</code> and instead passing in the index (<code>i</code>) of the training example we want to use to compute the gradient.</p>
-<div id="b4b86f7c" class="cell" data-execution_count="9">
+<div id="d8497c71" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stochastic_gradient(X, Y, θ, i):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    δ <span class="op">=</span> np.zeros(<span class="dv">2</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> i <span class="op">%</span> <span class="bu">len</span>(X)</span>
@@ -361,7 +361,7 @@ Learned parameters: [0.00303936 1.04948881]</code></pre>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> δ</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Running the descent gives:</p>
-<div id="6488b3d2" class="cell" data-execution_count="10">
+<div id="758e5f40" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>θ_stochastic, trace_stochastic <span class="op">=</span> run_descent(stochastic_gradient, <span class="fl">0.001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>i = 0            loss 785.20179039
@@ -373,7 +373,7 @@ Learned parameters: [0.00268266 1.05993278]</code></pre>
 </div>
 </div>
 <p>It’s pretty close to the answer we got from using the full gradient! Note that we had to use a different learning rate (<code>0.001</code>) to get this to converge. We can plot both lines against the data to see how well they fit and how close they are to each other.</p>
-<div id="cd3e592e" class="cell" data-execution_count="11">
+<div id="4369507e" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

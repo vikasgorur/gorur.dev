@@ -13,10 +13,11 @@ Engineering at [Airbase](https://www.airbase.com/), previously Twitter, Blurb, G
 
 This is my attempt to build the "tech tree" of ML, starting from the absolute basics and ending up somewhere around GPT-4.
 
-- [Learning by Gradient Descent](learning-by-gradient-descent.qmd)
+- [Learning by gradient descent](learning-by-gradient-descent.qmd)
+- [Breaking Caesar ciphers using relative entropy](breaking-caesar-cipher.qmd)
 
 ## Math exercises
 
 Interesting math exercises with code to solve or verify answers.
 
-- [Counting is Hard](counting-is-hard.qmd)
+- [Counting is hard](counting-is-hard.qmd)

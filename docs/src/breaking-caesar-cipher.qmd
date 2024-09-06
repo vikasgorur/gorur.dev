@@ -1,0 +1,129 @@
+---
+title: "Breaking Caesar Ciphers using Relative Entropy"
+jupyter: python3
+---
+
+Last updated: Sep 1, 2024.
+
+---
+
+One of the simplest way to "encrypt" a piece of English text is the Caesar,
+or rotational, cipher which simply shifts each letter by a fixed number of
+places in the alphabet, with wrap around. A well-known example is `rot13` where every letter is shifted by 13 places. So `A -> N, B -> O` and so on.
+
+I have often read that simple ciphers like this can be broken by "frequency analysis", taking advantage of the observation that the frequencies of the various letters in English is well-known. But what exactly does that mean? How would such frequency analysis actually work?
+
+First, let's write some code to encrypt and decrypt. For simplicity we'll restrict our alphabet to just the uppercase letters `A-Z` and space and we'll leave the space characters unchanged. The "key" for our encryption is a single number in the range `[0, 25]`.
+
+```{python}
+def rot(c: str, n: int) -> str:
+    "Rotate the character c by n places, wrapping around. c must be an uppercase letter"
+    assert ord("A") <= ord(c) <= ord("Z") or c == " "
+    match c:
+        case " ":
+            return c
+        case _:
+            return chr((ord(c) - ord("A") + n) % 26 + ord("A"))
+
+
+def caesar_encrypt(s: str, n: int) -> str:
+    return "".join([rot(c, n) for c in s])
+
+
+def caesar_decrypt(s: str, n: int) -> str:
+    return "".join([rot(c, -n) for c in s])
+
+caesar_encrypt("THE MYSTIC CHORDS OF MEMORY", 13)
+```
+
+Our task is to figure out the key `n` when given only the encrypted text and the knowledge that a Caesar cipher has been used.
+
+Since we want to do frequency analysis in some fashion, let's write a function to return the letter frequencies for a piece of text. For reasons that will become clear later we'll actually compute a *probability mass function*, which is just the frequencies divided by the total count of letters. We will represent the PMF as a dictionary that maps each letter of our alphabet to its probability.
+
+```{python}
+from collections import Counter
+
+LetterPmf = dict[str, float]
+
+def letter_pmf(s: str) -> LetterPmf:
+    s = s.upper()
+    counts = Counter(s)
+    total = sum(counts.values())
+    return {c: counts[c] / total for c in counts.keys()}
+
+letter_pmf("So we beat on boats against the current borne back ceaselessly into the past")
+```
+
+A reasonable way to use letter frequencies to break the cipher is:
+
+1. Try every value for the key, 0-25 and decrypt the given ciphertext.
+2. Pick the plaintext whose letter frequencies most closely match that of general English text.
+
+(Ofcourse we could argue that this is all needlessly complicated. If we already know that the text has been encrypted with a Caesar cipher, we can just inspect the results of trying all 26 keys and surely all but one of them will look like gibberish. That's true, but in this post we're more interested in teaching a computer to do that work for us.)
+
+Let's use the complete Sherlock Holmes canon as a stand-in for the English language as a whole and compute the letter PMF.
+
+```{python}
+def clean_text(s: str) -> str:
+    return "".join([c for c in s if c.isalpha() or c == " "]).upper()
+
+HOLMES = letter_pmf(clean_text(open("/Users/vikasprasad/hobby/cryptopals/holmes.txt").read()))
+```
+
+The last thing we need is to define what "frequencies closely match" means. A pmf_distance.
+
+```{python}
+def pmf_distance(p: LetterPmf, q: LetterPmf) -> float:
+    return 0.0
+```
+
+We can now do the decryption:
+
+```{python}
+import math
+import numpy as np
+
+
+def all_distances(cipher: str) -> np.array:
+    return np.array([pmf_distance(
+        letter_pmf(caesar_decrypt(cipher, key)),
+        HOLMES
+    ) for key in range(0, 26)])
+
+
+def try_decrypt(cipher: str) -> str:
+    correct_key = np.argmin(all_distances(cipher))
+    return correct_key, caesar_decrypt(cipher, correct_key)
+
+CIPHER = caesar_encrypt(clean_text("So we beat on boats against the current borne back ceaselessly into the past"), 7)
+
+try_decrypt(CIPHER)
+```
+
+let's define relative entropy as the distance
+
+```{python}
+def relative_entropy(p: LetterPmf, q: LetterPmf) -> float:
+    return sum(p[x] * (math.log2(p[x]) - math.log2(q[x])) for x in p.keys())
+
+pmf_distance = relative_entropy
+try_decrypt(CIPHER)
+```
+
+
+```{python}
+import matplotlib.pyplot as plt
+
+distances = 1 / all_distances(CIPHER)
+plt.figure(figsize=(12, 6))
+plt.plot(range(26), distances, '-o')
+plt.xlabel('Key')
+plt.ylabel('Distance')
+plt.title('Distance between decrypted text and English for each key')
+plt.xticks(range(26))
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.show()
+
+```
+
+Prove that this distance is >= 0.
