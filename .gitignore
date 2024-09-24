@@ -2,5 +2,9 @@
 /.quarto/
 ipynb_checkpoints
 __pycache__
+.calva
+.clj-kondo
+.cpcache
+.lsp
 
 data/holmes.txt

@@ -16,8 +16,6 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 - [Learning by gradient descent](learning-by-gradient-descent.qmd)
 - [Breaking Caesar ciphers using relative entropy](breaking-caesar-cipher.qmd)
 
-## Math exercises
-
-Interesting math exercises with code to solve or verify answers.
+## Applied Math
 
 - [Counting is hard](counting-is-hard.qmd)
