@@ -10,7 +10,7 @@ def __():
     import numpy as np
     import pandas as pd
 
-    candidates = pd.read_csv("data/candidates.csv")
+    candidates = pd.read_csv("src/data/candidates.csv")
     candidates
     return candidates, mo, np, pd
 

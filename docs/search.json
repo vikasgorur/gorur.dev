@@ -23,7 +23,7 @@
   {
     "objectID": "src/chessrank.html",
     "href": "src/chessrank.html",
-    "title": "chessrank",
+    "title": "chessrank: who should win a tournament?",
     "section": "",
     "text": "Motivation: all wins should not count the same in a chess tournament. Beating a higher ranked player should count for more.\nHypothesize a ‘quality’ for each player. This leads to the system of equations in the Landau paper. This system of equations can be written in matrix form. To solve that system we need to find the eigenvalue.\nIntuitions:\n\nThe tournament is a way of discovering information. If we already have the true quality (eignevalue), then the tournament discovers no new information, thus it doesn’t change the vector.\nPower method. Repeatedly applying the matrix “pulls” any vector towards the largest eigenvalue’s eigenvector. Show this with the diagonal decomposition, and with actual example."
   },
@@ -138,5 +138,12 @@
     "title": "Breaking Caesar ciphers using relative entropy",
     "section": "Further Reading",
     "text": "Further Reading\n\n\n\n\n\n\n\nDavid J. C. MacKay, Information Theory, Inference, and Learning Algorithms, 2003.\n\n\n\n\nSection 2.4 contains the definitions of entropy and relative entropy."
+  },
+  {
+    "objectID": "src/index.html#applied-math",
+    "href": "src/index.html#applied-math",
+    "title": "Vikas Gorur",
+    "section": "Applied Math",
+    "text": "Applied Math\n\nCounting is hard\nChessrank"
   }
 ]

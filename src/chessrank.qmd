@@ -1,10 +1,6 @@
 ---
-title: "chessrank"
+title: "chessrank: who should win a tournament?"
 jupyter: python3
-format:
-    html:
-        mainfont: "Palatino"
-        code-fold: false
 ---
 
 Motivation: all wins should not count the same in a chess tournament. Beating a higher ranked player should count for more.

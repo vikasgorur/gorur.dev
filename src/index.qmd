@@ -19,3 +19,4 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 ## Applied Math
 
 - [Counting is hard](counting-is-hard.qmd)
+- [Chessrank](chessrank.qmd)
