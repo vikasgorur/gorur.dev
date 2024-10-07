@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Vikas Gorur</title>
+<title>History of Language Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -67,6 +87,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -84,7 +133,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../src/index.html" aria-current="page"> 
+    <a class="nav-link" href="../src/index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -99,25 +148,14 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#machine-learning" id="toc-machine-learning" class="nav-link active" data-scroll-target="#machine-learning">Machine Learning</a>
-  <ul class="collapse">
-  <li><a href="#makemore" id="toc-makemore" class="nav-link" data-scroll-target="#makemore">makemore</a></li>
-  </ul></li>
-  <li><a href="#applied-math" id="toc-applied-math" class="nav-link" data-scroll-target="#applied-math">Applied Math</a></li>
-  <li><a href="#annotations" id="toc-annotations" class="nav-link" data-scroll-target="#annotations">Annotations</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Vikas Gorur</h1>
+<h1 class="title">History of Language Models</h1>
 </div>
 
 
@@ -134,36 +172,68 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Engineering at <a href="https://www.airbase.com/">Airbase</a>, previously Twitter, Blurb, Gluster.</p>
-<p><a href="https://x.com/vikasgorur"><span class="citation" data-cites="vikasgorur">@vikasgorur</span></a></p>
-<section id="machine-learning" class="level2">
-<h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
-<p>This is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>This annotation is for the paper <span class="citation" data-cites="hangli2022">(<a href="#ref-hangli2022" role="doc-biblioref">Li 2022</a>)</span></p>
+</div>
+</div>
+</div>
+<p><em>Last updated</em>: Oct 7, 2024.</p>
+<hr>
+<p>There are two fundamental approaches to language modeling: one based on probability theory and the other based on language theory (grammars).</p>
+<p>A language model is a probability distribution defined on a word (token) sequence. More seriously, the probability of a given sequence of words <span class="math inline">\(w_1, w_2, ..., w_N\)</span> is the product of successive conditional probabilities:</p>
 <ul>
-<li><a href="../src/learning-by-gradient-descent.html">Learning by gradient descent</a></li>
-<li><a href="../src/breaking-caesar-cipher.html">Breaking Caesar ciphers using relative entropy</a></li>
+<li>probability of the second word given the first</li>
+<li>probability of the third word given the first and second</li>
+<li>and so on</li>
 </ul>
-<section id="makemore" class="level3">
-<h3 class="anchored" data-anchor-id="makemore">makemore</h3>
-</section>
-</section>
-<section id="applied-math" class="level2">
-<h2 class="anchored" data-anchor-id="applied-math">Applied Math</h2>
+<p><span class="math display">\[
+p(w_1, w_2, ..., w_N) = \prod_{i=1}^{N} p(w_i | w_1, w_2, ..., w_{i-1})
+\]</span></p>
+<p>Markov invented the concept of Markov processes when studying language. See <span class="citation" data-cites="hayes2013">(<a href="#ref-hayes2013" role="doc-biblioref">Hayes 2013</a>)</span> for a fascinating history of how he analyzed the text of Pushkin’s <em>Eugene Onegin</em> by hand.</p>
+<p>An <span class="math inline">\(n\)</span>-gram language model assumes that the probability of a word depends only on the words at the previous <span class="math inline">\(n - 1\)</span> positions. This kind of model is a Markov chain of the order <span class="math inline">\(n - 1\)</span>.</p>
+<p><span class="citation" data-cites="shannon1948">Shannon (<a href="#ref-shannon1948" role="doc-biblioref">1948</a>)</span> defined the concepts of entropy and cross-entropy. The cross-entropy is a measure of how well the model has learned the “true” probability. What is this true probability? I think it’s just the probability computed using frequencies in the training corpus.</p>
+<p>The other approach to language modeling was the hierarchy of grammars proposed by Chomsky in 1956. This is not at all influential anymore. Chomsky thought that finite state grammars (like n-gram models) are limited and that context-free grammars can model language more effectively.</p>
+<p><span class="citation" data-cites="bengio2003">Yoshua Bengio (<a href="#ref-bengio2003" role="doc-biblioref">2003</a>)</span> (Turing Award 2018) first used neural networks for language modeling. Their paper had two key ideas:</p>
 <ul>
-<li><a href="../src/counting-is-hard.html">Counting is hard</a></li>
+<li>Words (tokens) have a “distributed representation” as vectors. This is the embedding.</li>
+<li>The language model is a neural network.</li>
 </ul>
-</section>
-<section id="annotations" class="level2">
-<h2 class="anchored" data-anchor-id="annotations">Annotations</h2>
-<p>My notes on papers and articles I’ve read.</p>
+<p>The number of parameters of this model is of the order <span class="math inline">\(O(V)\)</span> where <span class="math inline">\(V\)</span> is the size of the vocabulary.</p>
+<p>The next step in neural language modeling was the use of recurrent neural networks (RNNs). See <span class="citation" data-cites="karpathy2015">Karpathy (<a href="#ref-karpathy2015" role="doc-biblioref">2015</a>)</span> on their “unreasonable effectiveness”.</p>
+<p>A “conditional” language model calculates probability of word sequence under the condition of a previous sequence. These are the seq2seq models. These models can do tasks such as machine translation where the input and output are both sequences of tokens.</p>
+<p>Seq2seq models led to the transformer and pre-trained language models. A pre-trained model:</p>
 <ul>
-<li><a href="../src/history-of-language-models.html">History of Language Modeling</a></li>
+<li>Uses a large corpus to do unsupervised learning to train the parameters.</li>
+<li>The model is then fine-tuned with a small number of examples to adapt the model to a specific task.</li>
 </ul>
+<p>This paper claims that language models don’t have reasoning, only association. I think that claim stopped being true mere months after this paper was published.</p>
+<p>It is known that human language understanding is based on representations of concepts in many modes: visual, auditory, tactile, olfactory. Can AI language models learn from multiple modes as well?</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-hayes2013" class="csl-entry" role="listitem">
+Hayes, Brian. 2013. <span>“First Links in the Markov Chain.”</span> <em>American Scientist</em> 101 (2). <a href="https://doi.org/10.1511/2013.101.92">https://doi.org/10.1511/2013.101.92</a>.
+</div>
+<div id="ref-karpathy2015" class="csl-entry" role="listitem">
+Karpathy, Andrej. 2015. <span>“The Unreasonable Effectiveness of Recurrent Neural Networks.”</span> <a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/">https://karpathy.github.io/2015/05/21/rnn-effectiveness/</a>.
+</div>
+<div id="ref-hangli2022" class="csl-entry" role="listitem">
+Li, Hang. 2022. <span>“Language Models: Past, Present, and Future.”</span> <em>Communications of the ACM</em> 65 (7). <a href="https://cacm.acm.org/research/language-models/">https://cacm.acm.org/research/language-models/</a>.
+</div>
+<div id="ref-shannon1948" class="csl-entry" role="listitem">
+Shannon, Claude E. 1948. <span>“A Mathematical Theory of Communication.”</span> <em>Bell System Technical Journal</em> 27. <a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf</a>.
+</div>
+<div id="ref-bengio2003" class="csl-entry" role="listitem">
+Yoshua Bengio, Pascal Vincent, Rejean Ducharme. 2003. <span>“A Neural Probabilistic Language Model.”</span> <em>Journal of Machine Learning Research</em> 3 (Feb). <a href="http://www.jmlr.org/papers/v3/bengio03a.html">http://www.jmlr.org/papers/v3/bengio03a.html</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

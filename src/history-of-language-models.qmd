@@ -1,0 +1,71 @@
+---
+title: History of Language Models
+bibliography: references.bib
+---
+
+::: {.callout-note}
+This annotation is for the paper [@hangli2022]
+:::
+
+_Last updated_: Oct 7, 2024.
+
+---
+
+There are two fundamental approaches to language modeling: one based on probability theory and the
+other based on language theory (grammars).
+
+A language model is a probability distribution defined on a word (token) sequence.
+More seriously, the probability of a given sequence of words $w_1, w_2, ..., w_N$
+is the product of successive conditional probabilities:
+
+- probability of the second word given the first
+- probability of the third word given the first and second
+- and so on
+
+$$
+p(w_1, w_2, ..., w_N) = \prod_{i=1}^{N} p(w_i | w_1, w_2, ..., w_{i-1})
+$$
+
+
+Markov invented the concept of Markov processes when studying language.
+See [@hayes2013] for a fascinating history of how he analyzed the text of
+Pushkin's _Eugene Onegin_ by hand.
+
+An $n$-gram language model assumes that the probability of a word depends
+only on the words at the previous $n - 1$ positions. This kind of model
+is a Markov chain of the order $n - 1$.
+
+@shannon1948 defined the concepts of entropy and cross-entropy. The cross-entropy
+is a measure of how well the model has learned the "true" probability. What is
+this true probability? I think it's just the probability computed using frequencies
+in the training corpus.
+
+The other approach to language modeling was the hierarchy of grammars proposed by
+Chomsky in 1956. This is not at all influential anymore. Chomsky thought that
+finite state grammars (like n-gram models) are limited and that context-free
+grammars can model language more effectively.
+
+@bengio2003 (Turing Award 2018) first used neural networks for language
+modeling. Their paper had two key ideas:
+
+- Words (tokens) have a "distributed representation" as vectors. This is the embedding.
+- The language model is a neural network.
+
+The number of parameters of this model is of the order $O(V)$ where $V$ is the size of the vocabulary.
+
+The next step in neural language modeling was the use of recurrent neural networks (RNNs).
+See @karpathy2015 on their "unreasonable effectiveness".
+
+A "conditional" language model calculates probability of word sequence under the
+condition of a previous sequence. These are the seq2seq models. These models can
+do tasks such as machine translation where the input and output are both sequences of tokens.
+
+Seq2seq models led to the transformer and pre-trained language models. A pre-trained model:
+
+- Uses a large corpus to do unsupervised learning to train the parameters.
+- The model is then fine-tuned with a small number of examples to adapt the model to a specific task.
+
+This paper claims that language models don't have reasoning, only association. I think
+that claim stopped being true mere months after this paper was published.
+
+It is known that human language understanding is based on representations of concepts in many modes: visual, auditory, tactile, olfactory. Can AI language models learn from multiple modes as well?

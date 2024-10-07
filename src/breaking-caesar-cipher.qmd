@@ -68,9 +68,10 @@ def letter_pmf(s: str) -> LetterPmf:
     total = sum(counts.values())
     return {c: counts[c] / total for c in counts.keys()}
 
-letter_pmf("""
-So we beat on boats against the current borne back ceaselessly into the past
-""")
+letter_pmf(
+    "So we beat on boats against the current" +
+    "borne back ceaselessly into the past"
+)
 ```
 
 A reasonable way to use letter frequencies to break the cipher is:
@@ -133,7 +134,10 @@ def try_decrypt(cipher: str) -> (int, str):
     correct_key = np.argmin(all_distances(cipher))
     return correct_key, caesar_decrypt(cipher, correct_key)
 
-SECRET = "ZV DL ILHA VU IVHAZ HNHPUZA AOL JBYYLUA IVYUL IHJR JLHZLSLZZSF PUAV AOL WHZA"
+SECRET = (
+    "ZV DL ILHA VU IVHAZ HNHPUZA AOL JBYYLUA IVYUL IHJR " +
+    "JLHZLSLZZSF PUAV AOL WHZA"
+)
 
 try_decrypt(SECRET)[1]
 ```
@@ -152,7 +156,7 @@ The *entropy* of a probability distribution is the sum of the information conten
 weighted by the probability of each event.
 
 $$
-entropy = \sum_{x_i} P(x_i) \space log_2 \frac{1}{P(x_i)}
+H(x) = \sum_{x_i} P(x_i) \space log_2 \frac{1}{P(x_i)}
 $$
 
 This too makes intuitive sense. For example, imagine a light that can be in two states on or off with
@@ -203,14 +207,14 @@ prettier.
 import matplotlib.pyplot as plt
 
 distances = 1 / all_distances(SECRET)
-plt.figure(figsize=(12, 6))
-plt.scatter(range(26), distances, marker='x', s=50)  # Changed marker to 'x' and added size parameter
-plt.scatter(7, distances[7], marker='x', s=50, color=(0.92, 0.41, 0.39))
+plt.figure(figsize=(10, 6))
+plt.scatter(range(26), distances, marker='x', s=50, color='black')  # Changed marker to 'x', added size and color parameters
+plt.scatter(7, distances[7], marker='x', s=50, color='black')
 plt.annotate('correct key', xy=(7+0.25, distances[7]), xytext=(9, distances[7]+0.05),
              arrowprops=dict(facecolor='black', shrink=0.05, width=0.5, headwidth=3, headlength=3))
 plt.xlabel('Key')
 plt.ylabel('1 / Distance')
-plt.title('(1 / distance) between decrypted text and English for each key')
+plt.title('(1 / distance) for each key')
 plt.xticks(range(26))
 plt.grid(True, linestyle='--', alpha=0.7)
 plt.show()

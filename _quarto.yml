@@ -7,6 +7,7 @@ project:
     - src/learning-by-gradient-descent.qmd
     - src/counting-is-hard.qmd
     - src/breaking-caesar-cipher.qmd
+    - src/history-of-language-models.qmd
 
 website:
   navbar:
@@ -20,6 +21,6 @@ format:
     theme: journal
     fontsize: 1.2em
     toc: true
-    mainfont: "Charter"
     code-fold: false
     callout-appearance: minimal
+    css: styles.css

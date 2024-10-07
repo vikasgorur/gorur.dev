@@ -9,7 +9,7 @@ Hypothesize a 'quality' for each player. This leads to the system of equations i
 
 Intuitions:
 
-1. The tournament is a way of discovering information. If we already have the true quality (eignevalue), then the tournament discovers no new information, thus it doesn't change the vector.
+1. The tournament is a way of discovering information. If we already have the true quality (eigenvalue), then the tournament discovers no new information, thus it doesn't change the vector.
 
 2. Power method. Repeatedly applying the matrix "pulls" any vector towards the largest eigenvalue's eigenvector. Show this with the diagonal decomposition, and with actual example.
 

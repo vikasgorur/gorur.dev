@@ -1,0 +1,45 @@
+---
+title: History of Language Models
+---
+
+::: {.callout-note}
+Hang Li. 2022. “Language Models: Past, Present, and Future.” _Communications of the ACM_ Vol 65, No 7. July 2022.
+:::
+
+Last updated: Oct 7, 2024.
+
+---
+
+There are two fundamental approaches to language modeling: one based on probability theory and the other based on language theory (grammars).
+
+A language model is a probability distribution defined on a word (token) sequence.
+
+(insert formal math definition here)
+
+Markov did language modeling on Pushkin's poetry.
+
+Shannon
+- Entropy and cross-entropy
+- Cross-entropy as the loss function
+
+Chomsky
+- Grammars, hierarchy of grammars (regular, finite state etc)
+- Context-free grammars
+
+2001 - Yoshua Bengio (Turing Award winner) first neural language model. Two key ideas:
+- Words (tokens) are represented by a vector - embeddings.
+- The language model is a neural network.
+
+The number of parameters of this model is of the order $O(V)$ where $V$ is the size of the vocabulary.
+
+RNNs - surprising effectiveness of RNNs, Karpathy.
+
+A conditional language model calculates probability of word sequence under the condition of a previous sequence. These are the seq2seq models.
+
+Pre-trained models have two steps:
+- Using a large corpus, do unsupervised learning to train the parameters.
+- Fine-tuning with a small number of examples to adapt the model to a specific task.
+
+This paper claims that language models don't have reasoning, only association. That claim wasn't true anymore mere months after this paper was published.
+
+It is known that human language understanding is based on representations of concepts in many modes: visual, auditory, tactile, olfactory.

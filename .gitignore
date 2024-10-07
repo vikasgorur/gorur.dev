@@ -6,5 +6,6 @@ __pycache__
 .clj-kondo
 .cpcache
 .lsp
+.obsidian
 
 data/holmes.txt
