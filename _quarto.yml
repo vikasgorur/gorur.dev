@@ -8,6 +8,7 @@ project:
     - src/counting-is-hard.qmd
     - src/breaking-caesar-cipher.qmd
     - src/history-of-language-models.qmd
+    - src/path-to-gpt.qmd
 
 website:
   navbar:

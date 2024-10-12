@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Vikas Gorur</title>
+<title>Path to GPT</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -84,7 +104,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../src/index.html" aria-current="page"> 
+    <a class="nav-link" href="../src/index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -103,12 +123,13 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#machine-learning" id="toc-machine-learning" class="nav-link active" data-scroll-target="#machine-learning">Machine Learning</a>
-  <ul class="collapse">
-  <li><a href="#makemore" id="toc-makemore" class="nav-link" data-scroll-target="#makemore">makemore</a></li>
-  </ul></li>
-  <li><a href="#applied-math" id="toc-applied-math" class="nav-link" data-scroll-target="#applied-math">Applied Math</a></li>
-  <li><a href="#annotations" id="toc-annotations" class="nav-link" data-scroll-target="#annotations">Annotations</a></li>
+  <li><a href="#math-background" id="toc-math-background" class="nav-link active" data-scroll-target="#math-background">Math background</a></li>
+  <li><a href="#optimization-in-ml" id="toc-optimization-in-ml" class="nav-link" data-scroll-target="#optimization-in-ml">Optimization in ML</a></li>
+  <li><a href="#automatic-differentiation" id="toc-automatic-differentiation" class="nav-link" data-scroll-target="#automatic-differentiation">Automatic Differentiation</a></li>
+  <li><a href="#what-are-neural-networks" id="toc-what-are-neural-networks" class="nav-link" data-scroll-target="#what-are-neural-networks">What are neural networks?</a></li>
+  <li><a href="#what-is-language-modeling" id="toc-what-is-language-modeling" class="nav-link" data-scroll-target="#what-is-language-modeling">What is language modeling?</a></li>
+  <li><a href="#how-is-language-modeling-done-with-neural-networks" id="toc-how-is-language-modeling-done-with-neural-networks" class="nav-link" data-scroll-target="#how-is-language-modeling-done-with-neural-networks">How is language modeling done with neural networks?</a></li>
+  <li><a href="#how-to-build-gpt" id="toc-how-to-build-gpt" class="nav-link" data-scroll-target="#how-to-build-gpt">How to build GPT?</a></li>
   </ul>
 </nav>
     </div>
@@ -117,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Vikas Gorur</h1>
+<h1 class="title">Path to GPT</h1>
 </div>
 
 
@@ -134,37 +155,73 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Engineering at <a href="https://www.airbase.com/">Airbase</a>, previously Twitter, Blurb, Gluster.</p>
-<p><a href="https://x.com/vikasgorur"><span class="citation" data-cites="vikasgorur">@vikasgorur</span></a></p>
-<section id="machine-learning" class="level2">
-<h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
-<p>This is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.</p>
-<ul>
-<li><a href="path-to-gpt.qmd">Path to GPT</a></li>
-<li><a href="../src/learning-by-gradient-descent.html">Learning by gradient descent</a></li>
-<li><a href="../src/breaking-caesar-cipher.html">Breaking Caesar ciphers using relative entropy</a></li>
-</ul>
-<section id="makemore" class="level3">
-<h3 class="anchored" data-anchor-id="makemore">makemore</h3>
+<p><em>Last updated</em>: Oct 11, 2024.</p>
+<hr>
+<p>This post is my attempt to draw the shortest path from knowing a little bit of ML to understanding state of the art language models (GPTx). It includes both milestone papers and the best resources I’ve found to understand a concept. I also like knowing the history of things so there will be a bunch of papers that might really only be of historical interest.</p>
+<p>This is a <em>personal</em> path, with the goal of being a reasonably good practitioner of ML, not a researcher.</p>
+<section id="math-background" class="level2">
+<h2 class="anchored" data-anchor-id="math-background">Math background</h2>
+<p>There is no end to the amount of math one <em>could</em> learn before studying ML, and usually the more I learn the more it seems to help. However, I’ve also found that it’s ok to “lazy-load” the required math once you’ve acquired a decent intuition in each of the major areas. This section therefore is just going to be a list of the areas of math that can be helpful and the best resources I’ve found for learning them.</p>
+<p><strong>Probability</strong></p>
+<p>Probability is the foundation for all of ML, statistics, and science. It’s also <em>way more</em> complicated than our brief encounter with it in high school or college makes us believe. I’m always on the look out for books and articles that help in developing a good intuition for probability.</p>
+<p><span class="citation" data-cites="hamming">(<a href="#ref-hamming" role="doc-biblioref"><strong>hamming?</strong></a>)</span> is one such book.</p>
+<p><strong>Information Theory</strong></p>
+<p>Information seems like the most natural concept to try to understand ML and stats. Many of the questions of interest can be posed as information theory questions: “what has a model learnt?”, or “what did this experiment tell us?”, “how much can a model of a certain size learn?”</p>
+<p><strong>Linear Algebra</strong></p>
+<p>Linear Algebra has the worst branding in all of math. It’s more exciting to think of the subject as “thinking in high-dimensional spaces”. Everything in ML deals with vectors with impossibly high dimensions (for example, each token in GPT3 is represented as a vector in a ~50,000 dimension space).</p>
+<p>The video series “Essence of Linear Algebra” (<span class="citation" data-cites="3blue1brown">(<a href="#ref-3blue1brown" role="doc-biblioref"><strong>3blue1brown?</strong></a>)</span>) was the first time linear algebra made any intuitive sense to me.</p>
 </section>
+<section id="optimization-in-ml" class="level2">
+<h2 class="anchored" data-anchor-id="optimization-in-ml">Optimization in ML</h2>
+<p>The goal of all ML training is to find an acceptably low value of the loss function.</p>
 </section>
-<section id="applied-math" class="level2">
-<h2 class="anchored" data-anchor-id="applied-math">Applied Math</h2>
-<ul>
-<li><a href="../src/counting-is-hard.html">Counting is hard</a></li>
-</ul>
+<section id="automatic-differentiation" class="level2">
+<h2 class="anchored" data-anchor-id="automatic-differentiation">Automatic Differentiation</h2>
+<p>AD is the key to training large neural networks. AD libraries automatically figure out the gradient of the loss function as long as the computation of the loss function is expressed in a form that the library expects. For example, in PyTorch the computation is expressed as tensor operations.</p>
+<p><span class="citation" data-cites="baydin_automatic_2015">Baydin et al. (<a href="#ref-baydin_automatic_2015" role="doc-biblioref">2015</a>)</span> is a great survey of the various AD methods. For ML training we care about “reverse mode”.</p>
+<p><span class="citation" data-cites="paszke_pytorch_2019">Paszke et al. (<a href="#ref-paszke_pytorch_2019" role="doc-biblioref">2019</a>)</span> describes PyTorch, the most widely used library for deep learning in production.</p>
 </section>
-<section id="annotations" class="level2">
-<h2 class="anchored" data-anchor-id="annotations">Annotations</h2>
-<p>My notes on papers and articles I’ve read.</p>
-<ul>
-<li><a href="../src/history-of-language-models.html">History of Language Modeling</a></li>
-</ul>
+<section id="what-are-neural-networks" class="level2">
+<h2 class="anchored" data-anchor-id="what-are-neural-networks">What are neural networks?</h2>
+<p>Neural networks began as the single-layer “perceptron”. I think it’s important to recognize the</p>
+<p>Rosenblatt perceptron Rumelhart backprop</p>
+<p><span class="citation" data-cites="lecun_backpropagation_1989">LeCun et al. (<a href="#ref-lecun_backpropagation_1989" role="doc-biblioref">1989</a>)</span> did handwriting recognition.</p>
+<p><span class="citation" data-cites="andrej_karpathy_deep_2022">Andrej Karpathy (<a href="#ref-andrej_karpathy_deep_2022" role="doc-biblioref">2022</a>)</span> re-implements that paper with today’s hardware.</p>
+<p><span class="citation" data-cites="krizhevsky_imagenet_2012">Krizhevsky, Sutskever, and Hinton (<a href="#ref-krizhevsky_imagenet_2012" role="doc-biblioref">2012</a>)</span> kick-started the modern deep learning revolution by achieving a significant jump in performance on the image recognition task.</p>
+</section>
+<section id="what-is-language-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-language-modeling">What is language modeling?</h2>
+</section>
+<section id="how-is-language-modeling-done-with-neural-networks" class="level2">
+<h2 class="anchored" data-anchor-id="how-is-language-modeling-done-with-neural-networks">How is language modeling done with neural networks?</h2>
+<p>Yoshua Bengio - neural language model unreasonably effectiveness of RNNs</p>
+</section>
+<section id="how-to-build-gpt" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-build-gpt">How to build GPT?</h2>
+<p>blah</p>
+<p>The bitter lesson.</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-andrej_karpathy_deep_2022" class="csl-entry" role="listitem">
+Andrej Karpathy. 2022. <span>“Deep <span>Neural</span> <span>Nets</span>: 33 Years Ago and 33 Years from Now.”</span> <a href="https://karpathy.github.io/2022/03/14/lecun1989/">https://karpathy.github.io/2022/03/14/lecun1989/</a>.
+</div>
+<div id="ref-baydin_automatic_2015" class="csl-entry" role="listitem">
+Baydin, Atilim Gunes, Barak A. Pearlmutter, Alexey Andreyevich Radul, and Jeffrey Mark Siskind. 2015. <span>“Automatic Differentiation in Machine Learning: A Survey.”</span> <a href="https://doi.org/10.48550/ARXIV.1502.05767">https://doi.org/10.48550/ARXIV.1502.05767</a>.
+</div>
+<div id="ref-krizhevsky_imagenet_2012" class="csl-entry" role="listitem">
+Krizhevsky, Alex, Ilya Sutskever, and Geoffrey E Hinton. 2012. <span>“<span>ImageNet</span> <span>Classification</span> with <span>Deep</span> <span>Convolutional</span> <span>Neural</span> <span>Networks</span>.”</span> In <em>Advances in <span>Neural</span> <span>Information</span> <span>Processing</span> <span>Systems</span></em>, edited by F. Pereira, C. J. Burges, L. Bottou, and K. Q. Weinberger. Vol. 25. Curran Associates, Inc. <a href="https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf">https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf</a>.
+</div>
+<div id="ref-lecun_backpropagation_1989" class="csl-entry" role="listitem">
+LeCun, Y., B. Boser, J. S. Denker, D. Henderson, R. E. Howard, W. Hubbard, and L. D. Jackel. 1989. <span>“Backpropagation <span>Applied</span> to <span>Handwritten</span> <span>Zip</span> <span>Code</span> <span>Recognition</span>.”</span> <em>Neural Computation</em> 1 (4): 541–51. <a href="https://doi.org/10.1162/neco.1989.1.4.541">https://doi.org/10.1162/neco.1989.1.4.541</a>.
+</div>
+<div id="ref-paszke_pytorch_2019" class="csl-entry" role="listitem">
+Paszke, Adam, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, et al. 2019. <span>“<span>PyTorch</span>: <span>An</span> <span>Imperative</span> <span>Style</span>, <span>High</span>-<span>Performance</span> <span>Deep</span> <span>Learning</span> <span>Library</span>.”</span> arXiv. <a href="https://doi.org/10.48550/ARXIV.1912.01703">https://doi.org/10.48550/ARXIV.1912.01703</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

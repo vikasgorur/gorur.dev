@@ -1,0 +1,9 @@
+---
+title: Path to GPT
+bibliography: references.bib
+---
+
+*Last updated*: Oct 11, 2024.
+---
+
+This is the path.

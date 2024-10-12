@@ -88,7 +88,7 @@
     "href": "src/index.html#machine-learning",
     "title": "Vikas Gorur",
     "section": "Machine Learning",
-    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n\nLearning by gradient descent\nBreaking Caesar ciphers using relative entropy\n\n\nmakemore"
+    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n\nPath to GPT\nLearning by gradient descent\nBreaking Caesar ciphers using relative entropy\n\n\nmakemore"
   },
   {
     "objectID": "src/index.html#applied-math",
@@ -138,5 +138,61 @@
     "title": "History of Language Models",
     "section": "",
     "text": "This annotation is for the paper (Li 2022)\n\n\n\nLast updated: Oct 7, 2024.\n\nThere are two fundamental approaches to language modeling: one based on probability theory and the other based on language theory (grammars).\nA language model is a probability distribution defined on a word (token) sequence. More seriously, the probability of a given sequence of words \\(w_1, w_2, ..., w_N\\) is the product of successive conditional probabilities:\n\nprobability of the second word given the first\nprobability of the third word given the first and second\nand so on\n\n\\[\np(w_1, w_2, ..., w_N) = \\prod_{i=1}^{N} p(w_i | w_1, w_2, ..., w_{i-1})\n\\]\nMarkov invented the concept of Markov processes when studying language. See (Hayes 2013) for a fascinating history of how he analyzed the text of Pushkin’s Eugene Onegin by hand.\nAn \\(n\\)-gram language model assumes that the probability of a word depends only on the words at the previous \\(n - 1\\) positions. This kind of model is a Markov chain of the order \\(n - 1\\).\nShannon (1948) defined the concepts of entropy and cross-entropy. The cross-entropy is a measure of how well the model has learned the “true” probability. What is this true probability? I think it’s just the probability computed using frequencies in the training corpus.\nThe other approach to language modeling was the hierarchy of grammars proposed by Chomsky in 1956. This is not at all influential anymore. Chomsky thought that finite state grammars (like n-gram models) are limited and that context-free grammars can model language more effectively.\nYoshua Bengio (2003) (Turing Award 2018) first used neural networks for language modeling. Their paper had two key ideas:\n\nWords (tokens) have a “distributed representation” as vectors. This is the embedding.\nThe language model is a neural network.\n\nThe number of parameters of this model is of the order \\(O(V)\\) where \\(V\\) is the size of the vocabulary.\nThe next step in neural language modeling was the use of recurrent neural networks (RNNs). See Karpathy (2015) on their “unreasonable effectiveness”.\nA “conditional” language model calculates probability of word sequence under the condition of a previous sequence. These are the seq2seq models. These models can do tasks such as machine translation where the input and output are both sequences of tokens.\nSeq2seq models led to the transformer and pre-trained language models. A pre-trained model:\n\nUses a large corpus to do unsupervised learning to train the parameters.\nThe model is then fine-tuned with a small number of examples to adapt the model to a specific task.\n\nThis paper claims that language models don’t have reasoning, only association. I think that claim stopped being true mere months after this paper was published.\nIt is known that human language understanding is based on representations of concepts in many modes: visual, auditory, tactile, olfactory. Can AI language models learn from multiple modes as well?\n\n\n\n\nReferences\n\nHayes, Brian. 2013. “First Links in the Markov Chain.” American Scientist 101 (2). https://doi.org/10.1511/2013.101.92.\n\n\nKarpathy, Andrej. 2015. “The Unreasonable Effectiveness of Recurrent Neural Networks.” https://karpathy.github.io/2015/05/21/rnn-effectiveness/.\n\n\nLi, Hang. 2022. “Language Models: Past, Present, and Future.” Communications of the ACM 65 (7). https://cacm.acm.org/research/language-models/.\n\n\nShannon, Claude E. 1948. “A Mathematical Theory of Communication.” Bell System Technical Journal 27. https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf.\n\n\nYoshua Bengio, Pascal Vincent, Rejean Ducharme. 2003. “A Neural Probabilistic Language Model.” Journal of Machine Learning Research 3 (Feb). http://www.jmlr.org/papers/v3/bengio03a.html."
+  },
+  {
+    "objectID": "src/path-to-gpt.html",
+    "href": "src/path-to-gpt.html",
+    "title": "Path to GPT",
+    "section": "",
+    "text": "Last updated: Oct 11, 2024.\nThis post is my attempt to draw the shortest path from knowing a little bit of ML to understanding state of the art language models (GPTx). It includes both milestone papers and the best resources I’ve found to understand a concept. I also like knowing the history of things so there will be a bunch of papers that might really only be of historical interest.\nThis is a personal path, with the goal of being a reasonably good practitioner of ML, not a researcher."
+  },
+  {
+    "objectID": "src/path-to-gpt.html#optimization-in-ml",
+    "href": "src/path-to-gpt.html#optimization-in-ml",
+    "title": "Path to GPT",
+    "section": "Optimization in ML",
+    "text": "Optimization in ML\nThe goal of all ML training is to find an acceptably low value of the loss function."
+  },
+  {
+    "objectID": "src/path-to-gpt.html#what-are-neural-networks",
+    "href": "src/path-to-gpt.html#what-are-neural-networks",
+    "title": "Path to GPT",
+    "section": "What are neural networks?",
+    "text": "What are neural networks?\nNeural networks began as the single-layer “perceptron”. I think it’s important to recognize the\nRosenblatt perceptron Rumelhart backprop\nLeCun et al. (1989) did handwriting recognition.\nAndrej Karpathy (2022) re-implements that paper with today’s hardware.\nKrizhevsky, Sutskever, and Hinton (2012) kick-started the modern deep learning revolution by achieving a significant jump in performance on the image recognition task."
+  },
+  {
+    "objectID": "src/path-to-gpt.html#what-is-language-modeling",
+    "href": "src/path-to-gpt.html#what-is-language-modeling",
+    "title": "Path to GPT",
+    "section": "What is language modeling?",
+    "text": "What is language modeling?"
+  },
+  {
+    "objectID": "src/path-to-gpt.html#how-is-language-modeling-done-with-neural-networks",
+    "href": "src/path-to-gpt.html#how-is-language-modeling-done-with-neural-networks",
+    "title": "Path to GPT",
+    "section": "How is language modeling done with neural networks?",
+    "text": "How is language modeling done with neural networks?\nYoshua Bengio - neural language model unreasonably effectiveness of RNNs"
+  },
+  {
+    "objectID": "src/path-to-gpt.html#automatic-differentiation",
+    "href": "src/path-to-gpt.html#automatic-differentiation",
+    "title": "Path to GPT",
+    "section": "Automatic Differentiation",
+    "text": "Automatic Differentiation\nAD is the key to training large neural networks. AD libraries automatically figure out the gradient of the loss function as long as the computation of the loss function is expressed in a form that the library expects. For example, in PyTorch the computation is expressed as tensor operations.\nBaydin et al. (2015) is a great survey of the various AD methods. For ML training we care about “reverse mode”.\nPaszke et al. (2019) describes PyTorch, the most widely used library for deep learning in production."
+  },
+  {
+    "objectID": "src/path-to-gpt.html#how-to-build-gpt",
+    "href": "src/path-to-gpt.html#how-to-build-gpt",
+    "title": "Path to GPT",
+    "section": "How to build GPT?",
+    "text": "How to build GPT?\nblah\nThe bitter lesson."
+  },
+  {
+    "objectID": "src/path-to-gpt.html#math-background",
+    "href": "src/path-to-gpt.html#math-background",
+    "title": "Path to GPT",
+    "section": "Math background",
+    "text": "Math background\nThere is no end to the amount of math one could learn before studying ML, and usually the more I learn the more it seems to help. However, I’ve also found that it’s ok to “lazy-load” the required math once you’ve acquired a decent intuition in each of the major areas. This section therefore is just going to be a list of the areas of math that can be helpful and the best resources I’ve found for learning them.\nProbability\nProbability is the foundation for all of ML, statistics, and science. It’s also way more complicated than our brief encounter with it in high school or college makes us believe. I’m always on the look out for books and articles that help in developing a good intuition for probability.\n(hamming?) is one such book.\nInformation Theory\nInformation seems like the most natural concept to try to understand ML and stats. Many of the questions of interest can be posed as information theory questions: “what has a model learnt?”, or “what did this experiment tell us?”, “how much can a model of a certain size learn?”\nLinear Algebra\nLinear Algebra has the worst branding in all of math. It’s more exciting to think of the subject as “thinking in high-dimensional spaces”. Everything in ML deals with vectors with impossibly high dimensions (for example, each token in GPT3 is represented as a vector in a ~50,000 dimension space).\nThe video series “Essence of Linear Algebra” ((3blue1brown?)) was the first time linear algebra made any intuitive sense to me."
   }
 ]
