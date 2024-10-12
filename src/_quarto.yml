@@ -1,21 +1,22 @@
 project:
   type: website
   output-dir: docs
+  execute-dir: project
   render:
-    - src/index.qmd
-    - src/chessrank.qmd
-    - src/learning-by-gradient-descent.qmd
-    - src/counting-is-hard.qmd
-    - src/breaking-caesar-cipher.qmd
-    - src/history-of-language-models.qmd
-    - src/path-to-gpt.qmd
+    - index.qmd
+    - posts/learning-by-gradient-descent.qmd
+    - posts/counting-is-hard.qmd
+    - posts/breaking-caesar-cipher.qmd
+    - annotations/history-of-language-models.qmd
+    - posts/path-to-gpt.qmd
 
 website:
   navbar:
     background: primary
     left:
       - text: "Home"
-        href: src/index.qmd
+        href: index.qmd
+  reader-mode: true
       
 format:
   html:

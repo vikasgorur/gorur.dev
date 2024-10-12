@@ -1,6 +1,6 @@
 ---
 title: History of Language Models
-bibliography: references.bib
+bibliography: ../references.bib
 ---
 
 ::: {.callout-note}

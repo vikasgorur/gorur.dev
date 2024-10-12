@@ -13,20 +13,20 @@ Engineering at [Airbase](https://www.airbase.com/), previously Twitter, Blurb, G
 
 This is my attempt to build the "tech tree" of ML, starting from the absolute basics and ending up somewhere around GPT-4.
 
-- [Path to GPT](path-to-gpt.qmd)
-- [Learning by gradient descent](learning-by-gradient-descent.qmd)
-- [Breaking Caesar ciphers using relative entropy](breaking-caesar-cipher.qmd)
+- [Path to GPT](posts/path-to-gpt.qmd)
+- [Learning by gradient descent](posts/learning-by-gradient-descent.qmd)
+- [Breaking Caesar ciphers using relative entropy](posts/breaking-caesar-cipher.qmd)
 
 ### makemore
 
 
 ## Applied Math
 
-- [Counting is hard](counting-is-hard.qmd)
+- [Counting is hard](posts/counting-is-hard.qmd)
 
 ## Annotations
 
 My notes on papers and articles I've read.
 
-- [History of Language Modeling](history-of-language-models.qmd)
+- [History of Language Modeling](annotations/history-of-language-models.qmd)
 

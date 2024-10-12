@@ -1,6 +1,6 @@
 ---
 title: Path to GPT
-bibliography: zotero.bib
+bibliography: ../zotero.bib
 ---
 
 *Last updated*: Oct 11, 2024.
