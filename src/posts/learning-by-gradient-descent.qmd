@@ -31,12 +31,7 @@ by learning the *parameters* of the model using training data.
 
 ## Problem: how long will this job run?
 
-*A note about finding problems*. When I used to endlessly consume ML textbooks,
-videos, blog posts, I always came away a bit dissatisfied and feeling like I
-hadn't really learned anything. Will the method I just learned work on anything
-other than the [Iris](https://en.wikipedia.org/wiki/Iris_flower_data_set)
-dataset from 1936? Learning that way skipped over one of the hard parts of doing
-ML: figuring out what kind of model would even work for a given problem. If you
+*A note about finding problems*. When I used to endlessly consume ML textbooks, videos, blog posts, I always came away a bit dissatisfied and feeling like I hadn't really learned anything. Will the method I just learned work on anything other than the [Iris](https://en.wikipedia.org/wiki/Iris_flower_data_set) dataset from 1936? Learning that way skipped over one of the hard parts of doing ML: figuring out what kind of model would even work for a given problem. If you
 have felt the same way, I encourage you to find problems and datasets from your
 own life, or atleast find a different dataset on your own and try to apply your
 newly learned techniques to it.

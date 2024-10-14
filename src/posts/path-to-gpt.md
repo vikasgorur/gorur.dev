@@ -9,10 +9,12 @@ bibliography: ../zotero.bib
 This post is my attempt to draw the shortest path from knowing a little bit of ML
 to understanding state of the art language models (GPTx). It includes both milestone
 papers and the best resources I've found to understand a concept. I also like knowing 
-the history of things so there will be a bunch of papers that might really only be of historical interest.
+the history of things so there will be a bunch of papers that might really
+only be of historical interest.
 
-This is a _personal_ path, with the goal of being a reasonably good practitioner of
-ML, not a researcher.
+This is a _personal_ path, with the goal of being a reasonably
+good practitioner of ML, not a researcher. Finally, "path" is a misnomer. It's
+more like a garden to get lost in.
 
 ## Math background
 
@@ -34,15 +36,20 @@ for probability.
 
 **Information Theory**
 
-Information seems like the most natural concept to try to understand ML and stats. Many of
-the questions of interest can be posed as information theory questions: "what has a model learnt?", or "what did this experiment tell us?", "how much can a model of a certain size learn?"
+Information seems like the most natural concept to try to understand ML and stats.
+Many of the questions of interest can be posed as information theory questions:
+"what has a model learnt?", or "what did this experiment tell us?",
+"how much can a model of a certain size learn?"
 
 **Linear Algebra**
 
-Linear Algebra has the worst branding in all of math. It's more exciting to think of the subject as "thinking in high-dimensional spaces". Everything in ML deals with vectors with impossibly high dimensions (for example, each token in GPT3 is represented as a vector in a ~50,000 dimension space).
+Linear Algebra has the worst branding in all of math. It's more exciting
+to think of the subject as "thinking in high-dimensional spaces". Everything in ML
+deals with vectors with impossibly high dimensions (for example, each token in GPT3
+is represented as a vector in a ~50,000 dimension space).
 
-The video series "Essence of Linear Algebra" (@3blue1brown) was the first time linear algebra made any
-intuitive sense to me.
+The video series "Essence of Linear Algebra" (@3blue1brown) was the
+first time linear algebra made any intuitive sense to me.
 
 ## Optimization in ML
 
