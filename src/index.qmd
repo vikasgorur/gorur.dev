@@ -29,3 +29,7 @@ My notes on papers and articles I've read.
 
 - [History of Language Modeling](annotations/history-of-language-models.qmd)
 
+## Misc
+
+- [How to do Feature Flag-Driven Development](posts/feature-flags.qmd)
+

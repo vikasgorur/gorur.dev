@@ -9,6 +9,7 @@ project:
     - posts/breaking-caesar-cipher.qmd
     - annotations/history-of-language-models.qmd
     - posts/path-to-gpt.qmd
+    - posts/feature-flags.qmd
 
 website:
   navbar:
