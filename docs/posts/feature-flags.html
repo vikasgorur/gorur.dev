@@ -101,6 +101,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -151,18 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#when-to-use-a-flag" id="toc-when-to-use-a-flag" class="nav-link" data-scroll-target="#when-to-use-a-flag">When to use a flag</a></li>
   <li><a href="#diverge-at-the-highest-level" id="toc-diverge-at-the-highest-level" class="nav-link" data-scroll-target="#diverge-at-the-highest-level">Diverge at the highest level</a></li>
   <li><a href="#the-3-step-data-model-change" id="toc-the-3-step-data-model-change" class="nav-link" data-scroll-target="#the-3-step-data-model-change">The 3-step data model change</a></li>
-  </ul></li>
-  <li><a href="#product-management" id="toc-product-management" class="nav-link" data-scroll-target="#product-management">Product Management</a>
-  <ul class="collapse">
-  <li><a href="#launchdarkly-segments" id="toc-launchdarkly-segments" class="nav-link" data-scroll-target="#launchdarkly-segments">LaunchDarkly Segments</a></li>
-  </ul></li>
-  <li><a href="#writing-code" id="toc-writing-code" class="nav-link" data-scroll-target="#writing-code">Writing Code</a>
-  <ul class="collapse">
-  <li><a href="#backend" id="toc-backend" class="nav-link" data-scroll-target="#backend">Backend</a></li>
-  <li><a href="#frontend" id="toc-frontend" class="nav-link" data-scroll-target="#frontend">Frontend</a>
-  <ul class="collapse">
-  <li><a href="#mobile" id="toc-mobile" class="nav-link" data-scroll-target="#mobile">Mobile</a></li>
-  </ul></li>
+  <li><a href="#caution" id="toc-caution" class="nav-link" data-scroll-target="#caution">Caution</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -193,39 +211,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <hr>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Feature flags are a set of development patterns that allow writing web apps that behave differently for certain segments of users. This document provides a rationale for using feature flags and recommends a set of best practices for development.</p>
+<p>Feature flags are a set of development patterns that allow writing web apps that behave differently for certain segments of users. This post provides a rationale for using feature flags and recommends a set of best practices for development.</p>
 <section id="why-use-feature-flags" class="level2">
 <h2 class="anchored" data-anchor-id="why-use-feature-flags">Why use feature flags?</h2>
-<p><em>This document assumes that we’re following the continuous delivery model of a single master branch into which all changes are merged.</em></p>
+<p><em>This post assumes that you’re following the continuous delivery model of a single master branch into which all changes are merged.</em></p>
 <p>The process of adding features to a SaaS application is a pipeline: product/engineering spec → code review/merge/test → QA/documentation. In any company of a reasonable size there will be multiple such pipelines active at any given time. A successful engineering organization must be able to deliver many new features quickly while not compromising on the quality of the product.</p>
 <p>Let us consider an example of a medium sized feature that requires changes on the backend and frontend, and which might take 3-4 weeks to move through the pipeline. In a development model that doesn’t use feature flags, we usually have to maintain a feature branch on both the backend and frontend for the entire 3-4 week period and they need to be merged and deployed together. This model has a number of problems:</p>
 <ul>
 <li><strong>Code review is hard</strong>: Since the changes cannot be merged to master, it’s harder to break up the feature into small, incremental pull requests. This forces us to review the entire feature at once.</li>
-<li><strong>Testing is hard</strong>: The changes cannot be tested in the regular staging environment since they’re on a separate branch. Thus we must setup a new environment (a Heroku review app) just for that branch, which can be time-consuming and in some cases impossible (for example, if the code involves receiving webhooks from an external service).</li>
+<li><strong>Testing is hard</strong>: It might be too complicated to setup a new staging environment for each feature branch, thus testing would be restricted to whatever is possible to do locally. This is especially hard if your product has many third-party integrations.</li>
 <li><strong>Merging is hard</strong>: When the engineer is ready to merge their code into the master branch, they might discover that changes merged by others in the intervening period cause conflicts. This problem gets worse the longer the feature remains in development. Resolving the complicated merge conflicts can easily lead to bugs being introduced.</li>
-<li><strong>Documentation is hard</strong>: If the product marketing or customer success teams wish to understand a feature, they have to wait until it’s in production or figure out how to use the specific test environment setup for that feature. This increases friction and causes delays.</li>
+<li><strong>Documentation is hard</strong>: If non-engineering teams such as Product Marketing or Customer Success wish to understand a feature, they have to wait until it’s in production or figure out how to use the specific test environment setup for that feature. This increases friction and causes delays.</li>
 <li><strong>Deployment is risky</strong>: The frontend and backend changes often have a strict dependency and must be deployed together. If we forget this and only deploy one of them, it can lead to production issues. The feature also goes live for all customers at once, which means if something goes wrong it affects everyone.</li>
 </ul>
 <p>In summary, trying to do continuous delivery without using feature flags makes the whole process a <strong>rigid and tightly coupled.</strong> Things must happen in a certain order and the stakeholders must co-ordinate closely. It’s an “all-in” jump from state <strong>A</strong> to state <strong>B</strong>, as in the diagram below:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="How to do Feature Flag-Driven Development f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled_Document.png" class="img-fluid figure-img"></p>
-<figcaption>How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled_Document.png</figcaption>
-</figure>
-</div>
-<p>In the feature flag model of development, enabling a flag causes the app to split into two versions, <strong>A</strong> and <strong>B</strong>. One segment of users continue to see the old version of the app, <strong>A</strong>, while another segment starts seeing the new version<strong>, B</strong>. The proportions of these segments is slowly adjusted until no users see version <strong>A</strong>. At this point the flag can be removed from the codebase and as a consequence the app merges back into a single version, <strong>C</strong>. Obviously this happens to <em>every</em> feature flag that’s defined in the system, thus if there are <code>n</code> flags active at a given time, there could be upto <code>2^n</code> versions of the app in production. This can sound overwhelming but as long as the product areas controlled by these flags don’t overlap too much, the effective number of “different” versions is much smaller than <code>2^n</code>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="How to do Feature Flag-Driven Development f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled_Document_(1).png" class="img-fluid figure-img"></p>
-<figcaption>How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled_Document_(1).png</figcaption>
-</figure>
-</div>
+<p><img src="images/breaking-change.png" class="img-fluid"></p>
+<p>In the feature flag model of development, enabling a flag causes the app to split into two versions, <strong>A</strong> and <strong>B</strong>. One segment of users continue to see the old version of the app, <strong>A</strong>, while another segment starts seeing the new version <strong>B</strong>. The proportions of these segments is slowly adjusted until no users see version <strong>A</strong>. At this point the flag can be removed from the codebase and as a consequence the app merges back into a single version, <strong>C</strong>. Obviously this happens to <em>every</em> feature flag that’s defined in the system, thus if there are <span class="math inline">\(n\)</span> flags active at a given time, there could be upto <span class="math inline">\(2^n\)</span> versions of the app in production. This can sound overwhelming but as long as the product areas controlled by these flags don’t overlap too much, the effective number of “different” versions is much smaller than <span class="math inline">\(2^n\)</span>.</p>
+<p><img src="images/abc-change.png" class="img-fluid"></p>
 <p>This model of development is much more <strong>flexible</strong> and <strong>loosely coupled</strong>, and brings with it many benefits:</p>
 <ul>
 <li><strong>Code review is easier</strong>: A feature can be split into multiple pull requests that can be reviewed and merged independently. Since everything is behind a feature flag, deploying these PRs to production has no effect until the flag is turned on.</li>
-<li><strong>Testing is easier</strong>: Testing can be done in the standard staging environment or even in production, by turning on the feature for a single company (our own). This is especially useful for testing things that have real-world interactions with card networks or ACH.</li>
+<li><strong>Testing is easier</strong>: Testing can be done in the standard staging environment or even in production, by turning on the feature for a single user. This is especially useful for testing things that have real-world interactions, like moving money.</li>
 <li><strong>Merging is trivial:</strong> Merge conflicts are rare because there are no long-lived branches that have diverged from master.</li>
-<li><strong>Documentation is easier:</strong> The product marketing and customer success teams can try the feature on staging or on production even while testing on the feature is still ongoing.</li>
+<li><strong>Documentation is easier:</strong> The non-engineering teams can try the feature on staging or on production even while testing on the feature is still ongoing.</li>
 <li><strong>Deployment is less risky</strong>: There is no dependency among backend and frontend deployments. Risky or large features (for example, shipping checks) can be rolled out slowly and tweaked based on real-world experience.</li>
 </ul>
 </section>
@@ -238,11 +246,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>As a rule of thumb, something should be put behind a feature flag if it’s <strong>substantial</strong>, <strong>user-visible,</strong> or <strong>risky.</strong></p>
 <ul>
 <li><strong>Substantial</strong>: If a change is really small, putting it behind a feature flag is not worth the trouble. A good rule of thumb might be: if the entire change can be a single pull request that’s no more than a few pages long, it doesn’t need to be behind a feature flag.</li>
-<li><strong>User-visible:</strong> If a change is invisible to the user and doesn’t modify any existing behavior, it doesn’t need a feature flag. Examples of such changes are refactors, backwards-compatible API changes, addition of new API endpoints, etc.
-<ul>
-<li>A special case to highlight is the <strong>irreversible migration</strong>. For example, transitioning a customer from the non-gateway model to the gateway model is a migration that cannot be reversed (easily). Such changes definitely <strong>should not</strong> be behind a feature flag, to avoid the risk of someone accidentally flipping a flag for a company and putting it in an inconsistent state.</li>
-</ul></li>
-<li><strong>Risky</strong>: Any change with real-world implications on money movement, GL impact, shipping, fraud should be behind a feature flag. These kinds of changes are nearly impossible to test in staging and thus we should be cautious and roll it out slowly to customers after gathering confidence in production.</li>
+<li><strong>User-visible:</strong> If a change is invisible to the user and doesn’t modify any existing behavior, it doesn’t need a feature flag. Examples of such changes are refactors, backwards-compatible API changes, addition of new API endpoints, etc.</li>
+<li><strong>Risky</strong>: Feature flags are primarily a tool to mitigate risk. So any change that where the cost of a bug is high should be gated behind a feature flag. This is especially important for changes that cannot be fully tested in staging environments.</li>
 </ul>
 </section>
 <section id="diverge-at-the-highest-level" class="level2">
@@ -277,110 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> ChoiceField(choices<span class="op">=</span>[<span class="st">"NOT_STARTED"</span>, <span class="st">"IN_PROGRESS"</span>, <span class="st">"FINISHED"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This is a very specific example but the 3-step pattern is generally applicable. Most 1-step breaking changes can be redesigned into this 3-step shape to facilitate use of a feature flag.</p>
 </section>
-</section>
-<section id="product-management" class="level1">
-<h1>Product Management</h1>
-<p>The following is a recommended workflow for product managers:</p>
-<ul>
-<li>When writing the product spec, identify the screens, background tasks and other behavior that should be behind the feature flag.</li>
-<li>Create the flag in LaunchDarkly and give it a descriptive name. Flags have descriptive name and a <code>name-like-this</code> to be used in the codebase. Enable the flag for all companies in staging, and no companies in production.</li>
-<li>Ensure that the engineering spec uses the same flag name.</li>
-<li>Test the feature in staging and roll it out in production as appropriate.</li>
-<li>Once the feature has been in production long enough, confirm that it has been turned on for all companies and add a task to the team’s plan to remove the flag from the codebase.</li>
-</ul>
-<section id="launchdarkly-segments" class="level2">
-<h2 class="anchored" data-anchor-id="launchdarkly-segments">LaunchDarkly Segments</h2>
-<p><a href="https://launchdarkly.com/blog/launched-segments-separate-your-users-into-reusable-segments/">LaunchDarkly segments</a> allow creating a reusable set of targeting criteria. The Django backend app has a daily job that creates these segments automatically for every active company.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="How to do Feature Flag-Driven Development f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled.png" class="img-fluid figure-img"></p>
-<figcaption>How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled.png</figcaption>
-</figure>
-</div>
-<p>When enabling a flag for a company, create or modify a rule of the form “user is in segment: &gt;list of segments&gt;”. Do not use numeric IDs of any sort, to avoid errors due to typos.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="How to do Feature Flag-Driven Development f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled 1.png" class="img-fluid figure-img"></p>
-<figcaption>How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%201.png</figcaption>
-</figure>
-</div>
-<p>Segments also allow you to easily get the list of companies that have the flag turned on. Click on the name of a segment to see this:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="How to do Feature Flag-Driven Development f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled 2.png" class="img-fluid figure-img"></p>
-<figcaption>How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%202.png</figcaption>
-</figure>
-</div>
-<p>To confirm that all companies are seeing a single variation of a flag, click on the “Insights” tab for a particular flag:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="How to do Feature Flag-Driven Development f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled 3.png" class="img-fluid figure-img"></p>
-<figcaption>How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%203.png</figcaption>
-</figure>
-</div>
-</section>
-</section>
-<section id="writing-code" class="level1">
-<h1>Writing Code</h1>
-<section id="backend" class="level2">
-<h2 class="anchored" data-anchor-id="backend">Backend</h2>
-<p>The LaunchDarkly library can be imported as:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> airbase_backend.launchdarkly <span class="im">import</span> LDFlag, ld_client</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>When introducing a new flag to the codebase, add it to the <code>LDFlag</code> enum:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LDFlag(Enum):</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    All the feature flags used by us.</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">    These should be created on LaunchDarkly first before use.</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Locally they are handled via .env files.</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    BANK_PAYMENTS <span class="op">=</span> <span class="st">"bank-payments"</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    BILL_PAYMENTS_AMORTIZATION <span class="op">=</span> <span class="st">"bill-payments-amortization"</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    DEPARTMENT_REPORTING <span class="op">=</span> <span class="st">"department-reporting"</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        ... <span class="co"># more flags</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>To check if a company has a feature enabled:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> company.has_feature(LDFlag.BILL_PAYMENTS_AMORTIZATION):</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The backend <code>.env</code> has a config variable called <code>LAUNCH_DARKLY_FLAG_ENABLE_ALL=True</code> which enables all feature flags during local development. You can turn off a specific flag by adding a variable of the form <code>LAUNCH_DARKLY_FLAG_BILL_PAYMENTS_AMORTIZATION=False</code></p>
-</section>
-<section id="frontend" class="level2">
-<h2 class="anchored" data-anchor-id="frontend">Frontend</h2>
-<p>To add a new flag to the codebase, define a function in <code>src/app/utils/LaunchDarkly.js</code>, and use the function wherever necessary. The first argument <code>state</code> is the Redux state object.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode jsx code-with-copy"><code class="sourceCode javascriptreact"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">isBillPaymentsAmortizationEnabled</span>(state) {</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">isFeatureEnabled</span>(state<span class="op">,</span> <span class="st">'bill-payments-amortization'</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The frontend <code>.env</code> file has a config variable called <code>REACT_APP_LD_FLAG_ENABLE_ALL=true</code> which enables all feature flags during local development. You can turn off a specific flag by adding a variable of the form <code>REACT_APP_LD_FLAG_BILL_PAYMENTS_AMORTIZATION=false</code>.</p>
-<section id="mobile" class="level3">
-<h3 class="anchored" data-anchor-id="mobile">Mobile</h3>
-<p>All Launch Darkly flags are fetched automatically on every app launch and every time when a flag changes. These flags are available in <code>launchDarkly</code> redux store.</p>
-<p>To use flags in your code do the following</p>
-<p>All Launch Darkly flags are fetched automatically on every app launch and every time when a flag changes. These flags are available in <code>launchDarkly</code> redux store.</p>
-<p>To use flags in your code do the following</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode jsx code-with-copy"><code class="sourceCode javascriptreact"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">//Add the flag as a constant in src/common/constants.js</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> FEATURE_FLAGS <span class="op">=</span> {</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">YOUR_FEATURE</span><span class="op">:</span> <span class="st">'your-feature'</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">//Connect your redux state to component props </span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> mapStateToProps <span class="op">=</span> state <span class="kw">=&gt;</span> ({</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">flags</span><span class="op">:</span> state<span class="op">.</span><span class="at">launchDarkly</span><span class="op">?.</span><span class="at">flags</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">//OR access the state from store object</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { store } <span class="im">from</span> <span class="st">'./src/common/store'</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> state <span class="op">=</span> store<span class="op">.</span><span class="fu">getState</span>()<span class="op">;</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> flags <span class="op">=</span> state<span class="op">.</span><span class="at">launchDarkly</span><span class="op">?.</span><span class="at">flags</span><span class="op">;</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">//Check the flag like so</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> yourFeature <span class="op">=</span> _<span class="op">.</span><span class="fu">get</span>(flags<span class="op">,</span> <span class="vs">`</span><span class="sc">${</span>FEATURE_FLAGS<span class="op">.</span><span class="at">YOUR_FEATURE</span><span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<hr>
-<p><em>The cover image is the front panel of a PDP-8 computer, and the switches allowed you to control program execution and even <a href="https://raymii.org/s/articles/Toggling_in_a_simple_program_on_the_DEC_PDP-8_and_PiDP-8_using_the_switch_register.html">directly modify memory</a>.</em></p>
+<section id="caution" class="level2">
+<h2 class="anchored" data-anchor-id="caution">Caution</h2>
+<p>In a growing company it’s easy to keep adding feature flags and never prioritize cleaning them up. Each unique combination of flags becomes a new “flavor” of your product. Your mental model for investigating every bug report needs to start with “When a user with flags <code>{f1, f2, f3}</code> turned on clicks a button …”.</p>
+<p>There needs to be some force counterbalancing this in the org. This can take the form of a hard budget (“no more than 50 flags in the codebase at any time”), quarterly clean up drives, and so on. One of the ideas I’ve tried that worked pretty well was a tax: “every PR that introduces a new flag into the codebase must be also clean up <code>N</code> unused flags”.</p>
 
 
-</section>
 </section>
 </section>
 

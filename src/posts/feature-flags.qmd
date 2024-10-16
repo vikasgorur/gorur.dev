@@ -8,36 +8,36 @@ title: "How to do Feature Flag-Driven Development"
 
 # Introduction
 
-Feature flags are a set of development patterns that allow writing web apps that behave differently for certain segments of users. This document provides a rationale for using feature flags and recommends a set of best practices for development.
+Feature flags are a set of development patterns that allow writing web apps that behave differently for certain segments of users. This post provides a rationale for using feature flags and recommends a set of best practices for development.
 
 ## Why use feature flags?
 
-*This document assumes that we're following the continuous delivery model of a single master branch into which all changes are merged.*
+*This post assumes that you're following the continuous delivery model of a single master branch into which all changes are merged.*
 
 The process of adding features to a SaaS application is a pipeline: product/engineering spec → code review/merge/test → QA/documentation. In any company of a reasonable size there will be multiple such pipelines active at any given time. A successful engineering organization must be able to deliver many new features quickly while not compromising on the quality of the product.
 
 Let us consider an example of a medium sized feature that requires changes on the backend and frontend, and which might take 3-4 weeks to move through the pipeline. In a development model that doesn't use feature flags, we usually have to maintain a feature branch on both the backend and frontend for the entire 3-4 week period and they need to be merged and deployed together. This model has a number of problems:
 
 - **Code review is hard**: Since the changes cannot be merged to master, it's harder to break up the feature into small, incremental pull requests. This forces us to review the entire feature at once.
-- **Testing is hard**: The changes cannot be tested in the regular staging environment since they're on a separate branch. Thus we must setup a new environment (a Heroku review app) just for that branch, which can be time-consuming and in some cases impossible (for example, if the code involves receiving webhooks from an external service).
+- **Testing is hard**: It might be too complicated to setup a new staging environment for each feature branch, thus testing would be restricted to whatever is possible to do locally. This is especially hard if your product has many third-party integrations.
 - **Merging is hard**: When the engineer is ready to merge their code into the master branch, they might discover that changes merged by others in the intervening period cause conflicts. This problem gets worse the longer the feature remains in development. Resolving the complicated merge conflicts can easily lead to bugs being introduced.
-- **Documentation is hard**:  If the product marketing or customer success teams wish to understand a feature, they have to wait until it's in production or figure out how to use the specific test environment setup for that feature. This increases friction and causes delays.
+- **Documentation is hard**:  If non-engineering teams such as Product Marketing or Customer Success wish to understand a feature, they have to wait until it's in production or figure out how to use the specific test environment setup for that feature. This increases friction and causes delays.
 - **Deployment is risky**: The frontend and backend changes often have a strict dependency and must be deployed together. If we forget this and only deploy one of them, it can lead to production issues. The feature also goes live for all customers at once, which means if something goes wrong it affects everyone.
 
 In summary, trying to do continuous delivery without using feature flags makes the whole process a **rigid and tightly coupled.** Things must happen in a certain order and the stakeholders must co-ordinate closely. It's an "all-in" jump from state **A** to state **B**, as in the diagram below:
 
-![How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled_Document.png](How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled_Document.png)
+![](images/breaking-change.png)
 
-In the feature flag model of development, enabling a flag causes the app to split into two versions, **A** and **B**. One segment of users continue to see the old version of the app, **A**, while another segment starts seeing the new version**, B**. The proportions of these segments is slowly adjusted until no users see version **A**. At this point the flag can be removed from the codebase and as a consequence the app merges back into a single version, **C**. Obviously this happens to *every* feature flag that's defined in the system, thus if there are `n` flags active at a given time, there could be upto `2^n` versions of the app in production. This can sound overwhelming but as long as the product areas controlled by these flags don't overlap too much, the effective number of "different" versions is much smaller than `2^n`.
+In the feature flag model of development, enabling a flag causes the app to split into two versions, **A** and **B**. One segment of users continue to see the old version of the app, **A**, while another segment starts seeing the new version **B**. The proportions of these segments is slowly adjusted until no users see version **A**. At this point the flag can be removed from the codebase and as a consequence the app merges back into a single version, **C**. Obviously this happens to *every* feature flag that's defined in the system, thus if there are $n$ flags active at a given time, there could be upto $2^n$ versions of the app in production. This can sound overwhelming but as long as the product areas controlled by these flags don't overlap too much, the effective number of "different" versions is much smaller than $2^n$.
 
-![How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled_Document_(1).png](How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled_Document_(1).png)
+![](images/abc-change.png)
 
 This model of development is much more **flexible** and **loosely coupled**, and brings with it many benefits:
 
 - **Code review is easier**: A feature can be split into multiple pull requests that can be reviewed and merged independently. Since everything is behind a feature flag, deploying these PRs to production has no effect until the flag is turned on.
-- **Testing is easier**: Testing can be done in the standard staging environment or even in production, by turning on the feature for a single company (our own). This is especially useful for testing things that have real-world interactions with card networks or ACH.
+- **Testing is easier**: Testing can be done in the standard staging environment or even in production, by turning on the feature for a single user. This is especially useful for testing things that have real-world interactions, like moving money.
 - **Merging is trivial:** Merge conflicts are rare because there are no long-lived branches that have diverged from master.
-- **Documentation is easier:** The product marketing and customer success teams can try the feature on staging or on production even while testing on the feature is still ongoing.
+- **Documentation is easier:** The non-engineering teams can try the feature on staging or on production even while testing on the feature is still ongoing.
 - **Deployment is less risky**: There is no dependency among backend and frontend deployments. Risky or large features (for example, shipping checks) can be rolled out slowly and tweaked based on real-world experience.
 
 # Designing for Feature Flags
@@ -50,8 +50,7 @@ As a rule of thumb, something should be put behind a feature flag if it's **subs
 
 - **Substantial**: If a change is really small, putting it behind a feature flag is not worth the trouble. A good rule of thumb might be: if the entire change can be a single pull request that's no more than a few pages long, it doesn't need to be behind a feature flag.
 - **User-visible:** If a change is invisible to the user and doesn't modify any existing behavior, it doesn't need a feature flag. Examples of such changes are refactors, backwards-compatible API changes, addition of new API endpoints, etc.
-    - A special case to highlight is the **irreversible migration**. For example, transitioning a customer from the non-gateway model to the gateway model is a migration that cannot be reversed (easily). Such changes definitely **should not** be behind a feature flag, to avoid the risk of someone accidentally flipping a flag for a company and putting it in an inconsistent state.
-- **Risky**: Any change with real-world implications on money movement, GL impact, shipping, fraud should be behind a feature flag. These kinds of changes are nearly impossible to test in staging and thus we should be cautious and roll it out slowly to customers after gathering confidence in production.
+- **Risky**: Feature flags are primarily a tool to mitigate risk. So any change that where the cost of a bug is high should be gated behind a feature flag. This is especially important for changes that cannot be fully tested in staging environments.
 
 ## Diverge at the highest level
 
@@ -102,114 +101,11 @@ class Concert:
 
 This is a very specific example but the 3-step pattern is generally applicable. Most 1-step  breaking changes can be redesigned into this 3-step shape to facilitate use of a feature flag.
 
-# Product Management
+## Caution
 
-The following is a recommended workflow for product managers:
+In a growing company it's easy to keep adding feature flags and never prioritize cleaning them up. Each unique combination of flags becomes
+a new "flavor" of your product. Your mental model for investigating every bug report needs to start with "When a user with flags `{f1, f2, f3}`
+turned on clicks a button ...".
 
-- When writing the product spec, identify the screens, background tasks and other behavior that should be behind the feature flag.
-- Create the flag in LaunchDarkly and give it a descriptive name. Flags have descriptive name and a `name-like-this` to be used in the codebase. Enable the flag for all companies in staging, and no companies in production.
-- Ensure that the engineering spec uses the same flag name.
-- Test the feature in staging and roll it out in production as appropriate.
-- Once the feature has been in production long enough, confirm that it has been turned on for all companies and add a task to the team's plan to remove the flag from the codebase.
-
-## LaunchDarkly Segments
-
-[LaunchDarkly segments](https://launchdarkly.com/blog/launched-segments-separate-your-users-into-reusable-segments/) allow creating a reusable set of targeting criteria. The Django backend app has a daily job that creates these segments automatically for every active company.
-
-![How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled.png](How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled.png)
-
-When enabling a flag for a company, create or modify a rule of the form "user is in segment: >list of segments>". Do not use numeric IDs of any sort, to avoid errors due to typos.
-
-![How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%201.png](How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%201.png)
-
-Segments also allow you to easily get the list of companies that have the flag turned on. Click on the name of a segment to see this:
-
-![How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%202.png](How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%202.png)
-
-To confirm that all companies are seeing a single variation of a flag, click on the "Insights" tab for a particular flag:
-
-![How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%203.png](How%20to%20do%20Feature%20Flag-Driven%20Development%20f9ce8e349b1f47d680a8a3ce6216fe4d/Untitled%203.png)
-
-# Writing Code
-
-## Backend
-
-The LaunchDarkly library can be imported as:
-
-```python
-from airbase_backend.launchdarkly import LDFlag, ld_client
-```
-
-When introducing a new flag to the codebase, add it to the `LDFlag` enum:
-
-```python
-class LDFlag(Enum):
-    """
-    All the feature flags used by us.
-
-    These should be created on LaunchDarkly first before use.
-    Locally they are handled via .env files.
-    """
-
-    BANK_PAYMENTS = "bank-payments"
-    BILL_PAYMENTS_AMORTIZATION = "bill-payments-amortization"
-    DEPARTMENT_REPORTING = "department-reporting"
-		... # more flags
-```
-
-To check if a company has a feature enabled:
-
-```python
-if company.has_feature(LDFlag.BILL_PAYMENTS_AMORTIZATION):
-	...
-```
-
-The backend `.env` has a config variable called `LAUNCH_DARKLY_FLAG_ENABLE_ALL=True` which enables all feature flags during local development. You can turn off a specific flag by adding a variable of the form `LAUNCH_DARKLY_FLAG_BILL_PAYMENTS_AMORTIZATION=False`
-
-## Frontend
-
-To add a new flag to the codebase, define a function in `src/app/utils/LaunchDarkly.js`, and use the function wherever necessary. The first argument `state` is the Redux state object.
-
-```jsx
-export function isBillPaymentsAmortizationEnabled(state) {
-  return isFeatureEnabled(state, 'bill-payments-amortization')
-}
-```
-
-The frontend `.env` file has a config variable called `REACT_APP_LD_FLAG_ENABLE_ALL=true` which enables all feature flags during local development. You can turn off a specific flag by adding a variable of the form `REACT_APP_LD_FLAG_BILL_PAYMENTS_AMORTIZATION=false`.
-
-### Mobile
-
-All Launch Darkly flags are fetched automatically on every app launch and every time when a flag changes. These flags are available in `launchDarkly` redux store.
-
-To use flags in your code do the following
-
-All Launch Darkly flags are fetched automatically on every app launch and every time when a flag changes. These flags are available in `launchDarkly` redux store.
-
-To use flags in your code do the following
-
-```jsx
-//Add the flag as a constant in src/common/constants.js
-export const FEATURE_FLAGS = {
-	...
-  YOUR_FEATURE: 'your-feature'
-};
-
-//Connect your redux state to component props 
-const mapStateToProps = state => ({
-	...
-	flags: state.launchDarkly?.flags
-})
-
-//OR access the state from store object
-import { store } from './src/common/store'
-const state = store.getState();
-const flags = state.launchDarkly?.flags;
-
-//Check the flag like so
-const yourFeature = _.get(flags, `${FEATURE_FLAGS.YOUR_FEATURE}`, false);
-```
-
----
-
-*The cover image is the front panel of a PDP-8 computer, and the switches allowed you to control program execution and even [directly modify memory](https://raymii.org/s/articles/Toggling_in_a_simple_program_on_the_DEC_PDP-8_and_PiDP-8_using_the_switch_register.html).*
+There needs to be some force counterbalancing this in the org. This can take the form of a hard budget ("no more than 50 flags in the codebase at any time"), quarterly clean up drives, and so on. One of the ideas I've tried that worked pretty well was a tax: "every PR that introduces
+a new flag into the codebase must be also clean up `N` unused flags".
