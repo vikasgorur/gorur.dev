@@ -39,21 +39,21 @@
     "href": "index.html#machine-learning",
     "title": "Vikas Gorur",
     "section": "Machine Learning",
-    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n\nLearning by gradient descent\nBreaking Caesar ciphers using relative entropy\n\n\nmakemore"
+    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n2024-09-01 Breaking Caesar ciphers using relative entropy\n2024-08-31 Learning by gradient descent"
   },
   {
     "objectID": "index.html#applied-math",
     "href": "index.html#applied-math",
     "title": "Vikas Gorur",
     "section": "Applied Math",
-    "text": "Applied Math\n\nCounting is hard"
+    "text": "Applied Math\n2024-07-24 Counting is hard"
   },
   {
     "objectID": "index.html#annotations",
     "href": "index.html#annotations",
     "title": "Vikas Gorur",
     "section": "Annotations",
-    "text": "Annotations\nMy notes on papers and articles I’ve read.\n\nHistory of Language Modeling"
+    "text": "Annotations\nMy notes on papers and articles I’ve read.\n2024-10-07 History of Language Modeling"
   },
   {
     "objectID": "posts/learning-by-gradient-descent.html",
@@ -137,7 +137,7 @@
     "href": "index.html#misc",
     "title": "Vikas Gorur",
     "section": "Misc",
-    "text": "Misc\n\nHow to do Feature Flag-Driven Development"
+    "text": "Misc\n2020-04-30 How to do Feature Flag-Driven Development"
   },
   {
     "objectID": "posts/feature-flags.html",
@@ -201,5 +201,12 @@
     "title": "How to do Feature Flag-Driven Development",
     "section": "Caution",
     "text": "Caution\nIn a growing company it’s easy to keep adding feature flags and never prioritize cleaning them up. Each unique combination of flags becomes a new “flavor” of your product. Your mental model for investigating every bug report needs to start with “When a user with flags {f1, f2, f3} turned on clicks a button …”.\nThere needs to be some force counterbalancing this in the org. This can take the form of a hard budget (“no more than 50 flags in the codebase at any time”), quarterly clean up drives, and so on. One of the ideas I’ve tried that worked pretty well was a tax: “every PR that introduces a new flag into the codebase must be also clean up N unused flags”."
+  },
+  {
+    "objectID": "index.html#misc-1",
+    "href": "index.html#misc-1",
+    "title": "Vikas Gorur",
+    "section": "Misc",
+    "text": "Misc\n2020-04-30 How to do Feature Flag-Driven Development"
   }
 ]
