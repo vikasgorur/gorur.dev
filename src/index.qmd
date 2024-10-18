@@ -13,6 +13,8 @@ Engineering at [Airbase](https://www.airbase.com/), previously Twitter, Blurb, G
 
 This is my attempt to build the "tech tree" of ML, starting from the absolute basics and ending up somewhere around GPT-4.
 
+[Path to LLMs](posts/path-to-llms.qmd)
+
 <span class="pub-date">2024-09-01</span> [Breaking Caesar ciphers using relative entropy](posts/breaking-caesar-cipher.qmd) \
 <span class="pub-date">2024-08-31</span> [Learning by gradient descent](posts/learning-by-gradient-descent.qmd)
 

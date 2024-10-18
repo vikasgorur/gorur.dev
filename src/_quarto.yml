@@ -8,7 +8,7 @@ project:
     - posts/counting-is-hard.qmd
     - posts/breaking-caesar-cipher.qmd
     - annotations/history-of-language-models.qmd
-    - posts/path-to-gpt.qmd
+    - posts/path-to-llms.qmd
     - posts/feature-flags.qmd
 
 website:

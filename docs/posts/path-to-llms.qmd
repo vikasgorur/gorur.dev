@@ -1,9 +1,10 @@
 ---
-title: Path to GPT
+title: Path to LLMs
 bibliography: ../zotero.bib
 ---
 
 *Last updated*: Oct 11, 2024.
+
 ---
 
 This post is my attempt to draw the shortest path from knowing a little bit of ML
@@ -13,8 +14,7 @@ the history of things so there will be a bunch of papers that might really
 only be of historical interest.
 
 This is a _personal_ path, with the goal of being a reasonably
-good practitioner of ML, not a researcher. Finally, "path" is a misnomer. It's
-more like a garden to get lost in.
+good practitioner of ML, not a researcher. Finally, "path" is a misnomer. It's more like a garden to get lost in.
 
 ## Math background
 
@@ -32,7 +32,7 @@ complicated than our brief encounter with it in high school or college makes us 
 always on the look out for books and articles that help in developing a good intuition
 for probability.
 
-@hamming is one such book.
+[@hamming_art_1991] is the best book for that.
 
 **Information Theory**
 
@@ -85,15 +85,39 @@ a significant jump in performance on the image recognition task.
 
 ## What is language modeling?
 
+shannon 1948
+markov pushkin
+shannon 1952 - entropy of english
+history of language modeling, Hang Li 2022
+
 ## How is language modeling done with neural networks?
 
 Yoshua Bengio - neural language model
 unreasonably effectiveness of RNNs
+makemore
+word2vec paper
 
-## How to build GPT?
+## GPT and beyond
 
 blah
 
+Karpathy talk on State of GPT
+3blue1brown on GPT
 The bitter lesson.
 
+Chinchilla scaling laws https://arxiv.org/abs/2203.15556
+LLama 2 paper
+Language models are zero shot learners (GPT2)
+Soumit blog post on training at scale
 
+10 papers from 2023 https://magazine.sebastianraschka.com/p/10-ai-research-papers-2023
+
+Quantization
+
+"GPT-3: Language Models are Few-Shot Learners" (2020)
+
+
+An intro to finetuning https://magazine.sebastianraschka.com/p/building-a-gpt-style-llm-classifier
+Mistral 7B paper https://arxiv.org/abs/2310.06825
+
+A survey of LLMs https://arxiv.org/abs/2303.18223
