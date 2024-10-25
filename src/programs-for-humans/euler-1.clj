@@ -47,11 +47,20 @@
 (defn e-terms
   "The first n terms of the continued fraction for e"
   [n]
-  )
+  (take n (map (fn [k]
+                 (case (mod k 3)
+                   0 1
+                   1 (* 2 (inc (quot k 3)))
+                   2 1))
+               (range n))))
 
-(+ 2 (sum-terms [1 2 1 1 4 1 1 6 1 1]))
-;;=> 2721/1001
+(reduce + (map #(Character/digit % 10)
+               (str (numerator (+ 2 (sum-terms (e-terms 99)))))))
+;;=> 272
 
-;; Sum of 
+
+ 
+
+
 
 
