@@ -46,7 +46,7 @@
     "href": "index.html#applied-math",
     "title": "Vikas Gorur",
     "section": "Applied Math",
-    "text": "Applied Math\n2024-07-24 Counting is hard"
+    "text": "Applied Math\n2024-10-28 chessrank: who should win a tournament?\n2024-07-24 Counting is hard"
   },
   {
     "objectID": "index.html#annotations",
@@ -278,5 +278,12 @@
     "title": "Path to LLMs",
     "section": "Calculus",
     "text": "Calculus\nML papers are full of complicated equations with symbols from multivariate and matrix calculus. This might give the impression that one needs a full undergrad course in these topics before making any progress, but I don’t buy it. I think one can get buy for a long time with just the intuition of the concept of a derivative (gradient) for complicated functions and the chain rule for computing them."
+  },
+  {
+    "objectID": "posts/chessrank.html",
+    "href": "posts/chessrank.html",
+    "title": "chessrank: who should win a tournament?",
+    "section": "",
+    "text": "Who should win a round-robin chess tournament?"
   }
 ]

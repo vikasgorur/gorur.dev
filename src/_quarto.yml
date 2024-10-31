@@ -10,6 +10,7 @@ project:
     - annotations/history-of-language-models.qmd
     - posts/path-to-llms.qmd
     - posts/feature-flags.qmd
+    - posts/chessrank.qmd
 
 website:
   navbar:

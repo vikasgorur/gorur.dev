@@ -1,0 +1,6 @@
+---
+title: "chessrank: who should win a tournament?"
+jupyter: python3
+---
+
+Who should win a round-robin chess tournament? 
