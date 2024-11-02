@@ -32,7 +32,7 @@
     "href": "index.html",
     "title": "Vikas Gorur",
     "section": "",
-    "text": "Engineering at Airbase, previously Twitter, Blurb, Gluster.\n@vikasgorur"
+    "text": "Engineering at Airbase, previously Twitter, Blurb, Gluster.\n(vikasgorur?)"
   },
   {
     "objectID": "index.html#machine-learning",
@@ -285,5 +285,12 @@
     "title": "chessrank: who should win a tournament?",
     "section": "",
     "text": "Who should win a round-robin chess tournament?"
+  },
+  {
+    "objectID": "exercises/stats110-practice1.html",
+    "href": "exercises/stats110-practice1.html",
+    "title": "Stats 110: Practice 1",
+    "section": "",
+    "text": "Stats 110: Practice 1\nExercises from Chapter 1 of Blitzstein and Hwang (2019)\n\n\n\n\n\n\n\nThere are 20 people at a chess club on a certain day. They each find opponents and start playing. How many possibilities are there for how they are matched up, assuming that in each game it does matter who has the white pieces?\n\n\n\n\nLet the players be numbered \\(1..20\\). Each permutation of the list can be considered a pairing, if you draw bars like so:\n\\[\n1 \\, 3 \\, | \\, 4 \\, 6 \\, | \\, 2 \\, 5  \\,|\\, ...\n\\] The total number of permutations is \\(20!\\)\n\n\n\n\n\nReferences\n\nBlitzstein, Joseph K., and Jessica Hwang. 2019. Introduction to Probability. Second edition. Boca Raton: CRC Press."
   }
 ]

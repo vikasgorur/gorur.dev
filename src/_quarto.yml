@@ -11,6 +11,9 @@ project:
     - posts/path-to-llms.qmd
     - posts/feature-flags.qmd
     - posts/chessrank.qmd
+    - exercises/stats110-practice1.qmd
+
+bibliography: /Users/vikas/auto-zotero.bib
 
 website:
   navbar:
@@ -26,5 +29,6 @@ format:
     fontsize: 1.2em
     toc: true
     code-fold: false
+    highlight-style: arrow
     callout-appearance: minimal
     css: styles.css
