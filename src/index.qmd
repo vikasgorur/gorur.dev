@@ -29,6 +29,9 @@ My notes on papers and articles I've read.
 
 <span class="pub-date">2024-10-07</span> [History of Language Modeling](annotations/history-of-language-models.qmd)
 
+## Exercises
+<span class="pub-date">2024-11-02</span> [Stats 110: Practice 1](exercises/stats110-practice1.qmd)
+
 ## Misc
 
 <span class="pub-date">2020-04-30</span> [How to do Feature Flag-Driven Development](posts/feature-flags.qmd)
