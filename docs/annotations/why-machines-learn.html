@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Vikas Gorur</title>
+<title>Why Machines Learn</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,25 +20,45 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ba792ffaf094770a44bc10fad9fa3043.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ba792ffaf094770a44bc10fad9fa3043.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -67,8 +87,37 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -84,7 +133,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -103,25 +152,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#machine-learning" id="toc-machine-learning" class="nav-link active" data-scroll-target="#machine-learning">Machine Learning</a></li>
-  <li><a href="#applied-math" id="toc-applied-math" class="nav-link" data-scroll-target="#applied-math">Applied Math</a></li>
-  <li><a href="#annotations" id="toc-annotations" class="nav-link" data-scroll-target="#annotations">Annotations</a></li>
-  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
-  <li><a href="#misc" id="toc-misc" class="nav-link" data-scroll-target="#misc">Misc</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Vikas Gorur</h1>
+<h1 class="title">Why Machines Learn</h1>
 </div>
 
 
@@ -138,37 +177,34 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Engineering at <a href="https://www.airbase.com/">Airbase</a>, previously Twitter, Blurb, Gluster.</p>
-<p><a href="https://x.com/vikasgorur">@vikasgorur</a></p>
-<section id="machine-learning" class="level2">
-<h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
-<p>This is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.</p>
-<p><span class="pub-date">2024-10-18</span> <a href="./posts/path-to-llms.html">Path to LLMs</a></p>
-<p><span class="pub-date">2024-09-01</span> <a href="./posts/breaking-caesar-cipher.html">Breaking Caesar ciphers using relative entropy</a><br>
-<span class="pub-date">2024-08-31</span> <a href="./posts/learning-by-gradient-descent.html">Learning by gradient descent</a></p>
-</section>
-<section id="applied-math" class="level2">
-<h2 class="anchored" data-anchor-id="applied-math">Applied Math</h2>
-<p><span class="pub-date">2024-07-24</span> <a href="./posts/counting-is-hard.html">Counting is hard</a></p>
-</section>
-<section id="annotations" class="level2">
-<h2 class="anchored" data-anchor-id="annotations">Annotations</h2>
-<p>My notes on papers and articles I’ve read.</p>
-<p><span class="pub-date">2024-11-09</span> <a href="./annotations/why-machines-learn.html"><em>Why Machines Learn</em></a> (book)<br>
-<span class="pub-date">2024-10-07</span> <a href="./annotations/history-of-language-models.html">History of Language Modeling</a></p>
-</section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<p><span class="pub-date">2024-11-02</span> <a href="./exercises/stats110-practice1.html">Stats 110: Practice 1</a></p>
-</section>
-<section id="misc" class="level2">
-<h2 class="anchored" data-anchor-id="misc">Misc</h2>
-<p><span class="pub-date">2020-04-30</span> <a href="./posts/feature-flags.html">How to do Feature Flag-Driven Development</a></p>
+<p>These are interesting things mentioned in <em>Why Machines Learn: The Elegant Maths behind Modern AI</em>, <span class="citation" data-cites="ananthaswamyWhyMachinesLearn2024">Ananthaswamy (<a href="#ref-ananthaswamyWhyMachinesLearn2024" role="doc-biblioref">2024</a>)</span>.</p>
+<p><strong>Imprinting</strong>: Konrad Lorenz discovered that ducklings imprint on the first moving thing they see after hatching. More interestingly, they can imprint on <em>relations</em>. If upon birth they see two moving red objects, they will later follow two objects of the same color, even if the color is different. More about this in his Nobel lecture <span class="citation" data-cites="konradlorenzAnalogySourceKnowledge1973">(<a href="#ref-konradlorenzAnalogySourceKnowledge1973" role="doc-biblioref">Konrad Lorenz 1973a</a>)</span> and biography <span class="citation" data-cites="konradlorenzKonradLorenzBiography1973">(<a href="#ref-konradlorenzKonradLorenzBiography1973" role="doc-biblioref">Konrad Lorenz 1973b</a>)</span>.</p>
+<p><strong>The first artificial neuron</strong>: The paper about the first artificial neuron was a collaboration between McCulloch, a professor in his mid-40s and Pitts, a teenage prodigy who was hanging around a university and was adopted into the McCulloch home. The paper itself <span class="citation" data-cites="mccullochLogicalCalculusIdeas1943">(<a href="#ref-mccullochLogicalCalculusIdeas1943" role="doc-biblioref">McCulloch and Pitts 1943</a>)</span> is impenetrable, written in a formal math style reminiscient of <em>Principia Mathematica</em>. The important conclusion though is that combinations of the artificial neuron can implement any boolean logic.</p>
+<p><strong>Hebbian learning</strong> can be understood as the memorable phrase “neurons that fire together, wire together”.</p>
+<p><strong>The Mark I perceptron</strong> was a hardware implementation that could recognize handwritten characters from a 20x20 image. It was a 3-layer neural network, although only one layer had adjustable weights (in hardware, using DC motors to drive potentiometers, essentially volume knobs!). The operator’s manual <span class="citation" data-cites="Hay1960MarkIP">(<a href="#ref-Hay1960MarkIP" role="doc-biblioref">Hay, Lynch, and Smith 1960</a>)</span> has all the fascinating details.</p>
+<p>William Rowan Hamilton discovered <strong>quarternions</strong> and etched it on a bridge in Dublin. He’s also responsible for notions of “scalar” and “vector”.</p>
+<p>A hyperplane, such as the one learnt by a perceptron, can be uniquely described by a vector that is orthogonal to it. This is in fact the vector of weights, <span class="math inline">\(w\)</span>.</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-ananthaswamyWhyMachinesLearn2024" class="csl-entry" role="listitem">
+Ananthaswamy, Anil. 2024. <em>Why Machines Learn: The Elegant Math Behind Modern <span>AI</span></em>. New York: Dutton.
+</div>
+<div id="ref-Hay1960MarkIP" class="csl-entry" role="listitem">
+Hay, John C., B. Lynch, and David Russell Bedford Smith. 1960. <span>“Mark <span>I</span> Perceptron Operators’ Manual.”</span>
+</div>
+<div id="ref-konradlorenzAnalogySourceKnowledge1973" class="csl-entry" role="listitem">
+Konrad Lorenz. 1973a. <span>“Analogy as a <span>Source</span> of <span>Knowledge</span>.”</span> Stockholm, Sweden.
+</div>
+<div id="ref-konradlorenzKonradLorenzBiography1973" class="csl-entry" role="listitem">
+———. 1973b. <span>“Konrad <span>Lorenz</span>: <span>Biography</span>.”</span>
+</div>
+<div id="ref-mccullochLogicalCalculusIdeas1943" class="csl-entry" role="listitem">
+McCulloch, Warren S., and Walter Pitts. 1943. <span>“A Logical Calculus of the Ideas Immanent in Nervous Activity.”</span> <em>The Bulletin of Mathematical Biophysics</em> 5 (4): 115–33. <a href="https://doi.org/10.1007/BF02478259">https://doi.org/10.1007/BF02478259</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

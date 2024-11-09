@@ -8,6 +8,8 @@ project:
     - posts/counting-is-hard.qmd
     - posts/breaking-caesar-cipher.qmd
     - annotations/history-of-language-models.qmd
+    - annotations/programming-as-theory-building.qmd
+    - annotations/why-machines-learn.qmd
     - posts/path-to-llms.qmd
     - posts/feature-flags.qmd
     - posts/chessrank.qmd

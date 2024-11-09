@@ -7,7 +7,7 @@ format:
 
 Engineering at [Airbase](https://www.airbase.com/), previously Twitter, Blurb, Gluster.
 
-[@vikasgorur](https://x.com/vikasgorur)
+[\@vikasgorur](https://x.com/vikasgorur)
 
 ## Machine Learning
 
@@ -20,13 +20,13 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 
 ## Applied Math
 
-<span class="pub-date">2024-10-28</span> [chessrank: who should win a tournament?](posts/chessrank.qmd) \
 <span class="pub-date">2024-07-24</span> [Counting is hard](posts/counting-is-hard.qmd)
 
 ## Annotations
 
 My notes on papers and articles I've read.
 
+<span class="pub-date">2024-11-09</span> [_Why Machines Learn_](annotations/why-machines-learn.qmd) (book) \
 <span class="pub-date">2024-10-07</span> [History of Language Modeling](annotations/history-of-language-models.qmd)
 
 ## Exercises

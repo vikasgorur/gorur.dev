@@ -1,0 +1,17 @@
+---
+title: Why Machines Learn
+---
+
+These are interesting things mentioned in _Why Machines Learn: The Elegant Maths behind Modern AI_, @ananthaswamyWhyMachinesLearn2024.
+
+**Imprinting**: Konrad Lorenz discovered that ducklings imprint on the first moving thing they see after hatching. More interestingly, they can imprint on _relations_. If upon birth they see two moving red objects, they will later follow two objects of the same color, even if the color is different. More about this in his Nobel lecture [@konradlorenzAnalogySourceKnowledge1973] and biography [@konradlorenzKonradLorenzBiography1973].
+
+**The first artificial neuron**: The paper about the first artificial neuron was a collaboration between McCulloch, a professor in his mid-40s and Pitts, a teenage prodigy who was hanging around a university and was adopted into the McCulloch home. The paper itself [@mccullochLogicalCalculusIdeas1943] is impenetrable, written in a formal math style reminiscient of _Principia Mathematica_. The important conclusion though is that combinations of the artificial neuron can implement any boolean logic.
+
+**Hebbian learning** can be understood as the memorable phrase "neurons that fire together, wire together".
+
+**The Mark I perceptron** was a hardware implementation that could recognize handwritten characters from a 20x20 image. It was a 3-layer neural network, although only one layer had adjustable weights (in hardware, using DC motors to drive potentiometers, essentially volume knobs!). The operator's manual [@Hay1960MarkIP] has all the fascinating details.
+
+William Rowan Hamilton discovered **quarternions** and etched it on a bridge in Dublin. He's also responsible for notions of "scalar" and "vector".
+
+A hyperplane, such as the one learnt by a perceptron, can be uniquely described by a vector that is orthogonal to it. This is in fact the vector of weights, $w$.

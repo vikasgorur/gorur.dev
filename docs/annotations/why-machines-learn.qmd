@@ -1,0 +1,5 @@
+---
+title: Why Machines Learn
+---
+
+These are things I learned from _Why Machines Learn: The Elegant Maths behind Modern AI_ (@ananthaswamyWhyMachinesLearn2024.
