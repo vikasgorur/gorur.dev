@@ -12,6 +12,21 @@ These are interesting things mentioned in _Why Machines Learn: The Elegant Maths
 
 **The Mark I perceptron** was a hardware implementation that could recognize handwritten characters from a 20x20 image. It was a 3-layer neural network, although only one layer had adjustable weights (in hardware, using DC motors to drive potentiometers, essentially volume knobs!). The operator's manual [@Hay1960MarkIP] has all the fascinating details.
 
-William Rowan Hamilton discovered **quarternions** and etched it on a bridge in Dublin. He's also responsible for notions of "scalar" and "vector".
+William Rowan Hamilton discovered **quaternions** and etched it on a bridge in Dublin. He's also responsible for notions of "scalar" and "vector".
 
 A hyperplane, such as the one learnt by a perceptron, can be uniquely described by a vector that is orthogonal to it. This is in fact the vector of weights, $w$.
+
+The **perceptron learning rule** is simple, but it's remarkable that it always converges if the dataset is linearly separable. The lecture notes [@kilianweinbergerCS457802024] have an accessible proof of this theorem, also reproduced in the book.
+
+When two dialup modems are trying to establish a connection they send a pre-agreed signal that lets them configure (learn) an **adaptive filter** to filter out the noise particular to that line. This is some of the weird sounds we used to hear! The course notes in [@ucberkeleyEECS20NSignalsSystems2011] have more details.
+
+Adaptive filters use the mean-squared error (MSE) as the cost function. When reading about linear regression I've always wondered why we can't just use the absolute difference. One reason to prefer MSE is that it's differentiable everywhere. Another reason mentioned in this book is that the MSE punishes outliers much more than the absolute difference.
+
+The idea of stochastic gradient descent was already invented by the **ADALINE** project at Stanford in the 60s, which tried to solve some of the same problems as the perceptron machine.
+
+Paul Erdős wasn't convinced at first that switching doors in the Monty Hall problem was the right solution. There is hope for all of us!
+
+Bayesian statistics was used by Frederick Mosteller and David Wallace in the 1940s to figure out the authorship of _The Federalist Papers_.
+
+A concise way to remember Principal Component Analysis (PCA): _The eigenvectors of a covariance matrix are the principal components of the original data matrix._
+

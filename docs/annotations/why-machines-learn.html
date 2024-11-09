@@ -182,8 +182,15 @@ window.Quarto = {
 <p><strong>The first artificial neuron</strong>: The paper about the first artificial neuron was a collaboration between McCulloch, a professor in his mid-40s and Pitts, a teenage prodigy who was hanging around a university and was adopted into the McCulloch home. The paper itself <span class="citation" data-cites="mccullochLogicalCalculusIdeas1943">(<a href="#ref-mccullochLogicalCalculusIdeas1943" role="doc-biblioref">McCulloch and Pitts 1943</a>)</span> is impenetrable, written in a formal math style reminiscient of <em>Principia Mathematica</em>. The important conclusion though is that combinations of the artificial neuron can implement any boolean logic.</p>
 <p><strong>Hebbian learning</strong> can be understood as the memorable phrase “neurons that fire together, wire together”.</p>
 <p><strong>The Mark I perceptron</strong> was a hardware implementation that could recognize handwritten characters from a 20x20 image. It was a 3-layer neural network, although only one layer had adjustable weights (in hardware, using DC motors to drive potentiometers, essentially volume knobs!). The operator’s manual <span class="citation" data-cites="Hay1960MarkIP">(<a href="#ref-Hay1960MarkIP" role="doc-biblioref">Hay, Lynch, and Smith 1960</a>)</span> has all the fascinating details.</p>
-<p>William Rowan Hamilton discovered <strong>quarternions</strong> and etched it on a bridge in Dublin. He’s also responsible for notions of “scalar” and “vector”.</p>
+<p>William Rowan Hamilton discovered <strong>quaternions</strong> and etched it on a bridge in Dublin. He’s also responsible for notions of “scalar” and “vector”.</p>
 <p>A hyperplane, such as the one learnt by a perceptron, can be uniquely described by a vector that is orthogonal to it. This is in fact the vector of weights, <span class="math inline">\(w\)</span>.</p>
+<p>The <strong>perceptron learning rule</strong> is simple, but it’s remarkable that it always converges if the dataset is linearly separable. The lecture notes <span class="citation" data-cites="kilianweinbergerCS457802024">(<a href="#ref-kilianweinbergerCS457802024" role="doc-biblioref">Kilian Weinberger 2024</a>)</span> have an accessible proof of this theorem, also reproduced in the book.</p>
+<p>When two dialup modems are trying to establish a connection they send a pre-agreed signal that lets them configure (learn) an <strong>adaptive filter</strong> to filter out the noise particular to that line. This is some of the weird sounds we used to hear! The course notes in <span class="citation" data-cites="ucberkeleyEECS20NSignalsSystems2011">(<a href="#ref-ucberkeleyEECS20NSignalsSystems2011" role="doc-biblioref">UC Berkeley 2011</a>)</span> have more details.</p>
+<p>Adaptive filters use the mean-squared error (MSE) as the cost function. When reading about linear regression I’ve always wondered why we can’t just use the absolute difference. One reason to prefer MSE is that it’s differentiable everywhere. Another reason mentioned in this book is that the MSE punishes outliers much more than the absolute difference.</p>
+<p>The idea of stochastic gradient descent was already invented by the <strong>ADALINE</strong> project at Stanford in the 60s, which tried to solve some of the same problems as the perceptron machine.</p>
+<p>Paul Erdős wasn’t convinced at first that switching doors in the Monty Hall problem was the right solution. There is hope for all of us!</p>
+<p>Bayesian statistics was used by Frederick Mosteller and David Wallace in the 1940s to figure out the authorship of <em>The Federalist Papers</em>.</p>
+<p>A concise way to remember Principal Component Analysis (PCA): <em>The eigenvectors of a covariance matrix are the principal components of the original data matrix.</em></p>
 
 
 
@@ -195,6 +202,9 @@ Ananthaswamy, Anil. 2024. <em>Why Machines Learn: The Elegant Math Behind Modern
 <div id="ref-Hay1960MarkIP" class="csl-entry" role="listitem">
 Hay, John C., B. Lynch, and David Russell Bedford Smith. 1960. <span>“Mark <span>I</span> Perceptron Operators’ Manual.”</span>
 </div>
+<div id="ref-kilianweinbergerCS457802024" class="csl-entry" role="listitem">
+Kilian Weinberger. 2024. <span>“<span>CS</span> 4/5780: <span>Intro</span> to <span>Machine Learning</span>.”</span>
+</div>
 <div id="ref-konradlorenzAnalogySourceKnowledge1973" class="csl-entry" role="listitem">
 Konrad Lorenz. 1973a. <span>“Analogy as a <span>Source</span> of <span>Knowledge</span>.”</span> Stockholm, Sweden.
 </div>
@@ -203,6 +213,9 @@ Konrad Lorenz. 1973a. <span>“Analogy as a <span>Source</span> of <span>Knowled
 </div>
 <div id="ref-mccullochLogicalCalculusIdeas1943" class="csl-entry" role="listitem">
 McCulloch, Warren S., and Walter Pitts. 1943. <span>“A Logical Calculus of the Ideas Immanent in Nervous Activity.”</span> <em>The Bulletin of Mathematical Biophysics</em> 5 (4): 115–33. <a href="https://doi.org/10.1007/BF02478259">https://doi.org/10.1007/BF02478259</a>.
+</div>
+<div id="ref-ucberkeleyEECS20NSignalsSystems2011" class="csl-entry" role="listitem">
+UC Berkeley. 2011. <span>“<span>EECS20N</span>: <span>Signals</span> and <span>Systems</span> - <span>Modem Negotiation</span>.”</span>
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
