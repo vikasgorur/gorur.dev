@@ -177,6 +177,7 @@ window.Quarto = {
 </header>
 
 
+<p><em>Last updated</em>: Nov 9, 2024.</p>
 <p>These are interesting things mentioned in <em>Why Machines Learn: The Elegant Maths behind Modern AI</em>, <span class="citation" data-cites="ananthaswamyWhyMachinesLearn2024">Ananthaswamy (<a href="#ref-ananthaswamyWhyMachinesLearn2024" role="doc-biblioref">2024</a>)</span>.</p>
 <p><strong>Imprinting</strong>: Konrad Lorenz discovered that ducklings imprint on the first moving thing they see after hatching. More interestingly, they can imprint on <em>relations</em>. If upon birth they see two moving red objects, they will later follow two objects of the same color, even if the color is different. More about this in his Nobel lecture <span class="citation" data-cites="konradlorenzAnalogySourceKnowledge1973">(<a href="#ref-konradlorenzAnalogySourceKnowledge1973" role="doc-biblioref">Konrad Lorenz 1973a</a>)</span> and biography <span class="citation" data-cites="konradlorenzKonradLorenzBiography1973">(<a href="#ref-konradlorenzKonradLorenzBiography1973" role="doc-biblioref">Konrad Lorenz 1973b</a>)</span>.</p>
 <p><strong>The first artificial neuron</strong>: The paper about the first artificial neuron was a collaboration between McCulloch, a professor in his mid-40s and Pitts, a teenage prodigy who was hanging around a university and was adopted into the McCulloch home. The paper itself <span class="citation" data-cites="mccullochLogicalCalculusIdeas1943">(<a href="#ref-mccullochLogicalCalculusIdeas1943" role="doc-biblioref">McCulloch and Pitts 1943</a>)</span> is impenetrable, written in a formal math style reminiscient of <em>Principia Mathematica</em>. The important conclusion though is that combinations of the artificial neuron can implement any boolean logic.</p>
@@ -191,6 +192,17 @@ window.Quarto = {
 <p>Paul Erdős wasn’t convinced at first that switching doors in the Monty Hall problem was the right solution. There is hope for all of us!</p>
 <p>Bayesian statistics was used by Frederick Mosteller and David Wallace in the 1940s to figure out the authorship of <em>The Federalist Papers</em>.</p>
 <p>A concise way to remember Principal Component Analysis (PCA): <em>The eigenvectors of a covariance matrix are the principal components of the original data matrix.</em></p>
+<p>The <strong>support vector machine</strong> (SVM) overcomes the linear separability limitation of the perceptron. It finds an <em>optimal</em> separating hyperplane by projecting the dataset to a much higher dimension and finding a plane there. The algorithm to find this hyperplane works by minimizing a cost function related to the weight vector while simultaneously satisfying a set of constraints, one per data point.</p>
+<p>Constrained optimization required by SVMs uses something called the technique of <strong>Lagrange multipliers</strong>. It consists of defining a new function, the Lagrange function, that encodes all the constraints and then finding the extrema of it.</p>
+<p>The optimal separating hyperplane of the SVM depends only on the dot produces of a few “support vectors” that anchor the margin, hence the name. However, computing the dot products in higher dimensions can be expensive (this is not very convincing to me – is it still true?). The solution is to use the <strong>kernel trick</strong>.</p>
+<p>A <em>kernel</em> is a function such that given two vectors <span class="math inline">\(x_i\)</span> and <span class="math inline">\(x_j\)</span> and a function <span class="math inline">\(\phi(x)\)</span> that transforms each vector to a higher dimension, the kernel <span class="math inline">\(K(x)\)</span> allows one to compute the dot product in the higher dimension while only working with the lower-dimension vectors:</p>
+<p><span class="math display">\[
+K(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)
+\]</span> The kernel trick was suggested by a French scientist Isabelle Guyon, working with Bernard Boser and Vladimir Vapnik. The trick apparently can work even when projecting to an <em>infinite</em> dimensional space, called a Hilbert space. The kernel in that case is called the “radial basis function” (RBF).</p>
+<p>An RBF kernel can <em>always</em> find a linearly separable hyperplane in some infinite-dimensional space. This means that SVMs are also <strong>universal function approximators</strong>, just like deep neural networks.</p>
+<p>The original SVM paper is <span class="citation" data-cites="boserTrainingAlgorithmOptimal1992">(<a href="#ref-boserTrainingAlgorithmOptimal1992" role="doc-biblioref">Boser, Guyon, and Vapnik 1992</a>)</span>.</p>
+<p>A <strong>spin-glass</strong> is a material that can be thought of as a 3d lattice.</p>
+<p>The physicist John Hopfield (Nobel in Physics, 2024) was thinking about the problem of <strong>associative memory</strong>. How is it that when given a fragment of an image or a hint of a smell, we can recall an entire vivid memory?</p>
 
 
 
@@ -198,6 +210,9 @@ window.Quarto = {
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-ananthaswamyWhyMachinesLearn2024" class="csl-entry" role="listitem">
 Ananthaswamy, Anil. 2024. <em>Why Machines Learn: The Elegant Math Behind Modern <span>AI</span></em>. New York: Dutton.
+</div>
+<div id="ref-boserTrainingAlgorithmOptimal1992" class="csl-entry" role="listitem">
+Boser, Bernhard E., Isabelle M. Guyon, and Vladimir N. Vapnik. 1992. <span>“A Training Algorithm for Optimal Margin Classifiers.”</span> In <em>Proceedings of the Fifth Annual Workshop on <span>Computational</span> Learning Theory</em>, 144–52. Pittsburgh Pennsylvania USA: ACM. <a href="https://doi.org/10.1145/130385.130401">https://doi.org/10.1145/130385.130401</a>.
 </div>
 <div id="ref-Hay1960MarkIP" class="csl-entry" role="listitem">
 Hay, John C., B. Lynch, and David Russell Bedford Smith. 1960. <span>“Mark <span>I</span> Perceptron Operators’ Manual.”</span>

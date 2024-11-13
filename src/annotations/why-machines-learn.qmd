@@ -1,6 +1,7 @@
 ---
 title: Why Machines Learn
 ---
+_Last updated_: Nov 9, 2024.
 
 These are interesting things mentioned in _Why Machines Learn: The Elegant Maths behind Modern AI_, @ananthaswamyWhyMachinesLearn2024.
 
@@ -30,3 +31,23 @@ Bayesian statistics was used by Frederick Mosteller and David Wallace in the 194
 
 A concise way to remember Principal Component Analysis (PCA): _The eigenvectors of a covariance matrix are the principal components of the original data matrix._
 
+The **support vector machine** (SVM) overcomes the linear separability limitation of the perceptron. It finds an _optimal_ separating hyperplane by projecting the dataset to a much higher dimension and finding a plane there. The algorithm to find this hyperplane works by minimizing a cost function related to the weight vector while simultaneously satisfying a set of constraints, one per data point.
+
+Constrained optimization required by SVMs uses something called the technique of **Lagrange multipliers**. It consists of defining a new function, the Lagrange function, that encodes all the constraints and then finding the extrema of it.
+
+The optimal separating hyperplane of the SVM depends only on the dot produces of a few "support vectors" that anchor the margin, hence the name. However, computing the dot products in higher dimensions can be expensive (this is not very convincing to me – is it still true?). The solution is to use the **kernel trick**.
+
+A _kernel_ is a function such that given two vectors $x_i$ and $x_j$ and a function $\phi(x)$ that transforms each vector to a higher dimension, the kernel $K(x)$ allows one to compute the dot product in the higher dimension while only working with the lower-dimension vectors:
+
+$$
+K(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)
+$$
+The kernel trick was suggested by a French scientist Isabelle Guyon, working with Bernard Boser and Vladimir Vapnik. The trick apparently can work even when projecting to an _infinite_ dimensional space, called a Hilbert space. The kernel in that case is called the "radial basis function" (RBF).
+
+An RBF kernel can _always_ find a linearly separable hyperplane in some infinite-dimensional space. This means that SVMs are also **universal function approximators**, just like deep neural networks.
+
+The original SVM paper is [@boserTrainingAlgorithmOptimal1992].
+
+A **spin-glass** is a material that can be thought of as a 3d lattice.
+
+The physicist John Hopfield (Nobel in Physics, 2024) was thinking about the problem of **associative memory**. How is it that when given a fragment of an image or a hint of a smell, we can recall an entire vivid memory?
