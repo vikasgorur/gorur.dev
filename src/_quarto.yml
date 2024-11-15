@@ -15,7 +15,7 @@ project:
     - posts/chessrank.qmd
     - exercises/stats110-practice1.qmd
 
-bibliography: /Users/vikas/auto-zotero.bib
+bibliography: /Users/vikas/study/vikasgorur.github.io/src/zotero.bib
 
 website:
   navbar:

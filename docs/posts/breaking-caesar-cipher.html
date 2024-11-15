@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.32">
+<meta name="generator" content="quarto-1.6.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,10 +69,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2486e1f0a3ee9ee1fc393803a1361cdb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-ba792ffaf094770a44bc10fad9fa3043.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-7fccaa5a4effadb8a2e8cfc8e0465904.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -203,7 +203,7 @@ window.Quarto = {
 <p>One of the simplest way to “encrypt” a piece of English text is the Caesar (rotational) cipher which shifts each letter by a fixed number of places in the alphabet with wrap around. A well-known example is <code>rot13</code> where every letter is shifted by 13 places. So <code>A -&gt; N, B -&gt; O</code> and so on.</p>
 <p>I have often read that simple ciphers like this can be broken by “frequency analysis”, taking advantage of the observation that the frequencies of the various letters in English is well-known. But what exactly does that mean? How would such frequency analysis actually work?</p>
 <p>First, let’s write some code to encrypt and decrypt. For simplicity we’ll restrict our alphabet to just the uppercase letters <code>A-Z</code> and space and we’ll leave the space characters unchanged. The “key” for our encryption is a single number in the range <code>[0, 25]</code>.</p>
-<div id="afad18a7" class="cell" data-execution_count="1">
+<div id="7e70fc8d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rotate(c: <span class="bu">str</span>, n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Rotate the character c by n places, wrapping around.</span></span>
@@ -232,7 +232,7 @@ window.Quarto = {
 </div>
 <p>Our task now is to figure out the key <code>n</code> when given only the encrypted text and the knowledge that a Caesar cipher has been used.</p>
 <p>Since we want to do frequency analysis in some fashion, let’s write a function to return the letter frequencies for a piece of text. For reasons that will become clear later we’ll actually compute a <em>probability mass function</em>, which is just the frequencies divided by the total count of letters. We will represent the PMF as a dictionary that maps each letter of our alphabet to its probability.</p>
-<div id="6e019ff1" class="cell" data-execution_count="2">
+<div id="132ab8bb" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>LetterPmf <span class="op">=</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">float</span>]</span>
@@ -276,19 +276,19 @@ window.Quarto = {
 </ol>
 <p>(Ofcourse we could argue that this is all needlessly complicated. If we already know that the text has been encrypted with a Caesar cipher, we can just inspect the results of trying all 26 keys and surely all but one of them will look like gibberish. That’s true, but in this post we’re more interested in teaching a computer to do that work for us.)</p>
 <p>Let’s use the complete Sherlock Holmes canon as a stand-in for the English language as a whole and compute the letter PMF.</p>
-<div id="478ce969" class="cell" data-execution_count="3">
+<div id="60a177b6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(s: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">""</span>.join([c <span class="cf">for</span> c <span class="kw">in</span> s <span class="cf">if</span> c.isalpha() <span class="kw">or</span> c <span class="op">==</span> <span class="st">" "</span>]).upper()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>HOLMES <span class="op">=</span> letter_pmf(clean_text(<span class="bu">open</span>(<span class="st">"data/holmes.txt"</span>).read()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>For a moment let’s assume we have a way to measure how close two frequency distributions are and call it <code>pmf_distance</code>. The definition below is just a dummy, always returning <code>0.0</code>.</p>
-<div id="511cba4f" class="cell" data-execution_count="4">
+<div id="6c4988fa" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pmf_distance(p: LetterPmf, q: LetterPmf) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can now do the decryption:</p>
-<div id="e4a5235d" class="cell" data-execution_count="5">
+<div id="9f18d07e" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -336,7 +336,7 @@ window.Quarto = {
 H(x) = \sum_{x_i} P(x_i) \space log_2 \frac{1}{P(x_i)}
 \]</span></p>
 <p>This too makes intuitive sense. For example, imagine a light that can be in two states on or off with equal probability. The entropy of this distribution is:</p>
-<div id="980f789c" class="cell" data-execution_count="6">
+<div id="4a24662d" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fl">0.5</span> <span class="op">*</span> math.log2(<span class="dv">1</span><span class="op">/</span><span class="fl">0.5</span>) <span class="op">+</span> <span class="fl">0.5</span> <span class="op">*</span> math.log2(<span class="dv">1</span><span class="op">/</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>1.0</code></pre>
@@ -347,13 +347,13 @@ H(x) = \sum_{x_i} P(x_i) \space log_2 \frac{1}{P(x_i)}
 <p><span class="math display">\[
 D(P, Q) = \sum_{x_i} P(x_i) \space log_2 \frac{P(x_i)}{Q(x_i)}
 \]</span></p>
-<div id="e898ca58" class="cell" data-execution_count="7">
+<div id="581e9e40" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> relative_entropy(p: LetterPmf, q: LetterPmf) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sum</span>(p[x] <span class="op">*</span> (math.log2(p[x]) <span class="op">-</span> math.log2(q[x])) <span class="cf">for</span> x <span class="kw">in</span> p.keys())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can also think of this as an informal kind of “distance” between <span class="math inline">\(P\)</span> and <span class="math inline">\(Q\)</span>, while remembering that it’s not a true distance in the mathematical sense because it’s not symmetric (<span class="math inline">\(D(P, Q) \neq D(Q, P)\)</span> in general) and it doesn’t satisfy a few other distance-like properties. This distance is also known as the <strong>Kullback-Leibler divergence</strong>, a name that tells you nothing while being needlessly scary-looking.</p>
 <p>We can try the decryption again, this time using the relative entropy as the distance between the distribution for each attempted decryption and the distribution for the English language:</p>
-<div id="9631a970" class="cell" data-execution_count="8">
+<div id="88fd455f" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pmf_distance <span class="op">=</span> relative_entropy</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>try_decrypt(SECRET)[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
@@ -361,7 +361,7 @@ D(P, Q) = \sum_{x_i} P(x_i) \space log_2 \frac{P(x_i)}{Q(x_i)}
 </div>
 </div>
 <p>We can also visualize the relative entropy for each of the candidate keys to get a sense of how the frequency distribution with the correct key is so obviously different from that for all the wrong keys. We’ll plot the reciprocal of the distance just to make the graph prettier.</p>
-<div id="162e11b0" class="cell" data-execution_count="9">
+<div id="7e224669" class="cell" data-execution_count="9">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
