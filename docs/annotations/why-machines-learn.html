@@ -201,8 +201,13 @@ K(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)
 \]</span> The kernel trick was suggested by a French scientist Isabelle Guyon, working with Bernard Boser and Vladimir Vapnik. The trick apparently can work even when projecting to an <em>infinite</em> dimensional space, called a Hilbert space. The kernel in that case is called the “radial basis function” (RBF).</p>
 <p>An RBF kernel can <em>always</em> find a linearly separable hyperplane in some infinite-dimensional space. This means that SVMs are also <strong>universal function approximators</strong>, just like deep neural networks.</p>
 <p>The original SVM paper is <span class="citation" data-cites="boserTrainingAlgorithmOptimal1992">(<a href="#ref-boserTrainingAlgorithmOptimal1992" role="doc-biblioref">Boser, Guyon, and Vapnik 1992</a>)</span>.</p>
-<p>A <strong>spin-glass</strong> is a material that can be thought of as a 3d lattice.</p>
+<p>Glass is a disordered solid — without an ordered crystalline structure yet not a liquid. By analogy, certain magnetic materials that have atoms or ions with randomly oriented magnetic moments (which arise due to ‘spin’) are called <strong>spin glasses</strong>.</p>
+<p>A simple mathematical model of spin glasses assumes that the spin of each element in a 2d or 3d array depends only on the spins of its neighbors. If such a material starts out in an arbitrary state, the spins will flip until the entire system reaches the state of lowest energy, which happens when the spins are all aligned.</p>
 <p>The physicist John Hopfield (Nobel in Physics, 2024) was thinking about the problem of <strong>associative memory</strong>. How is it that when given a fragment of an image or a hint of a smell, we can recall an entire vivid memory?</p>
+<p>The solution was the <strong>Hopfield network</strong>. The connections in such a network are arranged similarly to the spin glasses. For a given configuration, the weights of the neurons represent the “memory” of the network. If the memory puts the network into its lowest energy state, any <em>distorted</em> (noisy) version of the same memory would put the network in a higher energy state. The network however can find its way back to the lowest energy state through a dynamical process, like any physical system finding its equilibrium. Thus we can think of the Hopfield network as a system that stores a memory and can retrieve that memory when given a fragment of it.</p>
+<p>Hopfield could only publish his paper <span class="citation" data-cites="hopfieldNeuralNetworksPhysical1982">(<a href="#ref-hopfieldNeuralNetworksPhysical1982" role="doc-biblioref">Hopfield 1982</a>)</span> because he was a member of the Academy of Sciences and thus had privileges to publish without peer review. “No refereed journal would have accepted it”. 🙃</p>
+<p>George Cybenko proved in 1989 that a neural network with just one hidden layer and an arbitrarily large number of neurons can approximate any function. This is the <strong>universal approximation theorem</strong>.</p>
+<p>Part of his proof depends on the idea that <strong>functions are vectors in an infinite dimensional space</strong>.</p>
 
 
 
@@ -216,6 +221,9 @@ Boser, Bernhard E., Isabelle M. Guyon, and Vladimir N. Vapnik. 1992. <span>“A 
 </div>
 <div id="ref-Hay1960MarkIP" class="csl-entry" role="listitem">
 Hay, John C., B. Lynch, and David Russell Bedford Smith. 1960. <span>“Mark <span>I</span> Perceptron Operators’ Manual.”</span> <a href="https://apps.dtic.mil/sti/tr/pdf/AD0236965.pdf">https://apps.dtic.mil/sti/tr/pdf/AD0236965.pdf</a>.
+</div>
+<div id="ref-hopfieldNeuralNetworksPhysical1982" class="csl-entry" role="listitem">
+Hopfield, J J. 1982. <span>“Neural Networks and Physical Systems with Emergent Collective Computational Abilities.”</span> <em>Proceedings of the National Academy of Sciences</em> 79 (8): 2554–58. <a href="https://doi.org/10.1073/pnas.79.8.2554">https://doi.org/10.1073/pnas.79.8.2554</a>.
 </div>
 <div id="ref-kilianweinbergerCS457802024" class="csl-entry" role="listitem">
 Kilian Weinberger. 2024. <span>“<span>CS</span> 4/5780: <span>Intro</span> to <span>Machine Learning</span>.”</span> 2024. <a href="https://www.cs.cornell.edu/courses/cs4780/2024sp/">https://www.cs.cornell.edu/courses/cs4780/2024sp/</a>.

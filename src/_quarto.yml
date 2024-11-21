@@ -2,6 +2,8 @@ project:
   type: website
   output-dir: ../docs
   execute-dir: project
+  preview:
+    port: 14000
   render:
     - index.qmd
     - posts/learning-by-gradient-descent.qmd
