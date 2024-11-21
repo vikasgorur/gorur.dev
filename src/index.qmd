@@ -2,12 +2,15 @@
 title: "Vikas Gorur"
 format:
     html:
+        toc: false
         code-fold: true
 ---
 
+<img src="mysore.jpeg" alt="A drawing of the Mysore railway station" width="120%" style="margin-left:-10%;"/>
+
 Engineering at [Airbase](https://www.airbase.com/), previously Twitter, Blurb, Gluster.
 
-[\@vikasgorur](https://x.com/vikasgorur)
+[\@vikasgorur](https://vikasgorur.bsky.social)
 
 ## Machine Learning
 
