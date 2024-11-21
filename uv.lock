@@ -479,6 +479,29 @@ wheels = [
 ]
 
 [[package]]
+name = "gorur-dev"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "fastrand" },
+    { name = "jupyterlab" },
+    { name = "marimo" },
+    { name = "matplotlib" },
+    { name = "pandas" },
+    { name = "torch" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "fastrand", specifier = ">=2.0.1" },
+    { name = "jupyterlab", specifier = ">=4.3.0" },
+    { name = "marimo", specifier = ">=0.9.18" },
+    { name = "matplotlib", specifier = ">=3.9.2" },
+    { name = "pandas", specifier = ">=2.2.3" },
+    { name = "torch", specifier = "==2.2.2" },
+]
+
+[[package]]
 name = "h11"
 version = "0.14.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2049,29 +2072,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e0/fc/1d785078eefd6945f3e5bab5c076e4230698046231eb0f3747bc5c8fa992/uvicorn-0.32.0.tar.gz", hash = "sha256:f78b36b143c16f54ccdb8190d0a26b5f1901fe5a3c777e1ab29f26391af8551e", size = 77564 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/eb/14/78bd0e95dd2444b6caacbca2b730671d4295ccb628ef58b81bee903629df/uvicorn-0.32.0-py3-none-any.whl", hash = "sha256:60b8f3a5ac027dcd31448f411ced12b5ef452c646f76f02f8cc3f25d8d26fd82", size = 63723 },
-]
-
-[[package]]
-name = "vikasgorur-github-io"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "fastrand" },
-    { name = "jupyterlab" },
-    { name = "marimo" },
-    { name = "matplotlib" },
-    { name = "pandas" },
-    { name = "torch" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "fastrand", specifier = ">=2.0.1" },
-    { name = "jupyterlab", specifier = ">=4.3.0" },
-    { name = "marimo", specifier = ">=0.9.18" },
-    { name = "matplotlib", specifier = ">=3.9.2" },
-    { name = "pandas", specifier = ">=2.2.3" },
-    { name = "torch", specifier = "==2.2.2" },
 ]
 
 [[package]]
