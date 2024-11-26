@@ -1,0 +1,11 @@
+---
+title: The Simplest Autoencoder
+jupyter: python3
+---
+The autoencoder.
+
+```python
+
+def f(x):
+	return x*2
+```

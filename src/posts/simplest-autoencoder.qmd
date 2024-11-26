@@ -1,0 +1,60 @@
+---
+title: The Simplest Autoencoder
+jupyter: python3
+---
+The autoencoder.
+
+```{python}
+import marimo as mo
+import numpy as np
+import torch
+from torch import nn
+from torchviz import make_dot
+```
+
+Define the inputs.
+
+```{python}
+INPUTS = torch.tensor([
+     1, 0, 0, 0, 0, 0, 0, 0,
+     0, 1, 0, 0, 0, 0, 0, 0,
+	 0, 0, 1, 0, 0, 0, 0, 0,
+	 0, 0, 0, 1, 0, 0, 0, 0,
+	 0, 0, 0, 0, 1, 0, 0, 0,
+     0, 0, 0, 0, 0, 1, 0, 0,
+	 0, 0, 0, 0, 0, 0, 1, 0,
+	 0, 0, 0, 0, 0, 0, 0, 1],
+	 dtype=torch.float32).reshape(8, 8)
+```
+
+Define the network
+
+```{python}
+from collections import OrderedDict
+
+class AutoEncoder(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.stack = nn.Sequential(OrderedDict([
+            ('input', nn.Linear(8, 3)),
+            ('sigmoid', nn.Sigmoid()),
+            ('hidden', nn.Linear(3, 8)),
+            ('sigmoid', nn.Sigmoid())
+        ]))
+
+    def forward(self, x):
+        return self.stack(x)
+```
+
+Visualize the network
+
+```{python}
+from torchview import draw_graph
+
+def visualize(model: nn.Module):
+    g = draw_graph(model, input_size=(8,)).visual_graph
+    g.graph_attr["rankdir"] = 'LR'
+    return g.render()
+
+#visualize(AutoEncoder())
+```
