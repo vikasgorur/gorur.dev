@@ -1,7 +1,7 @@
 import marimo
 
-__generated_with = "0.7.5"
-app = marimo.App(width="medium")
+__generated_with = "0.9.18"
+app = marimo.App(width="full")
 
 
 @app.cell
@@ -41,7 +41,7 @@ def __(IMAGE_SIZE, Shape, np):
         for offset in s:
             img[start_x + offset[0], start_y + offset[1]] = np.random.normal(0.75, 0.2)
         return img
-    return draw_shape,
+    return (draw_shape,)
 
 
 @app.cell
@@ -55,7 +55,7 @@ def __(plt):
     def show(shape):
         plt.imshow(shape, cmap="grey")
         plt.show()
-    return show,
+    return (show,)
 
 
 @app.cell
