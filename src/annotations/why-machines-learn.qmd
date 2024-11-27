@@ -1,7 +1,7 @@
 ---
 title: Why Machines Learn
 ---
-_Last updated_: Nov 9, 2024.
+_Last updated_: Nov 27, 2024.
 
 These are interesting things mentioned in _Why Machines Learn: The Elegant Maths behind Modern AI_, @ananthaswamyWhyMachinesLearn2024.
 
@@ -60,4 +60,24 @@ Hopfield could only publish his paper [@hopfieldNeuralNetworksPhysical1982] beca
 
 George Cybenko proved in 1989 that a neural network with just one hidden layer and an arbitrarily large number of neurons can approximate any function. This is the **universal approximation theorem**. 
 
-Part of his proof depends on the idea that **functions are vectors in an infinite dimensional space**. 
+The proof uses the idea that **functions are vectors in an infinite dimensional space**. It's not a constructive proof but one by contradiction. It assumes that a network with a single hidden layer cannot span the entire vector space of functions and arrives at a contradiction.
+
+A deterministic algorithm for updating the weights of a neural network suffers from the problem of **symmetry**. If the initial weights are all assigned the same value (say, 0), they will be updated by the learning rule in the same way and thus effectively become redundant. The simple way to solve this problem is to initialize the weights randomly, an idea that first occured to Rumelhart.
+
+The backprop paper [@rumelhartLearningRepresentationsBackpropagating1986] was the "last time" it was discovered. See  [@liuBackstoryBackpropagation2023] for a detailed history of backpropagation.
+
+David Hubel and Torsten Wiesel did experiments on cats and figured out essentially that the neurons in the brain respond to certain "features" in the visual field, like edges.
+
+Yann LeCun at Bell Labs in 1988 designed a neural network to recognize handwritten digits from a US Postal Service dataset (is this the origin of the famous MNIST dataset?). He wrote a compiler in Lisp that would take the architecture of a neural network and generate C code to implement it.
+
+His network, LeNet, was a **convolutional neural network**. A 2d convolution of an image involves moving a small _kernel_ (say 4x4) over the pixels of the image and generating a new pixel through some operation (say, average or max). The end result of this is a slightly smaller image. While these kernels could be handcrafted, it's more scalable to let the neural net learn them. This is how a neural net learns which features are important.
+
+In 2009, Fei-Fei Li presented an immense dataset of labeled images, ImageNet and an associated challenge. Use the 1.2 million images, binned into 1000 categories, to train an algorithm and test it on 100,000 unseen images. AlexNet, using GPUs for training won the contest in 2012 by a wide margin, kicking off the modern deep learning revolution.
+
+**Grokking** is a rather strange properly of deep neural networks. The cutting edge models today have parameters in the billions or trillions, sometimes outnumbering the instances of data used to train them. In theory these networks should simply overfit the data and not generalize, but that's not true.
+
+One hypothesis is that some kind of implicit regularization is happening in the training process. See also the illuminating short paper [@breimanReflectionsRefereeingPapers2018] that questions the usefulness of "theory" when doing ML research.
+
+LLMs are an instance of self-supervised learning. The pre-training helps the network learn some structure of language (or images, speech, ...) and fine-tuning later guides them towards a purpose.
+
+The theory of all this is far, far behind experimentation.

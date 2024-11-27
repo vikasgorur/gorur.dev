@@ -177,9 +177,9 @@ window.Quarto = {
 </header>
 
 
-<p><em>Last updated</em>: Nov 9, 2024.</p>
+<p><em>Last updated</em>: Nov 27, 2024.</p>
 <p>These are interesting things mentioned in <em>Why Machines Learn: The Elegant Maths behind Modern AI</em>, <span class="citation" data-cites="ananthaswamyWhyMachinesLearn2024">Ananthaswamy (<a href="#ref-ananthaswamyWhyMachinesLearn2024" role="doc-biblioref">2024</a>)</span>.</p>
-<p><strong>Imprinting</strong>: Konrad Lorenz discovered that ducklings imprint on the first moving thing they see after hatching. More interestingly, they can imprint on <em>relations</em>. If upon birth they see two moving red objects, they will later follow two objects of the same color, even if the color is different. More about this in his Nobel lecture <span class="citation" data-cites="konradlorenzAnalogySourceKnowledge1973">(<a href="#ref-konradlorenzAnalogySourceKnowledge1973" role="doc-biblioref">Konrad Lorenz 1973b</a>)</span> and biography <span class="citation" data-cites="konradlorenzKonradLorenzBiography1973">(<a href="#ref-konradlorenzKonradLorenzBiography1973" role="doc-biblioref">Konrad Lorenz 1973a</a>)</span>.</p>
+<p><strong>Imprinting</strong>: Konrad Lorenz discovered that ducklings imprint on the first moving thing they see after hatching. More interestingly, they can imprint on <em>relations</em>. If upon birth they see two moving red objects, they will later follow two objects of the same color, even if the color is different. More about this in his Nobel lecture <span class="citation" data-cites="konradlorenzAnalogySourceKnowledge1973">(<a href="#ref-konradlorenzAnalogySourceKnowledge1973" role="doc-biblioref">Konrad Lorenz 1973a</a>)</span> and biography <span class="citation" data-cites="konradlorenzKonradLorenzBiography1973">(<a href="#ref-konradlorenzKonradLorenzBiography1973" role="doc-biblioref">Konrad Lorenz 1973b</a>)</span>.</p>
 <p><strong>The first artificial neuron</strong>: The paper about the first artificial neuron was a collaboration between McCulloch, a professor in his mid-40s and Pitts, a teenage prodigy who was hanging around a university and was adopted into the McCulloch home. The paper itself <span class="citation" data-cites="mccullochLogicalCalculusIdeas1943">(<a href="#ref-mccullochLogicalCalculusIdeas1943" role="doc-biblioref">McCulloch and Pitts 1943</a>)</span> is impenetrable, written in a formal math style reminiscient of <em>Principia Mathematica</em>. The important conclusion though is that combinations of the artificial neuron can implement any boolean logic.</p>
 <p><strong>Hebbian learning</strong> can be understood as the memorable phrase “neurons that fire together, wire together”.</p>
 <p><strong>The Mark I perceptron</strong> was a hardware implementation that could recognize handwritten characters from a 20x20 image. It was a 3-layer neural network, although only one layer had adjustable weights (in hardware, using DC motors to drive potentiometers, essentially volume knobs!). The operator’s manual <span class="citation" data-cites="Hay1960MarkIP">(<a href="#ref-Hay1960MarkIP" role="doc-biblioref">Hay, Lynch, and Smith 1960</a>)</span> has all the fascinating details.</p>
@@ -207,7 +207,17 @@ K(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)
 <p>The solution was the <strong>Hopfield network</strong>. The connections in such a network are arranged similarly to the spin glasses. For a given configuration, the weights of the neurons represent the “memory” of the network. If the memory puts the network into its lowest energy state, any <em>distorted</em> (noisy) version of the same memory would put the network in a higher energy state. The network however can find its way back to the lowest energy state through a dynamical process, like any physical system finding its equilibrium. Thus we can think of the Hopfield network as a system that stores a memory and can retrieve that memory when given a fragment of it.</p>
 <p>Hopfield could only publish his paper <span class="citation" data-cites="hopfieldNeuralNetworksPhysical1982">(<a href="#ref-hopfieldNeuralNetworksPhysical1982" role="doc-biblioref">Hopfield 1982</a>)</span> because he was a member of the Academy of Sciences and thus had privileges to publish without peer review. “No refereed journal would have accepted it”. 🙃</p>
 <p>George Cybenko proved in 1989 that a neural network with just one hidden layer and an arbitrarily large number of neurons can approximate any function. This is the <strong>universal approximation theorem</strong>.</p>
-<p>Part of his proof depends on the idea that <strong>functions are vectors in an infinite dimensional space</strong>.</p>
+<p>The proof uses the idea that <strong>functions are vectors in an infinite dimensional space</strong>. It’s not a constructive proof but one by contradiction. It assumes that a network with a single hidden layer cannot span the entire vector space of functions and arrives at a contradiction.</p>
+<p>A deterministic algorithm for updating the weights of a neural network suffers from the problem of <strong>symmetry</strong>. If the initial weights are all assigned the same value (say, 0), they will be updated by the learning rule in the same way and thus effectively become redundant. The simple way to solve this problem is to initialize the weights randomly, an idea that first occured to Rumelhart.</p>
+<p>The backprop paper <span class="citation" data-cites="rumelhartLearningRepresentationsBackpropagating1986">(<a href="#ref-rumelhartLearningRepresentationsBackpropagating1986" role="doc-biblioref">Rumelhart, Hinton, and Williams 1986</a>)</span> was the “last time” it was discovered. See <span class="citation" data-cites="liuBackstoryBackpropagation2023">(<a href="#ref-liuBackstoryBackpropagation2023" role="doc-biblioref">Liu 2023</a>)</span> for a detailed history of backpropagation.</p>
+<p>David Hubel and Torsten Wiesel did experiments on cats and figured out essentially that the neurons in the brain respond to certain “features” in the visual field, like edges.</p>
+<p>Yann LeCun at Bell Labs in 1988 designed a neural network to recognize handwritten digits from a US Postal Service dataset (is this the origin of the famous MNIST dataset?). He wrote a compiler in Lisp that would take the architecture of a neural network and generate C code to implement it.</p>
+<p>His network, LeNet, was a <strong>convolutional neural network</strong>. A 2d convolution of an image involves moving a small <em>kernel</em> (say 4x4) over the pixels of the image and generating a new pixel through some operation (say, average or max). The end result of this is a slightly smaller image. While these kernels could be handcrafted, it’s more scalable to let the neural net learn them. This is how a neural net learns which features are important.</p>
+<p>In 2009, Fei-Fei Li presented an immense dataset of labeled images, ImageNet and an associated challenge. Use the 1.2 million images, binned into 1000 categories, to train an algorithm and test it on 100,000 unseen images. AlexNet, using GPUs for training won the contest in 2012 by a wide margin, kicking off the modern deep learning revolution.</p>
+<p><strong>Grokking</strong> is a rather strange properly of deep neural networks. The cutting edge models today have parameters in the billions or trillions, sometimes outnumbering the instances of data used to train them. In theory these networks should simply overfit the data and not generalize, but that’s not true.</p>
+<p>One hypothesis is that some kind of implicit regularization is happening in the training process. See also the illuminating short paper <span class="citation" data-cites="breimanReflectionsRefereeingPapers2018">(<a href="#ref-breimanReflectionsRefereeingPapers2018" role="doc-biblioref">Breiman 2018</a>)</span> that questions the usefulness of “theory” when doing ML research.</p>
+<p>LLMs are an instance of self-supervised learning. The pre-training helps the network learn some structure of language (or images, speech, …) and fine-tuning later guides them towards a purpose.</p>
+<p>The theory of all this is far, far behind experimentation.</p>
 
 
 
@@ -219,26 +229,35 @@ Ananthaswamy, Anil. 2024. <em>Why Machines Learn: The Elegant Math Behind Modern
 <div id="ref-boserTrainingAlgorithmOptimal1992" class="csl-entry" role="listitem">
 Boser, Bernhard E., Isabelle M. Guyon, and Vladimir N. Vapnik. 1992. <span>“A Training Algorithm for Optimal Margin Classifiers.”</span> In <em>Proceedings of the Fifth Annual Workshop on <span>Computational</span> Learning Theory</em>, 144–52. Pittsburgh Pennsylvania USA: ACM. <a href="https://doi.org/10.1145/130385.130401">https://doi.org/10.1145/130385.130401</a>.
 </div>
+<div id="ref-breimanReflectionsRefereeingPapers2018" class="csl-entry" role="listitem">
+Breiman, Leo. 2018. <span>“Reflections <span>After Refereeing Papers</span> for <span>NIPS</span>.”</span> In <em>The <span>Mathematics</span> of <span>Generalization</span></em>, 1st ed., 11–15. CRC Press. <a href="https://doi.org/10.1201/9780429492525-2">https://doi.org/10.1201/9780429492525-2</a>.
+</div>
 <div id="ref-Hay1960MarkIP" class="csl-entry" role="listitem">
-Hay, John C., B. Lynch, and David Russell Bedford Smith. 1960. <span>“Mark <span>I</span> Perceptron Operators’ Manual.”</span> <a href="https://apps.dtic.mil/sti/tr/pdf/AD0236965.pdf">https://apps.dtic.mil/sti/tr/pdf/AD0236965.pdf</a>.
+Hay, John C., B. Lynch, and David Russell Bedford Smith. 1960. <span>“Mark <span>I</span> Perceptron Operators’ Manual.”</span>
 </div>
 <div id="ref-hopfieldNeuralNetworksPhysical1982" class="csl-entry" role="listitem">
 Hopfield, J J. 1982. <span>“Neural Networks and Physical Systems with Emergent Collective Computational Abilities.”</span> <em>Proceedings of the National Academy of Sciences</em> 79 (8): 2554–58. <a href="https://doi.org/10.1073/pnas.79.8.2554">https://doi.org/10.1073/pnas.79.8.2554</a>.
 </div>
 <div id="ref-kilianweinbergerCS457802024" class="csl-entry" role="listitem">
-Kilian Weinberger. 2024. <span>“<span>CS</span> 4/5780: <span>Intro</span> to <span>Machine Learning</span>.”</span> 2024. <a href="https://www.cs.cornell.edu/courses/cs4780/2024sp/">https://www.cs.cornell.edu/courses/cs4780/2024sp/</a>.
-</div>
-<div id="ref-konradlorenzKonradLorenzBiography1973" class="csl-entry" role="listitem">
-Konrad Lorenz. 1973a. <span>“Konrad <span>Lorenz</span>: <span>Biography</span>.”</span> December 1973. <a href="https://www.nobelprize.org/prizes/medicine/1973/lorenz/biographical/">https://www.nobelprize.org/prizes/medicine/1973/lorenz/biographical/</a>.
+Kilian Weinberger. 2024. <span>“<span>CS</span> 4/5780: <span>Intro</span> to <span>Machine Learning</span>.”</span>
 </div>
 <div id="ref-konradlorenzAnalogySourceKnowledge1973" class="csl-entry" role="listitem">
-———. 1973b. <span>“Analogy as a <span>Source</span> of <span>Knowledge</span>.”</span> Stockholm, Sweden, December 12. <a href="https://www.nobelprize.org/uploads/2018/06/lorenz-lecture.pdf">https://www.nobelprize.org/uploads/2018/06/lorenz-lecture.pdf</a>.
+Konrad Lorenz. 1973a. <span>“Analogy as a <span>Source</span> of <span>Knowledge</span>.”</span> Stockholm, Sweden.
+</div>
+<div id="ref-konradlorenzKonradLorenzBiography1973" class="csl-entry" role="listitem">
+———. 1973b. <span>“Konrad <span>Lorenz</span>: <span>Biography</span>.”</span>
+</div>
+<div id="ref-liuBackstoryBackpropagation2023" class="csl-entry" role="listitem">
+Liu, Yuxi. 2023. <span>“The <span>Backstory</span> of <span>Backpropagation</span>.”</span> <em>Yuxi on the Wired</em>. https://yuxi-liu-wired.github.io/essays/posts/backstory-of-backpropagation/.
 </div>
 <div id="ref-mccullochLogicalCalculusIdeas1943" class="csl-entry" role="listitem">
 McCulloch, Warren S., and Walter Pitts. 1943. <span>“A Logical Calculus of the Ideas Immanent in Nervous Activity.”</span> <em>The Bulletin of Mathematical Biophysics</em> 5 (4): 115–33. <a href="https://doi.org/10.1007/BF02478259">https://doi.org/10.1007/BF02478259</a>.
 </div>
+<div id="ref-rumelhartLearningRepresentationsBackpropagating1986" class="csl-entry" role="listitem">
+Rumelhart, David E., Geoffrey E. Hinton, and Ronald J. Williams. 1986. <span>“Learning Representations by Back-Propagating Errors.”</span> <em>Nature</em> 323 (6088): 533–36. <a href="https://doi.org/10.1038/323533a0">https://doi.org/10.1038/323533a0</a>.
+</div>
 <div id="ref-ucberkeleyEECS20NSignalsSystems2011" class="csl-entry" role="listitem">
-UC Berkeley. 2011. <span>“<span>EECS20N</span>: <span>Signals</span> and <span>Systems</span> - <span>Modem Negotiation</span>.”</span> 2011. <a href="https://ptolemy.berkeley.edu/eecs20/week14/negotiation.html">https://ptolemy.berkeley.edu/eecs20/week14/negotiation.html</a>.
+UC Berkeley. 2011. <span>“<span>EECS20N</span>: <span>Signals</span> and <span>Systems</span> - <span>Modem Negotiation</span>.”</span>
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
