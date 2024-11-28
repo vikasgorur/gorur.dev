@@ -58,3 +58,59 @@ def visualize(model: nn.Module):
 
 #visualize(AutoEncoder())
 ```
+
+Train it
+
+```{python}
+def train(epochs: int):
+    model = AutoEncoder()
+    cross_entropy_loss = nn.CrossEntropyLoss()
+    sgd = torch.optim.SGD(model.parameters(), lr=0.001)
+
+    prev_loss = 1e9
+    loss = 0
+    iters = []
+    losses = []
+    for i in range(epochs):
+        x = INPUTS
+        yhat = model(x)
+        prev_loss = loss
+        loss = cross_entropy_loss(yhat, x)
+
+        loss.backward()
+        sgd.step()
+
+        if abs(loss - prev_loss) < 1e-6:
+            print(f"i = {i}, loss: {loss:>7f}")
+            break
+
+        if i % 100 == 0:
+            print(f"i = {i}, loss: {loss:>7f}")
+
+        iters.append(i)
+        losses.append(loss.item())
+
+    return model, iters, losses
+```
+
+Visualize the loss
+
+```{python}
+import matplotlib.pyplot as plt
+
+torch.manual_seed(42)
+net, iters, losses = train(10000)
+plt.plot(iters, losses)
+```
+
+Outputs
+
+```{python}
+for i in range(8):
+    print(np.argmax(net(INPUTS[i]).detach().numpy()))
+```
+
+Things I learned while training this network:
+
+- MSE loss doesn't work.
+- Gradient descent with one example at a time doesn't work very reliably.

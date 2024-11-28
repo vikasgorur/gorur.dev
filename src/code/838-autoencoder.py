@@ -28,6 +28,12 @@ def __(torch):
 
 @app.cell
 def __(torch):
+    torch.diag(torch.zeros((8, 8)))
+    return
+
+
+@app.cell
+def __(torch):
     INPUTS = torch.tensor([1, 0, 0, 0, 0, 0, 0, 0,
                           0, 1, 0, 0, 0, 0, 0, 0,
                           0, 0, 1, 0, 0, 0, 0, 0,
@@ -81,7 +87,7 @@ def __(AutoEncoder, mo, nn):
 def __(AutoEncoder, INPUTS, nn, torch):
     def train(epochs: int):
         model = AutoEncoder()
-        mse = nn.CrossEntropyLoss()
+        cross_entropy_loss = nn.CrossEntropyLoss()
         sgd = torch.optim.SGD(model.parameters(), lr=0.001)
 
         prev_loss = 1e9
@@ -92,7 +98,7 @@ def __(AutoEncoder, INPUTS, nn, torch):
             x = INPUTS
             yhat = model(x)
             prev_loss = loss
-            loss = mse(yhat, x)
+            loss = cross_entropy_loss(yhat, x)
 
             loss.backward()
             sgd.step()
@@ -118,7 +124,8 @@ def __(INPUTS, nn):
 
 
 @app.cell
-def __(train):
+def __(torch, train):
+    torch.manual_seed(42)
     net, iters, losses = train(10000)
     return iters, losses, net
 
