@@ -6,6 +6,7 @@ project:
     port: 14000
   render:
     - index.qmd
+    - posts/for-a-kannada-movie.qmd
     - posts/simplest-autoencoder.qmd
     - posts/learning-by-gradient-descent.qmd
     - posts/counting-is-hard.qmd

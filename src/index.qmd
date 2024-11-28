@@ -39,5 +39,6 @@ My notes on papers and articles I've read.
 
 ## Misc
 
-<span class="pub-date">2020-04-30</span> [How to do Feature Flag-Driven Development](posts/feature-flags.qmd)
+<span class="pub-date">2021-03-16</span> [For A Kannada Movie](posts/for-a-kannada-movie.qmd)
 
+<span class="pub-date">2020-04-30</span> [How to do Feature Flag-Driven Development](posts/feature-flags.qmd)
