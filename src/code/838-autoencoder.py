@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.9.23"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", css_file="marimo.css")
 
 
 @app.cell
@@ -47,11 +47,6 @@ def __(torch):
 
 
 @app.cell
-def __():
-    return
-
-
-@app.cell
 def __(nn):
     from collections import OrderedDict
 
@@ -59,10 +54,9 @@ def __(nn):
         def __init__(self):
             super().__init__()
             self.stack = nn.Sequential(OrderedDict([
-                ('input', nn.Linear(8, 3)),
+                ('input', nn.Linear(8, 3, bias=False)),
                 ('sigmoid', nn.Sigmoid()),
-                ('hidden', nn.Linear(3, 8)),
-                ('sigmoid', nn.Sigmoid())
+                ('hidden', nn.Linear(3, 8, bias=False)),
             ]))
 
         def forward(self, x):
@@ -128,6 +122,12 @@ def __(torch, train):
     torch.manual_seed(42)
     net, iters, losses = train(10000)
     return iters, losses, net
+
+
+@app.cell
+def __(net):
+    list(net.parameters())
+    return
 
 
 @app.cell

@@ -114,3 +114,11 @@ Things I learned while training this network:
 
 - MSE loss doesn't work.
 - Gradient descent with one example at a time doesn't work very reliably.
+
+The point of the autoencoder is to learn two functions, the encoder and decoder.
+Each of the weight matrices can be thought of as a function.
+
+Print out the 3-element representations for each input.
+Try reducing the floats to 16 bit or lower?
+
+Can a single layer with sigmoid learn this?
