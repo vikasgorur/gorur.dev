@@ -28,12 +28,12 @@ website:
       - text: "Home"
         href: index.qmd
   reader-mode: true
-      
+
 format:
   html:
     theme: journal
     fontsize: 1.2em
-    toc: true
+    toc: false
     code-fold: false
     highlight-style: arrow
     callout-appearance: minimal

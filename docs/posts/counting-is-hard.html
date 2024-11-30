@@ -54,7 +54,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -134,7 +154,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -166,16 +186,7 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#a-performance-lesson" id="toc-a-performance-lesson" class="nav-link active" data-scroll-target="#a-performance-lesson">A performance lesson</a></li>
-  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further reading</a></li>
-  </ul>
-</nav>
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -198,22 +209,22 @@ window.Quarto = {
 </header>
 
 
-<p><em>Last updated: Jul 26, 2024.</em></p>
+<p><em>Last updated: Nov 30, 2024.</em></p>
 <p>This problem seems simple enough at first. Each of the 12 phone calls can independently happen on any of the 7 days, so the total number of ways to distribute the phone calls is <span class="math inline">\(7^{12}\)</span>.</p>
 <p>We want each day to have atleast one phone call, so let’s first choose 7 out of 12 calls and distribute them one per day. The number of ways to do this is: <span class="math inline">\({12 \choose 7} \cdot 7!\)</span>. Each of the remaining 5 calls can happen on any of the 7 days, so the number of ways is <span class="math inline">\(7^5\)</span>. Putting it all together the probability we want is:</p>
 <p><span class="math display">\[
 \frac{{12 \choose 7} \cdot 7! \cdot 7^5}{7^{12}}
 \]</span></p>
-<div id="34b76c46" class="cell" data-execution_count="1">
+<div id="134600b8" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>math.comb(<span class="dv">12</span>, <span class="dv">7</span>) <span class="op">*</span> math.factorial(<span class="dv">7</span>) <span class="op">*</span> <span class="dv">7</span><span class="op">**</span><span class="dv">5</span> <span class="op">/</span> <span class="dv">7</span><span class="op">**</span><span class="dv">12</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>4.846960025159585</code></pre>
 </div>
 </div>
 <p>Well, that’s not right. I tried a few other ways to arrive at an answer but couldn’t be sure that any of them were correct. So I gave up and wrote code instead:</p>
-<div id="242d2062" class="cell" data-execution_count="2">
+<div id="349549e7" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fastrand</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> phonecalls():</span>
@@ -233,12 +244,12 @@ window.Quarto = {
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> count <span class="op">/</span> N</span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>phonecalls()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>0.228721</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>0.229162</code></pre>
 </div>
 </div>
 <p>I looked up the answer in the solutions manual for the textbook. It says:</p>
-<p><img src="phonecalls.png" class="img-fluid"></p>
+<p><img src="images/phonecalls.png" class="img-fluid"></p>
 <p>This answer doesn’t feel very satisfying. Even if I’d come up with it myself, I would feel more confident about the correctness of my code than this answer. Why is it so complicated?</p>
 <p>I’m left with more questions about counting:</p>
 <ul>
@@ -248,7 +259,7 @@ window.Quarto = {
 <section id="a-performance-lesson" class="level2">
 <h2 class="anchored" data-anchor-id="a-performance-lesson">A performance lesson</h2>
 <p>I initially wrote the code using NumPy but after benchmarking found that: - The vectors aren’t big enough in this case so the overhead of NumPy dominates. - Most of the time is spent in generating the random numbers.</p>
-<p>The second point led me to discover the library <a href="https://github.com/lemire/fastrand">fastrand</a> and its accompanying paper. The impact of just swapping out the random number generator is below:</p>
+<p>The second point led me to discover the library <a href="https://github.com/lemire/fastrand">fastrand</a> and its accompanying paper <span class="citation" data-cites="lemireFastRandomInteger2018">(<a href="#ref-lemireFastRandomInteger2018" role="doc-biblioref">Lemire 2018</a>)</span>. The impact of just swapping out the random number generator is below:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -267,27 +278,55 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
+<p><br>
+</p>
+<p>I then also wrote the same in <a href="https://ziglang.org">Zig</a> just to remind myself how fast our computers really are:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode zig code-with-copy"><code class="sourceCode zig"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> std <span class="op">=</span> <span class="bu">@import</span>(<span class="st">"std"</span>);</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">var</span> pcg <span class="op">=</span> std<span class="op">.</span>Random<span class="op">.</span>Pcg<span class="op">.</span>init(<span class="dv">0</span><span class="er">xca24a8e91f6e4c8f</span>);</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">const</span> rand <span class="op">=</span> pcg<span class="op">.</span>random();</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">fn</span> main() <span class="op">!</span><span class="dt">void</span> {</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> tic <span class="op">=</span> std<span class="op">.</span>time<span class="op">.</span>microTimestamp();</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">var</span> week <span class="op">=</span> [<span class="dv">7</span>]<span class="dt">u8</span>{ <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span> };</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> N <span class="op">=</span> <span class="dv">1_000_000</span>;</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">var</span> count<span class="op">:</span> <span class="dt">u32</span> <span class="op">=</span> <span class="dv">0</span>;</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="dv">0</span><span class="er">.</span><span class="op">.</span>N) <span class="op">|</span>_<span class="op">|</span> {</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">@memset</span>(<span class="op">&amp;</span>week<span class="op">,</span> <span class="dv">0</span>);</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">var</span> idx<span class="op">:</span> <span class="dt">usize</span> <span class="op">=</span> <span class="dv">0</span>;</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (<span class="dv">0</span><span class="er">.</span><span class="op">.</span><span class="dv">12</span>) <span class="op">|</span>_<span class="op">|</span> {</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            idx <span class="op">=</span> rand<span class="op">.</span>intRangeAtMost(<span class="dt">u8</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">6</span>);</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            week[idx] <span class="op">+=</span> <span class="dv">1</span>;</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (week) <span class="op">|</span>d<span class="op">|</span> {</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> (d <span class="op">==</span> <span class="dv">0</span>) {</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>                count <span class="op">+=</span> <span class="dv">1</span>;</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span>;</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> p<span class="op">:</span> <span class="dt">f64</span> <span class="op">=</span> (N <span class="op">-</span> <span class="bu">@as</span>(<span class="dt">f64</span><span class="op">,</span> @floatFromInt(count))) <span class="op">/</span> N;</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> toc <span class="op">=</span> std<span class="op">.</span>time<span class="op">.</span>microTimestamp();</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">const</span> duration<span class="op">:</span> <span class="dt">f64</span> <span class="op">=</span> <span class="bu">@as</span>(<span class="dt">f64</span><span class="op">,</span> @floatFromInt(toc <span class="op">-</span> tic)) <span class="op">/</span> <span class="fl">1000.0</span>;</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    std<span class="op">.</span>debug<span class="op">.</span>print(<span class="st">"{d}, {d}ms</span><span class="sc">\n</span><span class="st">"</span><span class="op">,</span> <span class="op">.</span>{ p<span class="op">,</span> duration });</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>$ ./phonecalls
+0.227504, 27.699ms</code></pre>
+
+
+
 </section>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
-<div class="callout callout-style-simple callout-note no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-body-container">
-<ol type="1">
-<li>Daniel Lemire, <a href="https://arxiv.org/abs/1805.10941">Fast Random Integer Generation in an Interval</a>, ACM Transactions on Modeling and Computer Simulation, Volume 29 Issue 1, February 2019.</li>
-</ol>
-</div>
-</div>
-</div>
-<p>The paper that describes the algorithm implemented by the <code>fastrand</code> library. Its key insight is that bounded random numbers can be generated by doing fewer expensive integer divisions.</p>
 
-
-</section>
-
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-lemireFastRandomInteger2018" class="csl-entry" role="listitem">
+Lemire, Daniel. 2018. <span>“Fast <span>Random Integer Generation</span> in an <span>Interval</span>.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.1805.10941">https://doi.org/10.48550/arXiv.1805.10941</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
