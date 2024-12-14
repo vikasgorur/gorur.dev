@@ -42,6 +42,7 @@ My notes on papers and articles I've read.
 <span class="pub-date">2024-11-02</span> [Stats 110: Practice 1](exercises/stats110-practice1.qmd)
 
 ## Misc
+<span class="pub-date">2024-12-14</span> [Mysore Food Guide](posts/mysore-food-guide.qmd)
 
 <span class="pub-date">2021-03-16</span> [For A Kannada Movie](posts/for-a-kannada-movie.qmd)
 
