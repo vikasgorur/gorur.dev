@@ -34,14 +34,14 @@ def __(torch):
 
 @app.cell
 def __(torch):
-    INPUTS = torch.tensor([1, 0, 0, 0, 0, 0, 0, 0,
-                          0, 1, 0, 0, 0, 0, 0, 0,
-                          0, 0, 1, 0, 0, 0, 0, 0,
-                          0, 0, 0, 1, 0, 0, 0, 0,
-                          0, 0, 0, 0, 1, 0, 0, 0,
-                          0, 0, 0, 0, 0, 1, 0, 0,
-                          0, 0, 0, 0, 0, 0, 1, 0,
-                          0, 0, 0, 0, 0, 0, 0, 1], dtype=torch.float32).reshape(8, 8)
+    INPUTS = torch.tensor([.9, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
+                          0.1, .9, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
+                          0.1, 0.1, .9, 0.1, 0.1, 0.1, 0.1, 0.1,
+                          0.1, 0.1, 0.1, .9, 0.1, 0.1, 0.1, 0.1,
+                          0.1, 0.1, 0.1, 0.1, .9, 0.1, 0.1, 0.1,
+                          0.1, 0.1, 0.1, 0.1, 0.1, .9, 0.1, 0.1,
+                          0.1, 0.1, 0.1, 0.1, 0.1, 0.1, .9, 0.1,
+                          0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, .9], dtype=torch.float32).reshape(8, 8)
     INPUTS.dtype
     return (INPUTS,)
 
@@ -54,13 +54,16 @@ def __(nn):
         def __init__(self):
             super().__init__()
             self.stack = nn.Sequential(OrderedDict([
-                ('input', nn.Linear(8, 3, bias=False)),
-                ('sigmoid', nn.Sigmoid()),
-                ('hidden', nn.Linear(3, 8, bias=False)),
+                ('input', nn.Linear(8, 3, bias=True)),
+                ('sigmoid1', nn.Sigmoid()),
+                ('hidden', nn.Linear(3, 8, bias=True)),
             ]))
 
         def forward(self, x):
             return self.stack(x)
+
+        def encode(self, x):
+            return self.stack['input'](x)
     return AutoEncoder, OrderedDict
 
 
@@ -79,10 +82,15 @@ def __(AutoEncoder, mo, nn):
 
 @app.cell
 def __(AutoEncoder, INPUTS, nn, torch):
-    def train(epochs: int):
+    def train(epochs: int, lr: float, momentum: float):
         model = AutoEncoder()
-        cross_entropy_loss = nn.CrossEntropyLoss()
-        sgd = torch.optim.SGD(model.parameters(), lr=0.001)
+        # nn.init.xavier_normal_(model.stack[0].weight)
+        # nn.init.normal(model.stack[0].bias)
+        # nn.init.xavier_normal_(model.stack[2].weight)
+        # nn.init.normal(model.stack[2].bias)
+
+        loss_fn = nn.MSELoss(reduction='mean')
+        sgd = torch.optim.SGD(model.parameters(), lr=lr, momentum=momentum)
 
         prev_loss = 1e9
         loss = 0
@@ -92,13 +100,13 @@ def __(AutoEncoder, INPUTS, nn, torch):
             x = INPUTS
             yhat = model(x)
             prev_loss = loss
-            loss = cross_entropy_loss(yhat, x)
+            loss = loss_fn(yhat, x)
 
             loss.backward()
             sgd.step()
 
-            if abs(loss - prev_loss) < 1e-6:
-                print(f"i = {i}, loss: {loss:>7f}")
+            if abs(loss - prev_loss) < 1e-5:
+                print(f"i = {i}, loss: {loss:>7f}, prev_loss: {prev_loss:>7f}")
                 break
 
             if i % 100 == 0:
@@ -112,30 +120,13 @@ def __(AutoEncoder, INPUTS, nn, torch):
 
 
 @app.cell
-def __(INPUTS, nn):
-    nn.CrossEntropyLoss()(INPUTS[0], INPUTS[0])
-    return
-
-
-@app.cell
 def __(torch, train):
-    torch.manual_seed(42)
-    net, iters, losses = train(10000)
-    return iters, losses, net
-
-
-@app.cell
-def __(net):
-    list(net.parameters())
-    return
-
-
-@app.cell
-def __(iters, losses):
     import matplotlib.pyplot as plt
 
+    torch.manual_seed(9)
+    net, iters, losses = train(10000, 0.0001, 0.5)
     plt.plot(iters, losses)
-    return (plt,)
+    return iters, losses, net, plt
 
 
 @app.cell
@@ -143,6 +134,20 @@ def __(INPUTS, net, np):
     for i in range(8):
         print(np.argmax(net(INPUTS[i]).detach().numpy()))
     return (i,)
+
+
+@app.cell
+def __(net, torch):
+    net.stack[1](net.stack[0](torch.tensor([0.0, 0, 0, 0, 0, 0, 0, 1.0])))
+    return
+
+
+@app.cell
+def __(INPUTS, net):
+    net(INPUTS)
+    #INPUTS
+
+    return
 
 
 if __name__ == "__main__":

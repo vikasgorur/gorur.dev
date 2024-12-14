@@ -17,6 +17,8 @@ project:
     - posts/path-to-llms.qmd
     - posts/feature-flags.qmd
     - posts/chessrank.qmd
+    - posts/mysore-food-guide.qmd
+    - programs-for-humans/advent-of-code-2024.qmd
     - exercises/stats110-practice1.qmd
 
 bibliography: /Users/vikas/study/gorur.dev/src/zotero.bib

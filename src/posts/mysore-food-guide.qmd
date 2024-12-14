@@ -1,0 +1,60 @@
+---
+title: Mysore Food Guide
+---
+
+_Last updated_: Dec 14, 2024.
+
+---
+These are my opinions but they are also correct.
+
+**Rating scale:**
+
+This is loosely based on the Michelin system, in which three means "a destination", two means "worth a detour" and one means "very good".
+
+| Rating | Interpretation                                                                                                                    |
+|--------|-----------------------------------------------------------------------------------------------------------------------------------|
+| ★★★    | A place with a distinct identity or uniquely Mysore flavor. These are the places you should prioritize if you're visiting Mysore. |
+| ★★     | The best place in Mysore for a specific category. Consult this list if you're craving something specific (e.g., pizza).           |
+| ★      | Acceptable. Use this list if you just need to grab something quick nearby.                                                        |
+
+<!-- just for vspace -->
+<div />
+
+## Three star
+★★★ **SAPA** \
+_Bakery, lunch & dinner, desserts_ ([map](https://maps.app.goo.gl/BbfK8VUvm225Bp2j6))
+
+<div class="indent">
+A Mysore institution. Set in a converted old bungalow with outdoor and indoor seating. The only place to get good European style breads (sourdough is the house specialty). Excellent savoury dishes and fantastic desserts.
+</div>
+
+★★★ **burgerie** \
+_Comforting vegan burgers and lunch_ ([map](https://maps.app.goo.gl/ZJuqMNStQXGNt8Mm6))
+
+<div class="indent">
+A passionate chef cooks a limited menu of burgers and lunch bowls. The rice & dal lunch bowls are the embodiment of the flavors of south Karnataka cuisine. 
+</div>
+
+★★★ **Gayatri Tiffin Room (GTR)** \
+_Dosa with a long-standing reputation_ ([map](https://maps.app.goo.gl/rLYqUp4jJmJd5gPW9))
+
+<div class="indent">
+Beloved by generations of Mysoreans for their morning dosa. Best paired with a robust hike up the steps of Chamundi hill ([start here](https://maps.app.goo.gl/Mse6Vm3zfQPxwPkKA)). Pro-tip: skip the crowds at the much-hyped Mylari dosa and go to GTR instead. Mylari is a worthwhile experience on its own but its hype has far overtaken its quality.
+</div>
+
+## Two star
+★★ **Sahibs Brick Oven Pizza** \
+_Take-away pizza_ ([map](https://maps.app.goo.gl/YrnJHFdR96kzM33fA))
+
+<div class="indent">
+
+</div>
+
+★★ **Poojari Fish Land** \
+_Kerala and Mangalore-style seafood_ ([map](https://maps.app.goo.gl/ttYdG8M1VW1rNpaA6))
+
+<div class="indent">
+
+</div>
+
+## One star

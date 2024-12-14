@@ -34,6 +34,10 @@ My notes on papers and articles I've read.
 <span class="pub-date">2024-11-27</span> [_Why Machines Learn_](annotations/why-machines-learn.qmd) (book) \
 <span class="pub-date">2024-10-07</span> [History of Language Modeling](annotations/history-of-language-models.qmd)
 
+## Programs for Humans
+
+<span class="pub-date">2024-12-09</span> [Advent of Code 2024 (Clojure)](programs-for-humans/advent-of-code-2024.qmd)
+
 ## Exercises
 <span class="pub-date">2024-11-02</span> [Stats 110: Practice 1](exercises/stats110-practice1.qmd)
 

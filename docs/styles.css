@@ -16,3 +16,33 @@
   font-size: 0.8em;
   font-family: "JetBrains Mono", monospace;
 }
+
+.eval {
+  display: block;
+  font-family: "JetBrains Mono", monospace;  
+  border-left: 4px solid #eb6864;
+  padding-left: 8px;
+}
+
+/* Clojure */
+.eval-result {
+  display: block;
+  padding-top: 0.6rem;
+  font-family: "JetBrains Mono", monospace;
+  padding-left: 36px;
+  position: relative;
+}
+
+.eval-result::before {
+  content: "⇒";
+  font-size: 2rem;
+  position: absolute;
+  left: 6px;
+  top: -16px;
+  padding-top: 0.6rem;
+}
+
+/* For food guide */
+.indent {
+  margin-left: 2em;
+}
