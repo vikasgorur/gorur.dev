@@ -16,33 +16,8 @@ def __():
 
 @app.cell
 def __(torch):
-    def random_onehot(n: int) -> torch.tensor:
-        "Returns a random one-hot vector of length n"
-        v = torch.zeros(n)
-        v[torch.randint(n, ())] = 1
-        return v
-
-    random_onehot(8)
-    return (random_onehot,)
-
-
-@app.cell
-def __(torch):
-    torch.diag(torch.zeros((8, 8)))
-    return
-
-
-@app.cell
-def __(torch):
-    INPUTS = torch.tensor([.9, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
-                          0.1, .9, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,
-                          0.1, 0.1, .9, 0.1, 0.1, 0.1, 0.1, 0.1,
-                          0.1, 0.1, 0.1, .9, 0.1, 0.1, 0.1, 0.1,
-                          0.1, 0.1, 0.1, 0.1, .9, 0.1, 0.1, 0.1,
-                          0.1, 0.1, 0.1, 0.1, 0.1, .9, 0.1, 0.1,
-                          0.1, 0.1, 0.1, 0.1, 0.1, 0.1, .9, 0.1,
-                          0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, .9], dtype=torch.float32).reshape(8, 8)
-    INPUTS.dtype
+    INPUTS = torch.diag(torch.ones(8))
+    INPUTS
     return (INPUTS,)
 
 
@@ -54,16 +29,16 @@ def __(nn):
         def __init__(self):
             super().__init__()
             self.stack = nn.Sequential(OrderedDict([
-                ('input', nn.Linear(8, 3, bias=True)),
-                ('sigmoid1', nn.Sigmoid()),
-                ('hidden', nn.Linear(3, 8, bias=True)),
+                ('hidden', nn.Linear(8, 3, bias=True)),
+                ('output', nn.Linear(3, 8, bias=True)),
+                ('sigmoid', nn.Sigmoid())
             ]))
 
         def forward(self, x):
             return self.stack(x)
 
         def encode(self, x):
-            return self.stack['input'](x)
+            return self.stack[0](x)
     return AutoEncoder, OrderedDict
 
 
@@ -84,14 +59,10 @@ def __(AutoEncoder, mo, nn):
 def __(AutoEncoder, INPUTS, nn, torch):
     def train(epochs: int, lr: float, momentum: float):
         model = AutoEncoder()
-        # nn.init.xavier_normal_(model.stack[0].weight)
-        # nn.init.normal(model.stack[0].bias)
-        # nn.init.xavier_normal_(model.stack[2].weight)
-        # nn.init.normal(model.stack[2].bias)
 
         loss_fn = nn.MSELoss(reduction='mean')
         sgd = torch.optim.SGD(model.parameters(), lr=lr, momentum=momentum)
-
+        
         prev_loss = 1e9
         loss = 0
         iters = []
@@ -102,14 +73,11 @@ def __(AutoEncoder, INPUTS, nn, torch):
             prev_loss = loss
             loss = loss_fn(yhat, x)
 
+            sgd.zero_grad()
             loss.backward()
             sgd.step()
 
-            if abs(loss - prev_loss) < 1e-5:
-                print(f"i = {i}, loss: {loss:>7f}, prev_loss: {prev_loss:>7f}")
-                break
-
-            if i % 100 == 0:
+            if i % 5000 == 0:
                 print(f"i = {i}, loss: {loss:>7f}")
 
             iters.append(i)
@@ -123,8 +91,8 @@ def __(AutoEncoder, INPUTS, nn, torch):
 def __(torch, train):
     import matplotlib.pyplot as plt
 
-    torch.manual_seed(9)
-    net, iters, losses = train(10000, 0.0001, 0.5)
+    torch.manual_seed(42)
+    net, iters, losses = train(20000, 0.1, 0.9)
     plt.plot(iters, losses)
     return iters, losses, net, plt
 
@@ -137,17 +105,13 @@ def __(INPUTS, net, np):
 
 
 @app.cell
-def __(net, torch):
-    net.stack[1](net.stack[0](torch.tensor([0.0, 0, 0, 0, 0, 0, 0, 1.0])))
-    return
-
-
-@app.cell
-def __(INPUTS, net):
+def __(INPUTS, net, torch):
+    from torch.nn.functional import sigmoid
+    torch.set_printoptions(linewidth=120, sci_mode=False)
     net(INPUTS)
-    #INPUTS
 
-    return
+
+    return (sigmoid,)
 
 
 if __name__ == "__main__":

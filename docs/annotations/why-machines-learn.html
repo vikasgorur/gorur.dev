@@ -120,7 +120,7 @@ window.Quarto = {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -152,9 +152,7 @@ window.Quarto = {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -215,7 +213,7 @@ K(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)
 <p>His network, LeNet, was a <strong>convolutional neural network</strong>. A 2d convolution of an image involves moving a small <em>kernel</em> (say 4x4) over the pixels of the image and generating a new pixel through some operation (say, average or max). The end result of this is a slightly smaller image. While these kernels could be handcrafted, it’s more scalable to let the neural net learn them. This is how a neural net learns which features are important.</p>
 <p>In 2009, Fei-Fei Li presented an immense dataset of labeled images, ImageNet and an associated challenge. Use the 1.2 million images, binned into 1000 categories, to train an algorithm and test it on 100,000 unseen images. AlexNet, using GPUs for training won the contest in 2012 by a wide margin, kicking off the modern deep learning revolution.</p>
 <p><strong>Grokking</strong> is a rather strange properly of deep neural networks. The cutting edge models today have parameters in the billions or trillions, sometimes outnumbering the instances of data used to train them. In theory these networks should simply overfit the data and not generalize, but that’s not true.</p>
-<p>One hypothesis is that some kind of implicit regularization is happening in the training process. See also the illuminating short paper <span class="citation" data-cites="breimanReflectionsRefereeingPapers2018">(<a href="#ref-breimanReflectionsRefereeingPapers2018" role="doc-biblioref">Breiman 2018</a>)</span> that questions the usefulness of “theory” when doing ML research.</p>
+<p>One hypothesis is that some kind of implicit regularization is happening in the training process. See also the illuminating short paper <span class="citation" data-cites="breimanReflectionsRefereeingPapers2018">(<a href="#ref-breimanReflectionsRefereeingPapers2018" role="doc-biblioref"><strong>breimanReflectionsRefereeingPapers2018?</strong></a>)</span> that questions the usefulness of “theory” when doing ML research.</p>
 <p>LLMs are an instance of self-supervised learning. The pre-training helps the network learn some structure of language (or images, speech, …) and fine-tuning later guides them towards a purpose.</p>
 <p>The theory of all this is far, far behind experimentation.</p>
 
@@ -228,9 +226,6 @@ Ananthaswamy, Anil. 2024. <em>Why Machines Learn: The Elegant Math Behind Modern
 </div>
 <div id="ref-boserTrainingAlgorithmOptimal1992" class="csl-entry" role="listitem">
 Boser, Bernhard E., Isabelle M. Guyon, and Vladimir N. Vapnik. 1992. <span>“A Training Algorithm for Optimal Margin Classifiers.”</span> In <em>Proceedings of the Fifth Annual Workshop on <span>Computational</span> Learning Theory</em>, 144–52. Pittsburgh Pennsylvania USA: ACM. <a href="https://doi.org/10.1145/130385.130401">https://doi.org/10.1145/130385.130401</a>.
-</div>
-<div id="ref-breimanReflectionsRefereeingPapers2018" class="csl-entry" role="listitem">
-Breiman, Leo. 2018. <span>“Reflections <span>After Refereeing Papers</span> for <span>NIPS</span>.”</span> In <em>The <span>Mathematics</span> of <span>Generalization</span></em>, 1st ed., 11–15. CRC Press. <a href="https://doi.org/10.1201/9780429492525-2">https://doi.org/10.1201/9780429492525-2</a>.
 </div>
 <div id="ref-Hay1960MarkIP" class="csl-entry" role="listitem">
 Hay, John C., B. Lynch, and David Russell Bedford Smith. 1960. <span>“Mark <span>I</span> Perceptron Operators’ Manual.”</span>
