@@ -1,6 +1,8 @@
-(ns code.advent2024 
+(ns code.advent2024
   (:require
-    [clojure.string :as string]))
+   [clojure.string :as string]
+   [clojure.core.match :refer [match]]
+   [clojure.test :refer [deftest testing is]]))
 
 ;; Day 1
 
@@ -77,7 +79,7 @@
 (solve-day2-part1 "src/code/data/advent2024-2.txt")
 ;;=> 269
 
-(defn filter-one 
+(defn filter-one
   "Returns all sequences resulting from removing one element from the input"
   [r]
   (for [i (range (count r))]
@@ -98,11 +100,53 @@
 (defn solve-day3-part1
   [input-path]
   (reduce + 0
-          (map (fn [match]
-                 (let [[_ a b] match]
-                   (* (Integer/parseInt a) (Integer/parseInt b))))
+          (map #(let [[_ a b] %]
+                 (* (Integer/parseInt a) (Integer/parseInt b)))
                (re-seq #"mul\((\d+),(\d+)\)" (slurp input-path)))))
 
 (solve-day3-part1 "src/code/data/advent2024-3.txt")
 ;;=> 171183089
 
+(defn process-instruction
+  [result inst]
+  (let [[enabled sum] result]
+    (match inst
+      :do [true sum]
+      :dont [false sum]
+      [:mul a b] (if enabled
+                   [enabled (+ sum (* a b))]
+                   [enabled sum])
+      :else result)))
+
+(deftest test-process-instruction
+  (testing "process-instruction"
+    (is (= [true 6] (process-instruction [true 0] [:mul 2 3])))
+    (is (= [false 0] (process-instruction [true 0] :dont)))
+    (is (= [true 0] (process-instruction [false 0] :do)))
+    (is (= [false 0] (process-instruction [false 0] [:mul 2 3])))
+    (is (= [true 0] (process-instruction [false 0] :do)))
+    (is (= [false 6] (reduce process-instruction [true 0] [[:mul 2 3] :dont [:mul 1 1]])))))
+
+(defn parse-instructions
+  [input]
+  (let [matches (re-seq #"mul\((\d+),(\d+)\)|do\(\)|don't\(\)"
+                        input)]
+    (map #(let [[text a b] %]
+           (cond
+             (.startsWith text "mul") [:mul
+                                       (Integer/parseInt a)
+                                       (Integer/parseInt b)]
+             (= text "don't()") :dont
+             (= text "do()") :do))
+         matches)))
+
+(parse-instructions "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))")
+;;=> ([:mul 2 4] :dont [:mul 5 5] [:mul 11 8] :do [:mul 8 5])
+
+(defn solve-day3-part2
+  [input-path]
+  (reduce process-instruction [true 0]
+          (parse-instructions (slurp input-path))))
+
+(solve-day3-part2 "src/code/data/advent2024-3.txt")
+;;=> [false 63866497]

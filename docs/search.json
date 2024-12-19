@@ -389,14 +389,14 @@
     "href": "programs-for-humans/advent-of-code-2024.html",
     "title": "Advent of Code 2024",
     "section": "",
-    "text": "(defn slurp-two-columns\n  \"Returns the two columns of integers from the input file\"\n  [input-path]\n  (let [lines (string/split (slurp input-path) #\"\\n\")\n        pairs (map #(map Integer/parseInt\n                         (string/split % #\"\\s+\"))\n                   lines)\n        pairs-interleaved (flatten pairs)\n        col1 (take-nth 2 pairs-interleaved)\n        col2 (take-nth 2 (rest pairs-interleaved))]\n    [col1 col2]))\n\n(defn solve-day1-part1\n  [input-path]\n  (let [[col1 col2] (slurp-two-columns input-path)]\n    (reduce + 0\n            (map #(abs (- %1 %2))\n                 (sort col1) (sort col2)))))\n(deltas [1 2 3 4 1]) (1 1 1 -3)"
+    "text": "Last updated: Dec 19, 2024.\nI’ve always attempted problems from the advent of code with the goal of writing the clearest code I can. This year I decided to try it in Clojure. I read SICP as an impressionable young programmer and thus some part of my brain always thinks in Lisp. Clojure is great for advent of code for a couple of reasons:\nFor each of the problems below I’ll restate the problem in a concise way and describe the non-obvious parts of the solution in words. Wherever necessary, I’ll also indicate the result of evaluating a Lisp expression in this way:\n(+ 4 5) 9"
   },
   {
     "objectID": "programs-for-humans/advent-of-code-2024.html#day-3",
     "href": "programs-for-humans/advent-of-code-2024.html#day-3",
     "title": "Advent of Code 2024",
     "section": "Day 3",
-    "text": "Day 3\n(defn solve-day3-part1\n  [input-path]\n  (reduce + 0\n          (map (fn [match]\n                 (let [[_ a b] match]\n                   (* (Integer/parseInt a) (Integer/parseInt b))))\n               (re-seq #\"mul\\((\\d+),(\\d+)\\)\" (slurp input-path)))))\n(solve-day3-part1 “src/code/data/advent2024-3.txt”) 171183089"
+    "text": "Day 3\n\nPart 1: Scan the input and identify every instance of mul(a, b). Compute a * b and sum all such results.\n\nre-seq returns a sequence of all the matches for the given regex. The groups of the match can be easily extracted using destructuring in the let binding: [[_ a b] match].\n(defn solve-day3-part1\n  [input-path]\n  (reduce + 0\n          (map #(let [[_ a b] %]\n                 (* (Integer/parseInt a) (Integer/parseInt b)))\n               (re-seq #\"mul\\((\\d+),(\\d+)\\)\" (slurp input-path)))))\n(solve-day3-part1 “src/code/data/advent2024-3.txt”) 171183089\n\nPart 2: The input now includes two new kinds of instructions. don't() disables future mul instructions while do() enables them. Only the most recent do() or don't() instruction applies. At the beginning of the program, mul instructions are enabled.\n\nEach instruction is one of:\n\n[:mul a b]\n:dont\n:do\n\nState is [enabled? total]\nReducer is:\n(defn process-instruction\n  [result inst]\n  (let [[enabled sum] result]\n    (match inst\n      :do [true sum]\n      :dont [false sum]\n      [:mul a b] (if enabled\n                   [enabled (+ sum (* a b))]\n                   [enabled sum])\n      :else result)))\nParse the input\n(defn parse-instructions\n  [input]\n  (let [matches (re-seq #\"mul\\((\\d+),(\\d+)\\)|do\\(\\)|don't\\(\\)\"\n                        input)]\n    (map #(let [[text a b] %]\n           (cond\n             (.startsWith text \"mul\") [:mul\n                                       (Integer/parseInt a)\n                                       (Integer/parseInt b)]\n             (= text \"don't()\") :dont\n             (= text \"do()\") :do))\n         matches)))\n(parse-instructions “xmul(2,4)&mul[3,7]!^don’t()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))”)  ([:mul 2 4] :dont [:mul 5 5] [:mul 11 8] :do [:mul 8 5]) \n(defn solve-day3-part2\n  [input-path]\n  (reduce process-instruction [true 0]\n          (parse-instructions (slurp input-path))))\n(solve-day3-part2 “src/code/data/advent2024-3.txt”)  [false 63866497]"
   },
   {
     "objectID": "posts/mysore-food-guide.html",
@@ -425,5 +425,19 @@
     "title": "Mysore Food Guide",
     "section": "One star",
     "text": "One star"
+  },
+  {
+    "objectID": "programs-for-humans/advent-of-code-2024.html#day-1",
+    "href": "programs-for-humans/advent-of-code-2024.html#day-1",
+    "title": "Advent of Code 2024",
+    "section": "Day 1",
+    "text": "Day 1\n\nPart 1: Given two columns of numbers, sort them both and compute pairwise absolute differences and return the sum of all differences.\n\nMost of the work in solving this problem is just reading the input:\n(defn slurp-two-columns\n  \"Returns the two columns of integers from the input file\"\n  [input-path]\n  (let [lines (string/split (slurp input-path) #\"\\n\")\n        pairs (map #(map Integer/parseInt\n                         (string/split % #\"\\s+\"))\n                   lines)\n        pairs-interleaved (flatten pairs)\n        col1 (take-nth 2 pairs-interleaved)\n        col2 (take-nth 2 (rest pairs-interleaved))]\n    [col1 col2]))\nA couple of Clojure features make the solution very easy to read: (1) map in Clojure takes any number of sequences as arguments (2) anonymous functions can be written as #(...) with %1 and %2 as placeholders for the arguments.\n(defn solve-day1-part1\n  [input-path]\n  (let [[col1 col2] (slurp-two-columns input-path)]\n    (reduce + 0\n            (map #(abs (- %1 %2))\n                 (sort col1) (sort col2)))))\n(solve-day1-part1 “src/code/data/advent2024-1.txt”) 3508942\n\nPart 2: Calculate a total similarity score by adding up each number in the left list after multiplying it by the number of times that number appears in the right list.\n\nfrequencies returns a map (dictionary) of items in a sequence mapped to the number of times they appear.\n(defn solve-day1-part2\n  [input-path]\n  (let [[col1 col2] (slurp-two-columns input-path)\n        counts (frequencies col2)\n        scores (map #(* % (get counts % 0)) col1)]\n    (reduce + 0 scores)))\n(solve-day1-part2 “src/code/data/advent2024-1.txt”) 26593248"
+  },
+  {
+    "objectID": "programs-for-humans/advent-of-code-2024.html#day-2",
+    "href": "programs-for-humans/advent-of-code-2024.html#day-2",
+    "title": "Advent of Code 2024",
+    "section": "Day 2",
+    "text": "Day 2\n(defn slurp-rows\n  \"Returns the rows of integers from the input file\"\n  [input-path]\n  (let [lines (string/split (slurp input-path) #\"\\n\")]\n    (map #(map Integer/parseInt (string/split % #\"\\s+\")) lines)))\n\n(defn deltas [xs]\n  (map -\n       (rest xs)\n       (drop-last xs)))\n(deltas [1 2 3 4 1]) (1 1 1 -3)"
   }
 ]

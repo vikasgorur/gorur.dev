@@ -94,10 +94,11 @@ INPUTS
 
 (range 8)
 
-(defn cross-entropy-loss
+(defn mean-squared-loss
   [y yhat]
-  (- (dot y (map Math/log yhat))))
+  (reduce + 0 (map #((Math/pow (- %1 %2) 2))
+                   y yhat)))
 
-(cross-entropy-loss
- [1 1e-6 1e-6 1e-6 1e-6 1e-6 1e-6 1e-6]
- [1e-6 1 1e-6 1e-6 1e-6 1e-6 1e-6 1e-6])
+(mean-squared-loss
+ [1 2 3.0]
+ [1 1 1.0])

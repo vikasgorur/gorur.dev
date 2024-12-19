@@ -1,6 +1,7 @@
 {:paths ["src"]
  :deps {org.clojure/clojure {:mvn/version "1.12.0"}
         org.clojure/data.codec {:mvn/version "0.1.1"}
+        org.clojure/core.match {:mvn/version "1.1.0"}
         io.github.nextjournal/clerk {:mvn/version "0.14.919"}
         criterium/criterium {:mvn/version "0.4.6"}
         org.scicloj/clay {:mvn/version "2-beta16"}}}
