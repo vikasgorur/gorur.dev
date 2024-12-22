@@ -382,7 +382,7 @@
     "href": "index.html#programs-for-humans",
     "title": "Vikas Gorur",
     "section": "Programs for Humans",
-    "text": "Programs for Humans\n2024-12-09 Advent of Code 2024 (Clojure)"
+    "text": "Programs for Humans\n\nPrograms must be written for people to read, and only incidentally for machines to execute.\n\n— Abelson & Sussman, SICP.\nThese are programs I write solely to understand something and maybe help another human understand it.\n2024-12-09 Advent of Code 2024 (Clojure)"
   },
   {
     "objectID": "programs-for-humans/advent-of-code-2024.html",

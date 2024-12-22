@@ -35,6 +35,11 @@ My notes on papers and articles I've read.
 <span class="pub-date">2024-10-07</span> [History of Language Modeling](annotations/history-of-language-models.qmd)
 
 ## Programs for Humans
+> Programs must be written for people to read, and only incidentally for machines to execute.
+
+--- Abelson & Sussman, [SICP](https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-7.html#%_chap_Temp_4).
+
+These are programs I write solely to understand something and maybe help another human understand it.
 
 <span class="pub-date">2024-12-09</span> [Advent of Code 2024 (Clojure)](programs-for-humans/advent-of-code-2024.qmd)
 
