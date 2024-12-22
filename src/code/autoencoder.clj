@@ -1,104 +1,133 @@
-
-;; A vector is a Java float array
-;; A matrix is a 2d Java float array
-
-(defn make-one-hot 
-  "Return a one-hot array of size n, with i hot"
-  [i n]
-  (let [result (make-array Float/TYPE n)]
-    (aset-float result i 1.0)
-    result))
-
-(def INPUTS
-  (map #(make-one-hot % 8) (range 8)))
-
-INPUTS
-
-(defn argmax
-  "Return the index with the max value in a vector"
-  [v]
-  (first (apply max-key second (map-indexed vector v))))
-
-(comment
-  (argmax (vec [0 1 8 7])))
-  ;;=> 2
-
-(defn sigmoid
-  "Sigmoid of a vector"
-  [xs]
-  (map #(/ 1 (+ 1 (Math/exp (- %)))) xs))
-
-(sigmoid (make-one-hot 2 8))
-
-(defn count-rows [M]
-  (count M))
-
-(defn count-columns [M]
-  (count (aget M 0)))
+(ns autoencoder
+  (:require [clojure.test :refer [deftest testing is]]))
 
 (defn dot
-  "Dot product of two vectors"
-  [a b]
-  (reduce + 0.0 (map * a b)))
+  "Returns the dot product of a and b"
+  ^double
+  [^"[D" a  ^"[D" b]
+  (loop [i      0
+         result 0.0]
+    (if (= i (alength a))
+      result
+      (recur (inc i)
+             (+ result (* (aget a i) (aget b i)))))))
 
-(dot [1 2 3] [4 5 6])
-;;=> 32.0
+(defn sigmoid
+  "Computes the sigmoid of each element of x and stores the result"
+
+  [^"[D" result
+   ^"[D" x]
+  (let [sigma (fn [x] (/ 1 (+ 1 (Math/exp (- x)))))]
+    (dotimes [i (alength x)]
+      (aset result i (sigma (aget x i))))
+    result))
+
+(defn random-array
+  ([n] (let [^"[D" result (make-array Double/TYPE n)]
+         (dotimes [i n]
+           (aset result i (Math/random)))
+         result))
+  ([m n] (let [^"[[D" result (make-array Double/TYPE m n)]
+           (doseq [i (range m)
+                   j (range n)]
+             (aset result i j (Math/random)))
+           result)))
+
+(defn vector-add
+  "Adds two vectors and stores the result"
+
+  [^"[D" result ^"[D" a ^"[D" b]
+  (dotimes [i (alength a)]
+    (aset result i (+ (aget a i) (aget b i))))
+  result)
 
 (defn matrix-vector
-  "Multiply a matrix by a vector"
-  [M v]
-  (assert (= (count-columns M) (count v)))
+  "Multiplies W and x and stores the result"
+  [^"[D" result ^"[[D" W ^"[D" x]
+  
+  (dotimes [i (alength W)]
+    (aset result i
+          (dot (aget W i) x)))
+  result)
 
-  (let [result (make-array Float/TYPE (count-rows M))]
-    (doseq [i (range (count-rows M))]
-      (aset-float result i
-                  (dot (aget M i) v)))
-    result))
+;; forward pass
 
-(comment
-  (matrix-vector (random-matrix 2 2) (random-vector 2))
-  (matrix-vector (random-matrix 3 8) (random-vector 8)))
+;; h = W0 * x + b0
+;; output = sigmoid(W1 * h + b1)
 
-(defn random-vector
-  "Random vector of size n"
-  [n]
-  (let [result (make-array Float/TYPE n)]
-    (doseq [i (range n)]
-      (aset-float result i (rand)))
-    result))
+(def NETWORK
+  {:W0      (random-array 3 8)
+   :W0-grad (make-array Double/TYPE 3 8)
 
-(random-vector 8)
+   :b0      (random-array 3)
+   :b0-grad (make-array Double/TYPE 3)
 
-(defn random-matrix
-  "Random matrix of shape (r, c)"
-  [r c]
-  (let [result (make-array Float/TYPE r c)]
-    (doseq [i (range r)
-            j (range c)]
-      (aset-float result i j (rand)))
-    result))
+   :W1      (random-array 8 3)
+   :W1-grad (make-array Double/TYPE 8 3)
 
-(aget (random-matrix 3 3) 1)
+   :b1      (random-array 8)
+   :b1-grad (make-array Double/TYPE 8)})
+
+(alength (:W0 NETWORK))
+
+;; TODO: make sure I count the number of bytes needed to run the computation
+;; and the number of FLOPs
 
 (defn feed-forward
-  "The forward pass of the autoencoder"
-  [input W0 W1]
-  (matrix-vector W1
-                 (sigmoid (matrix-vector W0 input))))
+  [x]
+  (let [h      (make-array Double/TYPE 3)
+        W0x    (make-array Double/TYPE 3)
+        W1h    (make-array Double/TYPE 8)
+        p      (make-array Double/TYPE 8) ;; pre-activation
+        output (make-array Double/TYPE 8)]
+    
+    (vector-add h
+                (matrix-vector W0x (:W0 NETWORK) x)
+                (:b0 NETWORK))
+    (vector-add p
+                (matrix-vector W1h (:W1 NETWORK) h)
+                (:b1 NETWORK))
+    (sigmoid output p)
+    output))
 
-(feed-forward (make-one-hot 2 8)
-              (random-matrix 8 3)
-              (random-matrix 3 8))
+(def INPUTS (let [A (make-array Double/TYPE 8 8)]
+              (dotimes [i 8]
+                (aset A i i 1))
+              A))
 
-(count (aget (random-matrix 8 3) 0))
+(mse-loss (feed-forward (aget INPUTS 3))
+          (aget INPUTS 3))
 
-(range 8)
+(defn mse-loss
+  [^"[D" y' ^"[D" y]
+    (loop [i      0
+          result 0.0]
+     (if (= i (alength y))
+       result
+       (recur (inc i)
+              (+ result (Math/pow (- (aget y i) (aget y' i)) 2))))))
 
-(defn mean-squared-loss
-  [y yhat]
-  (reduce + 0 (map #((Math/pow (- %1 %2) 2))
-                   y yhat)))
+;; Tests
+(deftest test-dot
+  (testing "dot product"
+    (is (= 3.0
+           (dot (into-array Double/TYPE [1.0 1.0 1.0])
+                (into-array Double/TYPE [1.0 1.0 1.0]))))
+    (is (= 0.0
+           (dot (into-array Double/TYPE [1.0 -1.0])
+                (into-array Double/TYPE [1.0 1.0]))))
+    (is (= 14.0
+           (dot (into-array Double/TYPE [1.0 2.0 3.0])
+                (into-array Double/TYPE [1.0 2.0 3.0]))))
+    (is (= -4.0
+           (dot (into-array Double/TYPE [-1.0 2.0 -3.0])
+                (into-array Double/TYPE [3.0 1.0 1.0]))))))
 
-(mean-squared-loss
- [1 2 3.0]
- [1 1 1.0])
+(deftest test-sigmoid
+  (testing "sigmoid"
+    (let [result (make-array Double/TYPE 3)]
+      (is (= [0.2689414213699951 0.5 0.7310585786300049]
+             (seq (sigmoid result (into-array Double/TYPE [-1.0 0 1.0]))))))))
+
+(set! *warn-on-reflection* true)
+

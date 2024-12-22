@@ -46,35 +46,35 @@
   (let [lines (string/split (slurp input-path) #"\n")]
     (map #(map Integer/parseInt (string/split % #"\s+")) lines)))
 
-(defn deltas [xs]
-  (map -
-       (rest xs)
-       (drop-last xs)))
+(defn deltas [xs] (map - (rest xs) (drop-last xs)))
 
 (deltas [1 2 3 4 1])
 ;;=> (1 1 1 -3)
 
-(defn same-sign?
-  "Returns true if all elements of xs have the same sign"
-  [xs]
-  (or (every? #(>= % 0) xs)
-      (every? #(< % 0) xs)))
+(defn sign [x] (if (zero? x) 0 (/ x (abs x))))
+(defn monotonic? [r] (apply = (map sign (deltas r))))
 
-(defn monotonic? [r] (same-sign? (deltas r)))
+(monotonic? [1 2 3 4 5])
+;;=> true
+(monotonic? [5 4 3 2 1])
+;;=> true
+(monotonic? [5 4 3 2 7])
+;;=> false
 
-(monotonic? [7 6 4 2 1])
+(monotonic? [8 6 4 4 1])
 
 (defn bounded-deltas? [r]
-  (every? #(and (>= (abs %) 1) (<= (abs %) 3)) (deltas r)))
+  (every? #(and (>= (abs %) 1) (<= (abs %) 3))
+          (deltas r)))
 
 (bounded-deltas? (deltas [7 6 4 2 1]))
 
 (defn safe-report? [r]
-  ((and (monotonic? r) (bounded-deltas? r))))
+  (and (monotonic? r) (bounded-deltas? r)))
 
 (defn solve-day2-part1
   [input-path]
-  (count (filter true? (map safe-report? (slurp-rows input-path)))))
+  (count (filter safe-report? (slurp-rows input-path))))
 
 (solve-day2-part1 "src/code/data/advent2024-2.txt")
 ;;=> 269

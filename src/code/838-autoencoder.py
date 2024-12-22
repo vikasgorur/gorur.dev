@@ -17,7 +17,6 @@ def __():
 @app.cell
 def __(torch):
     INPUTS = torch.diag(torch.ones(8))
-    INPUTS
     return (INPUTS,)
 
 
@@ -56,17 +55,25 @@ def __(AutoEncoder, mo, nn):
 
 
 @app.cell
+def __(AutoEncoder, draw_graph):
+    g = draw_graph(AutoEncoder(), input_size=(8,)).visual_graph
+    g.graph_attr["rankdir"] = 'LR'
+    g.render("838-autoencoder", format="png")
+    return (g,)
+
+
+@app.cell
 def __(AutoEncoder, INPUTS, nn, torch):
     def train(epochs: int, lr: float, momentum: float):
         model = AutoEncoder()
 
         loss_fn = nn.MSELoss(reduction='mean')
         sgd = torch.optim.SGD(model.parameters(), lr=lr, momentum=momentum)
-        
+
         prev_loss = 1e9
         loss = 0
-        iters = []
         losses = []
+        
         for i in range(epochs):
             x = INPUTS
             yhat = model(x)
@@ -80,10 +87,9 @@ def __(AutoEncoder, INPUTS, nn, torch):
             if i % 5000 == 0:
                 print(f"i = {i}, loss: {loss:>7f}")
 
-            iters.append(i)
             losses.append(loss.item())
 
-        return model, iters, losses
+        return model, losses
     return (train,)
 
 
@@ -92,9 +98,9 @@ def __(torch, train):
     import matplotlib.pyplot as plt
 
     torch.manual_seed(42)
-    net, iters, losses = train(20000, 0.1, 0.9)
-    plt.plot(iters, losses)
-    return iters, losses, net, plt
+    net, losses = train(20000, 0.1, 0.9)
+    plt.plot(range(len(losses)), losses)
+    return losses, net, plt
 
 
 @app.cell
@@ -109,8 +115,6 @@ def __(INPUTS, net, torch):
     from torch.nn.functional import sigmoid
     torch.set_printoptions(linewidth=120, sci_mode=False)
     net(INPUTS)
-
-
     return (sigmoid,)
 
 

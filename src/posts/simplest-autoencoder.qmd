@@ -2,16 +2,46 @@
 title: The Simplest Autoencoder
 jupyter: python3
 ---
+Last updated: _Dec 21, 2024_.
 
-blog post [@liuBackstoryBackpropagation2023].
-book [@rumelhartChapter8Learning1986]
+---
+
+The backpropagation algorithm for training neural networks seemed very complicated when I first encountered it. I only really understood it after implementing it from scratch following the excellent video by @andrejkarpathySpelledoutIntroNeural2022. It also helped me to realize that backpropagation is a kind of _automatic differentiation_ (AD) and can be understood without any reference to neural networks. See [@baydinAutomaticDifferentiationMachine2015] for an excellent survey of AD in machine learning.
+
+After understanding backprop, though, I had a different question: why did it take so long to discover and become popular? The story of that seems surprisingly complicated but a good starting point is the blog post by @liuBackstoryBackpropagation2023.
+
+While reading through that post a couple of quotes from Geoffrey Hinton caught my eye:
+
+> So they just refused to work on [backprop], not even to write a program, so I had to do it myself.
+
+> I almost blew it because the first thing I tried it on was an 8-3-8 encoder; that is, you have eight input units, three hidden units, and eight output units. You want to turn on one of the input units and get the same output unit to be on.
+
+> I went off and I spent a weekend. I wrote a LISP program to do it.
+
+I love learning about the history of computing so in this post we'll try to recreate what Hinton must have done in that weekend.
+
+The neural network he's describing ("8-3-8") is an **autoencoder**, whose job is to learn to simply reproduce its output as faithfully as it can. This might seem pointless, but it makes more sense when you think of the network as containing both an **encoder** and a **decoder** along with a "bottleneck" in the middle where the input vector gets squashed to one with a lower dimension. This squashing can be variously understood as a lossy compression of the input, as dimensionality reduction, or as feature extraction. For our purposes here though, it's just a toy historical example demonstrating the value of backpropagation.
+
+The input dataset for our network are the numbers $0$ - $7$ encoded as "one-hot" vectors.
+
+$$
+0 = [0 0 0 0 0 0 0 1] \\
+1 = [0 0 0 0 0 0 1 0] \\
+... \\
+7 = [1 0 0 0 0 0 0 0]
+$$
+
+Thus the input layer and output layers both have size $8$, and we'll introduce a hidden layer inbetween of size $3$, hence giving the network the name "8-3-8" encoder. The hidden layer is of size $3$ because $3$ bits is all you need to represent the numbers upto $7$. The network and the learning algorithm are described in detail in [@rumelhartLearningRepresentationsBackpropagating1986, chapter 8] though the terminology is a little archaic.
+
+We'll implement this network in two different ways. First, using modern libraries (PyTorch and Keras) at the highest level of abstraction. Second, writing everything from scratch in Clojure (as a tribute to the Hinton version written in Lisp).
+
+## 8-3-8 in PyTorch
 
 ```{python}
 import marimo as mo
 import numpy as np
 import torch
 from torch import nn
-from torchviz import make_dot
 ```
 
 Define the inputs.
@@ -37,12 +67,11 @@ class AutoEncoder(nn.Module):
 
     def forward(self, x):
         return self.stack(x)
-
-    def encode(self, x):
-        return self.stack[0](x)
 ```
 
-Train it
+Visualize:
+
+![](images/838-autoencoder.png)
 
 ```{python}
 def train(epochs: int, lr: float, momentum: float):
@@ -50,11 +79,11 @@ def train(epochs: int, lr: float, momentum: float):
 
     loss_fn = nn.MSELoss(reduction='mean')
     sgd = torch.optim.SGD(model.parameters(), lr=lr, momentum=momentum)
-    
+
     prev_loss = 1e9
     loss = 0
-    iters = []
     losses = []
+    
     for i in range(epochs):
         x = INPUTS
         yhat = model(x)
@@ -68,55 +97,27 @@ def train(epochs: int, lr: float, momentum: float):
         if i % 5000 == 0:
             print(f"i = {i}, loss: {loss:>7f}")
 
-        iters.append(i)
         losses.append(loss.item())
 
-    return model, iters, losses
+    return model, losses
 ```
 
-Visualize the loss
+Train the thing
 
 ```{python}
 import matplotlib.pyplot as plt
 
 torch.manual_seed(42)
-net, iters, losses = train(20000, 0.1, 0.9)
-plt.plot(iters, losses)
+net, losses = train(20000, 0.1, 0.9)
+plt.plot(range(len(losses)), losses)
 ```
 
-Outputs
+Print the outputs
 
 ```{python}
 torch.set_printoptions(linewidth=120, sci_mode=False)
 net(INPUTS)
 ```
 
-```{python}
-net.encode(INPUTS[7])
-```
+## Clojure
 
-
-Things I learned while training this network:
-
-- MSE loss doesn't work.
-- Gradient descent with one example at a time doesn't work very reliably.
-
-The point of the autoencoder is to learn two functions, the encoder and decoder.
-Each of the weight matrices can be thought of as a function.
-
-Print out the 3-element representations for each input.
-Try reducing the floats to 16 bit or lower?
-
-Can a single layer with sigmoid learn this?
-
-Clojure
-
-```clojure
-(defn dot
-  "Dot product of two vectors"
-  [a b]
-  (reduce + 0.0 (map * a b)))
-
-(dot [1 2 3] [4 5 6])
-;;=> 32.0
-```

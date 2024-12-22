@@ -22,6 +22,7 @@ project:
     - exercises/stats110-practice1.qmd
 
 bibliography: /Users/vikas/study/gorur.dev/src/zotero.bib
+csl: chicago-with-urls.csl
 
 website:
   navbar:
