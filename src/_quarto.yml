@@ -11,14 +11,15 @@ project:
     - posts/learning-by-gradient-descent.qmd
     - posts/counting-is-hard.qmd
     - posts/breaking-caesar-cipher.qmd
-    - annotations/history-of-language-models.qmd
-    - annotations/programming-as-theory-building.qmd
-    - annotations/why-machines-learn.qmd
     - posts/path-to-llms.qmd
     - posts/feature-flags.qmd
     - posts/chessrank.qmd
     - posts/mysore-food-guide.qmd
+    - annotations/history-of-language-models.qmd
+    - annotations/programming-as-theory-building.qmd
+    - annotations/why-machines-learn.qmd
     - programs-for-humans/advent-of-code-2024.qmd
+    - programs-for-humans/cryptopals-set1.qmd
     - exercises/stats110-practice1.qmd
 
 bibliography: /Users/vikas/study/gorur.dev/src/zotero.bib

@@ -30,82 +30,94 @@
 (defn verify
   "Takes a boolean or sequence of booleans and returns emoji checkmarks or crosses"
   [input]
-  (let [to-emoji (fn [b] (if b "✅" "❌"))]
+  (let [to-emoji #(if % "✅" "❌")]
     (if (sequential? input)
       (str/join " " (map to-emoji input))
       (to-emoji input))))
 
-(let [CH1-INPUT "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
-      CH1-ANSWER "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"]
+(defn hex->base64
+  [input]
+  (-> input
+      hex->bytes
+      b64/encode
+      String.))
 
-  (verify (= CH1-ANSWER
-             (-> CH1-INPUT
-                 hex->bytes
-                 b64/encode
-                 String.))))
+(defn solve-ch1
+  []
+  (let [CH1-INPUT "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+        CH1-ANSWER "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"]
 
+    (verify (= CH1-ANSWER
+               (hex->base64 CH1-INPUT)))))
+
+(solve-ch1)
+;;=> "✅"
 
 ;; Challenge 2
-(let [CH2-INPUT1 "1c0111001f010100061a024b53535009181c"
-      CH2-INPUT2 "686974207468652062756c6c277320657965"
-      CH2-ANSWER "746865206b696420646f6e277420706c6179"]
+(defn solve-ch2
+  []
+  (let [CH2-INPUT1 "1c0111001f010100061a024b53535009181c"
+        CH2-INPUT2 "686974207468652062756c6c277320657965"
+        CH2-ANSWER "746865206b696420646f6e277420706c6179"]
 
-  (verify (= CH2-ANSWER
-             (bytes->hex (map bit-xor
-                              (hex->bytes CH2-INPUT1)
-                              (hex->bytes CH2-INPUT2))))))
+    (verify (= CH2-ANSWER
+               (bytes->hex (map bit-xor
+                                (hex->bytes CH2-INPUT1)
+                                (hex->bytes CH2-INPUT2)))))))
+
+(solve-ch2)
+;;=> "✅"
 
 ;; Challenge 3
 
-(def CH3-CIPHER (hex->bytes "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
-
-(defn gibberish-score [text]
-  (let [cs (char-array text)
-        total (count cs)
-        non-readable (count (filter #(not (or (Character/isLetter %)
-                                              (Character/isSpace %)))
-                                    cs))]
-    (/ (double non-readable) total)))
+(def CH3-CIPHER
+  (hex->bytes
+   "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
 
 (defn non-readable [b]
   (not (or (and (>= b (byte \A)) (<= b (byte \Z)))
-      (and (>= b (byte \a)) (<= b (byte \z)))
-      (= b (byte \space)))))
+           (and (>= b (byte \a)) (<= b (byte \z)))
+           (= b (byte \space)))))
 
-(defn gibberish-score-bytes [text-bytes]
-  (let [total (count text-bytes)]
-    (/ (double (count (filter non-readable text-bytes))) total)))
+(defn gibberish-score
+  [^bytes text]
+  (/ (double (count (filter non-readable text)))
+     (count text)))
+
+(defn gibberish-score-str
+  [text]
+  (gibberish-score (byte-array (map byte text))))
 
 (def sample-bytes (byte-array (map byte "correct horse battery staple")))
 
-(comment (c/quick-bench (gibberish-score-bytes sample-bytes))
+(comment (c/quick-bench (gibberish-score sample-bytes))
          (c/quick-bench (gibberish-score "correct horse battery staple")))
 
-(verify [(= 0.0 (gibberish-score-bytes (byte-array (map byte "correct horse battery staple"))))
-         (= 0.2 (gibberish-score-bytes (byte-array (map byte "ABCD?"))))
-         (= 0.5 (gibberish-score-bytes (byte-array (map byte "(ok)"))))
-         (= 1.0 (gibberish-score-bytes (byte-array (map byte "*@&#$*&@#"))))])
+(verify [(= 0.0 (gibberish-score-str "correct horse battery staple"))
+         (= 0.2 (gibberish-score-str "ABCD?"))
+         (= 0.5 (gibberish-score-str "(ok)"))
+         (= 1.0 (gibberish-score-str "*@&#$*&@#"))])
 
 ;; Return the scores from using each of the `trial-keys` to try
 ;; to decrypt the ciphertext
 
-(defn byte-xor-decryption-scores
+(defn xor-decryption-scores
   [ciphertext trial-keys]
   
   (for [key trial-keys
-        :let [plain (String. (byte-array (map #(bit-xor key %) ciphertext)))]]
+        :let [plain (byte-array (map #(bit-xor key %) ciphertext))]]
 
     {:key (char key)
      :score (gibberish-score plain)
      :plain plain}))
 
-(byte-xor-decryption-scores CH3-CIPHER (range (byte \A) (byte \Z)))
+(xor-decryption-scores CH3-CIPHER (range (byte \A) (byte \Z)))
 
 ;; Challenge 3 answer is the key with the lowest gibberish score
 (defn break-byte-xor
   [cipher trial-keys]
   (apply min-key :score
-         (byte-xor-decryption-scores cipher trial-keys)))
+         (xor-decryption-scores cipher trial-keys)))
 
 (let [CH3-CIPHER
       (hex->bytes "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")]
