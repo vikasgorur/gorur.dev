@@ -70,10 +70,6 @@
 
 ;; Challenge 3
 
-(def CH3-CIPHER
-  (hex->bytes
-   "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
-
 (defn non-readable [b]
   (not (or (and (>= b (byte \A)) (<= b (byte \Z)))
            (and (>= b (byte \a)) (<= b (byte \z)))
@@ -101,7 +97,7 @@
 ;; Return the scores from using each of the `trial-keys` to try
 ;; to decrypt the ciphertext
 
-(defn xor-decryption-scores
+(defn xor-trial-keys-scores
   [ciphertext trial-keys]
   
   (for [key trial-keys
@@ -111,20 +107,16 @@
      :score (gibberish-score plain)
      :plain plain}))
 
-(xor-decryption-scores CH3-CIPHER (range (byte \A) (byte \Z)))
-
 ;; Challenge 3 answer is the key with the lowest gibberish score
-(defn break-byte-xor
-  [cipher trial-keys]
-  (apply min-key :score
-         (xor-decryption-scores cipher trial-keys)))
+(defn solve-ch3
+  [trial-keys]
 
-(let [CH3-CIPHER
-      (hex->bytes "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")]
-  (break-byte-xor CH3-CIPHER (range (byte \A) (byte \Z))))
+  (let [CH3-CIPHER (hex->bytes "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")]
+    (apply min-key :score
+         (xor-trial-keys-scores CH3-CIPHER trial-keys))))
 
-(time (break-byte-xor CH3-CIPHER (range (byte \A) (byte \Z))))
-
+(String. (:plain (solve-ch3 (range (byte \A) (byte \Z)))))
+;;=> "Cooking MC's like a pound of bacon"
 
 ;; Challenge 4
 
@@ -228,7 +220,7 @@ distances
 (def LIKELY-KEYSIZES [5 3 2 13 11 20 18 38 15 17 16 21 31 37 23 29])
 
 (map #(let [block-1 (first (block-transpose %1 CH6-CIPHER))]
-        (break-byte-xor block-1 (range 0 255)))
+        (solve-ch3 block-1 (range 0 255)))
      LIKELY-KEYSIZES)
 
 (def KEYSIZE 29)
@@ -236,7 +228,7 @@ distances
 ;; Break each of the 29 blocks
 
 (def CH6-KEY
-  (map #(:key (break-byte-xor (nth (block-transpose KEYSIZE CH6-CIPHER) %1) (range 0 255)))
+  (map #(:key (solve-ch3 (nth (block-transpose KEYSIZE CH6-CIPHER) %1) (range 0 255)))
        (range 0 KEYSIZE)))
 
 (apply str CH6-KEY)

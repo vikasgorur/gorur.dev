@@ -79,6 +79,11 @@ $6$ hex chars = $3$ bytes = $24$ bits = $4$ base64 chars.
 <span class="eval">(solve-ch2) => ✅</span>
 
 ## Challenge 3
+> The hex encoded string [input] has been XOR'd against a single character. Find the key, decrypt the message.
+> 
+> You can do this by hand. But don't: write code to do it for you.
+> 
+> How? Devise some method for "scoring" a piece of English plaintext. Character frequency is a good metric. Evaluate each output and choose the one with the best score.
 
 ```clojure
 (def CH3-CIPHER
@@ -86,6 +91,7 @@ $6$ hex chars = $3$ bytes = $24$ bits = $4$ base64 chars.
    "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
 ```
 
+At first I thought of using something like the KL divergence (see [this post](/posts/breaking-caesar-cipher.html)) to score the plaintext but then 
 A readable ASCII byte is either in the range `A-Z`, or in the range `a-z` or a space. A non-readable byte is the negation of that.
 
 ```clojure
@@ -110,3 +116,31 @@ The gibberish score:
 
 <span class="eval">(gibberish-score-str "ABCD?") => 0.2</span>
 <span class="eval">(gibberish-score-str "*@&#$*&@#") => 1.0</span>
+
+```clojure
+(defn xor-trial-keys-scores
+  [ciphertext trial-keys]
+  
+  (for [key trial-keys
+        :let [plain (byte-array (map #(bit-xor key %) ciphertext))]]
+
+    {:key (char key)
+     :score (gibberish-score plain)
+     :plain (String. plain)}))
+```
+
+```clojure
+(defn solve-ch3
+  [trial-keys]
+
+  (let [CH3-CIPHER (hex->bytes "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736")]
+    (apply min-key :score
+         (xor-trial-keys-scores CH3-CIPHER trial-keys))))
+```
+
+<span class="eval">(String. (:plain (solve-ch3 (range (byte \\A) (byte \\Z)))))</span>
+<span class="eval-result">{:key \\X, :score 0.029411764705882353, :plain "Cooking MC's like a pound of bacon"}</span>
+
+## Challenge 4
+
+> One of the 60-character strings in [this file](https://cryptopals.com/static/challenge-data/4.txt) has been encrypted by single-character XOR. Find it.

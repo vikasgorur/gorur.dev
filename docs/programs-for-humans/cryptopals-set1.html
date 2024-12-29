@@ -254,10 +254,15 @@ window.Quarto = {
 </section>
 <section id="challenge-3" class="level2">
 <h2 class="anchored" data-anchor-id="challenge-3">Challenge 3</h2>
+<blockquote class="blockquote">
+<p>The hex encoded string [input] has been XOR’d against a single character. Find the key, decrypt the message.</p>
+<p>You can do this by hand. But don’t: write code to do it for you.</p>
+<p>How? Devise some method for “scoring” a piece of English plaintext. Character frequency is a good metric. Evaluate each output and choose the one with the best score.</p>
+</blockquote>
 <div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> CH3-CIPHER</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (hex-&gt;bytes</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>A readable ASCII byte is either in the range <code>A-Z</code>, or in the range <code>a-z</code> or a space. A non-readable byte is the negation of that.</p>
+<p>At first I thought of using something like the KL divergence (see <a href="../posts/breaking-caesar-cipher.html">this post</a>) to score the plaintext but then A readable ASCII byte is either in the range <code>A-Z</code>, or in the range <code>a-z</code> or a space. A non-readable byte is the negation of that.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> non-readable </span>[b]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">not</span> (<span class="kw">or</span> (<span class="kw">and</span> (<span class="kw">&gt;=</span> b (<span class="kw">byte</span> <span class="ch">\A</span>)) (<span class="kw">&lt;=</span> b (<span class="kw">byte</span> <span class="ch">\Z</span>)))</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>           (<span class="kw">and</span> (<span class="kw">&gt;=</span> b (<span class="kw">byte</span> <span class="ch">\a</span>)) (<span class="kw">&lt;=</span> b (<span class="kw">byte</span> <span class="ch">\z</span>)))</span>
@@ -272,6 +277,28 @@ window.Quarto = {
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  [text]</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">byte-array</span> (<span class="kw">map</span> <span class="kw">byte</span> text)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval">(gibberish-score-str “ABCD?”) =&gt; 0.2</span> <span class="eval">(gibberish-score-str “<em>@&amp;#$</em>&amp;@#”) =&gt; 1.0</span></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> xor-trial-keys-scores</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  [ciphertext trial-keys]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">for</span> [<span class="kw">key</span> trial-keys</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">:let</span> [plain (<span class="kw">byte-array</span> (<span class="kw">map</span> #(<span class="kw">bit-xor</span> <span class="kw">key</span> <span class="va">%</span>) ciphertext))]]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    {<span class="at">:key</span> (<span class="kw">char</span> <span class="kw">key</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">:score</span> (gibberish-score plain)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">:plain</span> (String. plain)}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-ch3</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  [trial-keys]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [CH3-CIPHER (hex-&gt;bytes <span class="st">"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"</span>)]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">apply</span> <span class="kw">min-key</span> <span class="at">:score</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         (xor-trial-keys-scores CH3-CIPHER trial-keys))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval">(String. (:plain (solve-ch3 (range (byte \A) (byte \Z)))))</span> <span class="eval-result">{:key \X, :score 0.029411764705882353, :plain “Cooking MC’s like a pound of bacon”}</span></p>
+</section>
+<section id="challenge-4" class="level2">
+<h2 class="anchored" data-anchor-id="challenge-4">Challenge 4</h2>
+<blockquote class="blockquote">
+<p>One of the 60-character strings in&nbsp;<a href="https://cryptopals.com/static/challenge-data/4.txt">this file</a>&nbsp;has been encrypted by single-character XOR. Find it.</p>
+</blockquote>
 
 
 </section>

@@ -27,7 +27,7 @@ the areas of math that can be helpful and the best resources I've found for lear
 them.
 
 Ever since I discovered computers my identity has been "programmer". The book by
-@jeremy_kun_programmers_2021 changed my *relationship* to math and gave me the confidence to 
+@jeremykunProgrammersIntroductionMathematics2021 changed my *relationship* to math and gave me the confidence to 
 read the ML textbooks and papers. It helped me reconnect with my teenage self that found
 math playful and was excited by it rather than scared by notation.
 **This is a life-changing book.**
@@ -39,7 +39,7 @@ complicated than our brief encounter with it in high school or college makes us 
 always on the look out for books and articles that help in developing a good intuition
 for probability.
 
-The textbook by @hamming_art_1991 is one of the best introductions. It is rigorous enough
+The textbook by [@hammingArtProbabilityScientists1991] is one of the best introductions. It is rigorous enough
 for us engineers but more importantly has long passages that explain the intuition behind
 ideas.
 
@@ -50,7 +50,7 @@ Many of the questions of interest can be posed as information theory questions:
 "what has a model learnt?", or "what did this experiment tell us?",
 "how much can a model of a certain size learn?"
 
-@cover_elements_2005 and @mackay_information_2003 are two useful textbooks.
+[@coverElementsInformationTheory2005] and [@mackayInformationTheoryInference2003] are two useful textbooks.
 
 ### Linear Algebra
 
@@ -59,7 +59,7 @@ to think of the subject as "thinking in high-dimensional spaces". Everything in 
 deals with vectors with impossibly high dimensions (for example, each token in GPT3
 is represented as a vector in a ~50,000 dimension space).
 
-The video series "Essence of Linear Algebra" by @3blue1brown_essence_2016 was the
+The video series "Essence of Linear Algebra" by [@3blue1brownEssenceLinearAlgebra2016] was the
 first time linear algebra made any intuitive sense to me.
 
 ### Calculus
@@ -75,7 +75,7 @@ complicated functions and the chain rule for computing them.
 The goal of all ML training is to find an acceptably low value of the loss function. This is the
 part of ML that I find it the easiest to treat as a black box.
 
-@bottou_optimization_2016 is a great overview of the various optimization methods
+[@bottouOptimizationMethodsLargeScale2016] is a great overview of the various optimization methods
 used in ML.
 
 ## Automatic Differentiation
@@ -85,13 +85,13 @@ figure out the gradient of the loss function as long as the computation of the l
 function is expressed in a form that the library expects. For example, in PyTorch
 the computation is expressed as tensor operations.
 
-@baydin_automatic_2015 is a great survey of the various AD methods. For ML training
-we care about "reverse mode". @paszke_pytorch_2019 describes PyTorch, the most widely used library for deep learning
+[@baydinAutomaticDifferentiationMachine2015] is a great survey of the various AD methods. For ML training
+we care about "reverse mode". [@paszkePyTorchImperativeStyle2019] describes PyTorch, the most widely used library for deep learning
 in production.
 
 ## What are neural networks?
 
-The first neural network was the perceptron [see @nilsson_quest_2010, section 4.2.1], a single-layer network built to identify
+The first neural network was the perceptron [see @nilssonQuestArtificialIntelligence2010, section 4.2.1], a single-layer network built to identify
 objects in 20x20 pixel images. I find it fascinating to note that most of the early work
 on neural networks was done by people trying to understand human cognition
 by building a model of computation different from the familiar digital (von Neumann) computer.
@@ -99,13 +99,13 @@ From that perspective, current LLMs running on GPUs are just one physical realiz
 model of computation.
 
 The key algorithm for training neural networks is backpropagation. This algorithm has apparently
-been invented independently many times. [@rumelhart_learning_1986] is one of the widely cited descriptions
+been invented independently many times. [@rumelhartLearningRepresentationsBackpropagating1986] is one of the widely cited descriptions
 of it.
 
-@lecun_backpropagation_1989 is one of the first examples of using neural networks and back propagation
-to solve the recognizably modern problem of handwriting recognition. An interesting companion piece is the blog post [@karpathy_deep_2022] that re-implements the network described in the original paper and illustrates the massive difference in training time made possible by modern hardware.
+[@lecunBackpropagationAppliedHandwritten1989] is one of the first examples of using neural networks and back propagation
+to solve the recognizably modern problem of handwriting recognition. An interesting companion piece is the blog post [@karpathyDeepNeuralNets2022] that re-implements the network described in the original paper and illustrates the massive difference in training time made possible by modern hardware.
 
-Another milestone in the deep learning revolution is AlexNet [@krizhevsky_imagenet_2012] where
+Another milestone in the deep learning revolution is AlexNet [@krizhevskyImageNetClassificationDeep2012] where
 a deep learning model beat all other previous computer vision models on image recognition
 by a significant margin. This paper also illustrates the coming together of three factors that make
 deep learning practical and are true to this day: (1) massive datasets (2) GPUs for efficient matrix
@@ -115,66 +115,47 @@ computations (3) libraries to do automatic differentiation easily.
 
 The task of language modeling is to learn a probability distribution about a corpus. The
 distribution is the conditional probability of the next token given a sequence of previous tokens. A
-short introduction to language modeling is in @hang_li_language_2022.
+short introduction to language modeling is in [@hangliLanguageModelsPresent2022].
 
 The roots of this go back to Markov analyzing Pushkin's poetry to settle a debate about free will(!),
-described in the article by @hayes_first_2013.
+described in the article by [@hayesFirstLinksMarkov2013].
 
-The classic [@shannon_mathematical_1948] paper that invented information theory also considers language modeling,
-as does his subsequent paper [@shannon_prediction_1951]. In the second paper he describes an experiment to
-figure out the entropy of English language by giving humans (his wife and another couple) the task
-of predicting the next word of a short sentence, essentially treating them like modern LLMs!
+The classic [@shannonMathematicalTheoryCommunication1948] paper that invented information theory also considers language modeling, as does his subsequent paper [@shannonPredictionEntropyPrinted1951]. In the second paper he describes an experiment to figure out the entropy of English language by giving humans (his wife and another couple) the task of predicting the next word of a short sentence, essentially treating them like modern LLMs!
 
-The Shannon living-room experiments story is related in this entertaining profile: [@horgan_claude_1992].
+The Shannon living-room experiments story is related in this entertaining profile: [@horganClaudeShannonProfile1992]
 
 ## How is language modeling done with neural networks?
 
-@bengio_neural_2003 introduced the ideas of using a neural network to model language as well
+[@bengioNeuralProbabilisticLanguage2003] introduced the ideas of using a neural network to model language as well
 as the idea of a "distributed representation", also known as word embeddings. The goal of embedding
 is to turn words and phrases into vectors in a high-dimensional space.
 
-A big step forward in embeddings was Google's word2vec paper [@mikolov_distributed_2013], which contained the famous example
-`vec("King") - vec("Man") + vec("Woman") ~= vec("Queen")`. Embeddings just on their
-own are an incredibly useful tool in building products because they capture a general notion
-of semantic "distance" between words, sentences, or entire documents.
+A big step forward in embeddings was Google's word2vec paper [@mikolovDistributedRepresentationsWords2013], which contained the famous example
+`vec("King") - vec("Man") + vec("Woman") ~= vec("Queen")`. Embeddings just on their own are an incredibly useful tool in building products because they capture a general notion of semantic "distance" between words, sentences, or entire documents.
 
-Recurrent Neural Nets (RNNs) were one solution to the problem of capturing the *sequential* nature of
-language. The historical roots of this approach are in the cognitive science paper [@elman_finding_1990]. The blog
-post [@andrej_karpathy_unreasonable_2015] illustrates the "unreasonable effectiveness" of RNNs.
+Recurrent Neural Nets (RNNs) were one solution to the problem of capturing the *sequential* nature of language. The historical roots of this approach are in the cognitive science paper [@elmanFindingStructureTime1990]. The blog post [@andrejkarpathyUnreasonableEffectivenessRecurrent2015] illustrates the "unreasonable effectiveness" of RNNs.
 
-The playlist "Neural Networks: Zero to Hero" [@karpathy_neural_2022] is a step-by-step walkthrough to building something
-like GPT-2 starting from nothing but knowledge of Python. This entire post is in a sense is all
-the supplementary reading I'm doing to finish understanding all the videos in this playlist.
+The playlist "Neural Networks: Zero to Hero" [@karpathyNeuralNetworksZero2022] is a step-by-step walkthrough to building something like GPT-2 starting from nothing but knowledge of Python. This entire post is in a sense is all the supplementary reading I'm doing to finish understanding all the videos in this playlist.
 
 ## Large Language Models
 
 Everything in this section is just the starting point for deeper rabbit holes.
 
-"Attention is all you need" [@vaswani_attention_2017] contains the core DNA of all current LLMs. Everything
-I described in this post above is my attempt to get to a full understanding of this landmark
-paper.
+"Attention is all you need" [@vaswaniAttentionAllYou2017] contains the core DNA of all current LLMs. Everything I described in this post above is my attempt to get to a full understanding of this landmark paper.
 
-"State of GPT" [@andrej_karpathy_state_2023] is the best 1-hour introduction to the architecture, training and capabilities of
-LLMs. This talk is accessible to any working programmer, it doesn't need any previous knowledge
-of LLMs or neural networks.
+"State of GPT" [@andrejkarpathyStateGPT2023] is the best 1-hour introduction to the architecture, training and capabilities of LLMs. This talk is accessible to any working programmer, it doesn't need any previous knowledge of LLMs or neural networks.
 
-[@3blue1brown_neural_2024] is a great series of videos on neural networks and deep learning,
+[@3blue1brownNeuralNetworks2024] is a great series of videos on neural networks and deep learning,
 with recent videos focusing on LLMs.
 
 The papers on open source LLMs have a wealth of detail on the training data and methodology.
-See LLAMA2 [@touvron_llama_2023], Mistral 7B [@jiang_mistral_2023].
+See LLAMA2 [@touvronLlama2Open2023], Mistral 7B [@jiangMistral7B2023].
 
-The effectiveness of neural networks is extremely dependent on the quantity and quality of the
-training data. This fact is apparently discovered again and again so often that it has a name:
-"the bitter lesson" [@rich_sutton_bitter_2019]. An intriguing related fact about LLMs is the existence of "scaling laws"
-that describe the optimal model size and number of training tokens for a given compute
-budget [@hoffmann_training_2022].
+The effectiveness of neural networks is extremely dependent on the quantity and quality of the training data. This fact is apparently discovered again and again so often that it has a name: "the bitter lesson" [@richsuttonBitterLesson2019]. An intriguing related fact about LLMs is the existence of "scaling laws" that describe the optimal model size and number of training tokens for a given compute budget [@hoffmannTrainingComputeOptimalLarge2022].
 
 The wide applicability of LLMs is a result of their ability to learn to perform tasks with just
-a handful of examples ("few-shot learning"). This discovery is related in the GPT2 [@brown_language_2020] and
-GPT3 papers [@kojima_large_2022].
+a handful of examples ("few-shot learning"). This discovery is related in the GPT2 [@brownLanguageModelsAre2020] and GPT3 papers [@kojimaLargeLanguageModels2022].
 
-Training LLMs is an incredibly complicated systems engineering problem. This blog post by the lead
-of PyTorch [@chintala_how_2024] and the infrastructure section in the LLama3 paper [@dubey_llama_2024] provide insight into what it takes.
+Training LLMs is an incredibly complicated systems engineering problem. This blog post by the lead of PyTorch [@chintalaHowTrainModel2024] and the infrastructure section in the LLama3 paper [@dubeyLlama3Herd2024] provide insight into what it takes.
 
 [ *to be continued* … ]
