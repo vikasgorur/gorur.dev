@@ -48,8 +48,8 @@ These are programs I write solely to understand something and maybe help another
 <span class="pub-date">2024-11-02</span> [Stats 110: Practice 1](exercises/stats110-practice1.qmd)
 
 ## Misc
-<span class="pub-date">2024-12-14</span> [Mysore Food Guide](posts/mysore-food-guide.qmd)
-
-<span class="pub-date">2021-03-16</span> [For A Kannada Movie](posts/for-a-kannada-movie.qmd)
+<span class="pub-date">2024-12-14</span> [Mysore Food Guide](posts/mysore-food-guide.qmd) \
+<span class="pub-date">2022-04-25</span> [The Varieties of Silence](posts/varieties-of-silence.qmd) \
+<span class="pub-date">2021-03-16</span> [For A Kannada Movie](posts/for-a-kannada-movie.qmd) \
 
 <span class="pub-date">2020-04-30</span> [How to do Feature Flag-Driven Development](posts/feature-flags.qmd)

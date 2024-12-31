@@ -44,5 +44,6 @@
 
 /* For food guide */
 .indent {
+  padding-top: 1em;
   margin-left: 2em;
 }
