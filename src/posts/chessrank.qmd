@@ -1,6 +1,248 @@
 ---
-title: "chessrank: who should win a tournament?"
+title: "Chessrank: Who Should Win a Chess Tournament?"
 jupyter: python3
 ---
 
-Who should win a round-robin chess tournament? 
+_Last updated_: Jan 3, 2025.
+
+---
+
+High-level chess tournaments are typically organized in a round-robin format. Every player plays everyone else twice, once with the white pieces and once with black. A win gets 1 point, a loss is counted as 0 points and a draw gets ½ point. The player with the highest score at the end wins the tournament.
+
+This raises a question: are all wins equal? Chess players have an [Elo rating](https://en.wikipedia.org/wiki/Elo_rating_system) based on past performance and the probability of a lower rated player beating a higher rated player drops quite sharply as the rating difference increases. A player rated 100 points higher on the FIDE scale for example has a ~60% chance of winning a game [@francoislabelleEloWinProbability2016]. Given this, should a win against a "weak" player really be counted as the same as winning against a player of comparable strength? Is there a better way of scoring the tournament? Would results of tournaments be affected if we used such a better way?
+
+These questions were debated in the 19th century and an answer was provided by the mathematician Edmund Landau, writing his first ever publication at the age of 18. This work is described in [@sinnLandauChessTournaments2022] and this post is largely based on that paper.
+
+## Quality
+
+We'll come up with a way to rank the performance of players in a tournament by making the following assumptions:
+
+1. We postulate the existence of a "quality score" for each player.
+2. The quality of a player is the sum of their game results ($0$, $½$, or $1$) but with each result _weighted by the quality of the opponent_.
+
+Let's number the players $1..N$ and define a tournament matrix ${\mathbf T}$ where an entry $t_{ij}$ is player $i$'s total result against player $j$. So for example, if player 1 won both games against player 2, $t_{12} = (1 + 1) = 2$.
+
+The quality of all the players can now be written as a set of simultaneous equations, illustrated here for a 4-player tournament:
+
+$$
+\begin{aligned}
+t_{11}\,q_1 + t_{12}\,q_2 + t_{13}\,q_3 + t_{14}\,q_4 &= \lambda q_1 \\
+t_{21}\,q_1 + t_{22}\,q_2 +  t_{23}\,q_3 + t_{24}\,q_4 &= \lambda q_2 \\
+t_{31}\,q_1 + t_{32}\,q_2 + t_{33}\,q_3 + t_{34}\,q_4 &= \lambda q_3 \\
+t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &= \lambda q_4 \\
+\end{aligned}
+$$
+
+where all $t_{ii} = 0$.
+
+If we think of the quality scores of all the players as the vector ${\mathbf q}$, the set of equations can be written as:
+
+$$
+\mathbf{T} \, \mathbf{q} = \lambda \, \mathbf{q}
+$$
+This is nothing but the definition of ${\mathbf q}$ as an **eigenvector**!
+
+::: {.callout-note}
+Why do we need the factor $\lambda$? The short answer is that the theorem that will guarantee the existence of the eigenvector requires it. Another way to think about it is that the _eigenvalue_ $\lambda$ is not guaranteed to be $1$. The value of $\lambda$ doesn't matter for our purposes though because all we care about is the _ordering_ of values within ${\mathbf q}$.
+
+Linear Algebra sometimes feels like just a long list of definitions, but here we encounter something non-obvious, the _Perron-Frobenius Theorem_:
+
+> Any matrix with nonnegative real entries has a largest real eigenvalue and a corresponding eigenvector, unique up to scaling, whose entries are all nonnegative.
+:::
+
+What is the intuitive understanding of ${\textbf q}$ as an eigenvector? I think of it like this:
+
+- For a tournament with $N$ players, there is an $N$-dimensional space where each point represents one possible ordering of the players. To keep things simple we can focus only on vectors of magnitude $1$, thus each possible ordering is a point on a hypersphere.
+
+- The tournament matrix is a transformation on this space. It maps any hypothetical ranking ${\mathbf q}_\text{before}$ to a new ranking ${\mathbf q}_\text{after}$. The act of holding the tournament is our attempt to discover the "true" value of ${\mathbf q}$.
+
+- Now imagine we knew the "true" value of ${\mathbf q}$ before the tournament. We would then expect the tournament matrix to _leave the vector unchanged_. An eigenvector of ${\mathbf T}$ is in some sense the "axis of rotation" of the hypersphere we just mentioned, in that its direction is left unchanged when the matrix acts upon it. Thus this eigenvector is the true quality vector we seek.
+
+(The above explanation is necessarily a bit of a hand-wave because intuition demands sacrificing rigor).
+
+## Candidates 2024
+_Some code below is hidden for clarity but you can find everything on [github](https://github.com/vikasgorur/gorur.dev/blob/main/src/posts/chessrank.qmd)_.
+
+Let's apply the above ranking method to a real tournament, the 2024 Candidates, won by Gukesh D who would go on to become the youngest world champion in Dec 2024.
+
+First we load the results into a `DataFrame` that looks like this (a few sample rows shown):
+
+```{python}
+#| echo: false
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+candidates = pd.read_csv("data/candidates.csv")
+candidates.sample(5)
+```
+
+<p />
+We then turn it into the matrix `T`:
+
+```{python}
+#| echo: false
+
+I_P = sorted(set(candidates["white_player"]))
+PTOI = {p: i for i, p in enumerate(I_P)}
+ITOP = {i: p for i, p in enumerate(I_P)}
+
+def results_matrix(df: pd.DataFrame) -> np.array:
+        "Convert the results DF into a nxn matrix of points"
+
+        N = len(PTOI.keys())
+        results = np.zeros((N, N))
+
+        for i, row in df.iterrows():
+            w = row["white_player"]
+            b = row["black_player"]
+            wp = row["white_points"]
+            bp = row["black_points"]
+            
+            results[PTOI[w], PTOI[b]] += wp
+            results[PTOI[b], PTOI[w]] += bp
+
+        return results
+
+T = results_matrix(candidates)
+print(np.array2string(T, separator='   ', formatter={'float': lambda x: f"{x:.1f}"}))
+```
+
+When we follow the conventional method of just adding the points, we get the following tournament ranking:
+
+```{python}
+#| echo: false
+
+def player_scores(df: pd.DataFrame) -> pd.DataFrame:
+    A = results_matrix(df)
+    scores = {}
+    for name in PTOI.keys():
+        scores[name] = [A[PTOI[name]].sum()]
+
+    # Convert dictionary to DataFrame
+    scores_df = pd.DataFrame.from_dict(
+        scores, orient="index", columns=["Score"]
+    )
+    # Sort by score in descending order
+    scores_df = scores_df.sort_values('Score', ascending=False)
+
+    return scores_df
+
+scores = player_scores(candidates)
+scores
+```
+
+## The power method
+
+We could find the eigenvectors of this matrix simply by calling `np.linalg.eig(T)` but there is an elegant method that also scales better to really large matrices.
+
+The **power iteration method** can be described in one sentence as:
+
+<span class="indent">If you start with a random vector and repeatedly apply a matrix, it converges to the eigenvector with the largest eigenvalue.</span>
+
+The only further detail needed is that the vector should be normalized after each iteration to prevent it from growing without bounds. Let's write the function and also have it return all the intermediate values because it'll be useful later to visualize:
+
+```{python}
+def power_iters(T: np.array, n: int) -> list[np.array]:
+    "Return the results of the applying the power method n times"
+    
+    q = np.random.random(T.shape[0])
+    results = [q]
+    
+    for i in range(n):
+        Tq = T @ q
+        q = Tq / np.linalg.norm(Tq)
+        results.append(q)
+        
+    return results
+```
+
+Why does this work?
+
+Imagine that the eigenvectors of ${\mathbf T}$ form the basis for our vector space. Ignore for a moment whether this is possible in general. When expressed in this basis, ${\mathbf T}$ is a _diagonal matrix_, with the diagonal values being the eigenvalues. Let's call the largest of these the dominant eigenvalue. Now if we take a random vector and repeatedly apply the matrix to it (while normalizing after each step), the dominant eigenvalue will make one of the components of the vector grow relative to the others. Eventually the vector will come to point almost entirely in the direction of that component. Given that we're working in the eigenbasis, this vector is nothing but an eigenvector.
+
+Another way to think about it is that the power method continually "pulls" a vector towards the eigenvector with the dominant eigenvalue. We can see this in action with our dataset. We'll start with a random vector that represents an arbitrary ranking of the players. After each iteration, we'll mark the players that rose or fell in the rankings. The scores mentioned after each player name are the 3 digits after the decimal place (so $0.919… = 919$).
+
+```{python}
+#| column: screen-inset-right
+#| echo: false
+
+def ranking(q: np.array) -> list[str]:
+    return sorted([(ITOP[i], q_) for i, q_ in enumerate(q)], key=lambda x: x[1], reverse=True)
+
+def rank_changes(
+    prev_ranking: list[tuple[str, float]], 
+    curr_ranking: list[tuple[str, float]]
+) -> dict[str, int]:
+    # Create maps of name -> position for both rankings
+    prev_positions = {name: i for i, (name, _) in enumerate(prev_ranking)}
+    curr_positions = {name: i for i, (name, _) in enumerate(curr_ranking)}
+
+    # For each player, compute how many positions they moved
+    # (previous position - current position, so positive means they improved)
+    changes = {name: prev_positions[name] - curr_positions[name] 
+              for name in prev_positions.keys()}
+
+    return changes
+
+np.random.seed(12)
+num_iters = 8  # Increased to show 8 plots total
+fig, axes = plt.subplots(2, 4, figsize=(10, 8))  # 2 rows, 4 columns
+axes = axes.flatten()  # Flatten to 1D array for easier indexing
+
+prev_ranks = None
+for i, q in enumerate(power_iters(T, num_iters-1)):
+    # Get the ranking tuples
+    ranks = ranking(q)
+    changes = {}
+    if prev_ranks:
+        changes = rank_changes(prev_ranks, ranks)
+    # Turn off axes for this subplot
+    axes[i].axis('off')
+
+    prev_ranks = ranks
+    # Display text, one line per player
+    y_pos = 0
+    for name, score in ranks:
+        delta = changes.get(name, 0)
+        prefix = ""
+        if delta < 0:
+            prefix = "↓"
+            color = "red"
+        elif delta > 0:
+            prefix = "↑"
+            color = "green"
+        else:
+            color = "black"
+
+
+        line = f"{prefix:<2} {name:<10}{score*1000:.0f}"
+        axes[i].text(
+            0.1,
+            0.9 - (y_pos / len(ranks)) * 0.7,
+            line,
+            fontsize=12,
+            fontname='Menlo',
+            color=color
+        )
+        axes[i].text(
+            0.5,
+            0.05,
+            f"iter {i}",
+            fontsize=10,
+            fontname="Menlo",
+            ha='center'
+        )
+        y_pos += 1
+```
+
+We see that the starting vector converges quite quickly to a stable ordering. We also see that it's the same order as the one obtained by adding up the points (except for the second place group, Nepo, Hikaru and Fabi, but it would be a mistake to think that the slight differences signify anything). I suspect that in most cases the method described here produces the same ranking as just adding up points, which explains why the simpler system is still used in tournaments.
+
+## Conclusion
+
+The really cool thing I learned from reading the paper mentioned at the top [@sinnLandauChessTournaments2022] is that this method is the same as PageRank!
+
+Instead of a tournament matrix we have the matrix of links between web pages, ${\mathbf W}$ and each entry ${\mathbf W}_{ij}$ is the number of links from page $i$ to page $j$. See the blog post [@jeremykunGooglesPageRankFirst2011] for a detailed description of PageRank.
+
+We can even think of it as a game. If `gorur.dev` has hundreds of links to `arxiv.org` while there are no links in the other direction, `arxiv.org` "wins" over `gorur.dev`. Computing the PageRank is like ranking the web pages in this "tournament"!

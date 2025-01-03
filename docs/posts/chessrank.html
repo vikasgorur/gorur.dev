@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>chessrank: who should win a tournament?</title>
+<title>Chessrank: Who Should Win a Chess Tournament?</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,10 +20,64 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -66,12 +120,44 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -103,15 +189,13 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
-    </div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">chessrank: who should win a tournament?</h1>
+<h1 class="title">Chessrank: Who Should Win a Chess Tournament?</h1>
 </div>
 
 
@@ -128,11 +212,239 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Who should win a round-robin chess tournament?</p>
+<p><em>Last updated</em>: Jan 3, 2025.</p>
+<hr>
+<p>High-level chess tournaments are typically organized in a round-robin format. Every player plays everyone else twice, once with the white pieces and once with black. A win gets 1 point, a loss is counted as 0 points and a draw gets ½ point. The player with the highest score at the end wins the tournament.</p>
+<p>This raises a question: are all wins equal? Chess players have an <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Elo rating</a> based on past performance and the probability of a lower rated player beating a higher rated player drops quite sharply as the rating difference increases. A player rated 100 points higher on the FIDE scale for example has a ~60% chance of winning a game <span class="citation" data-cites="francoislabelleEloWinProbability2016">(<a href="#ref-francoislabelleEloWinProbability2016" role="doc-biblioref">François Labelle 2016</a>)</span>. Given this, should a win against a “weak” player really be counted as the same as winning against a player of comparable strength? Is there a better way of scoring the tournament? Would results of tournaments be affected if we used such a better way?</p>
+<p>These questions were debated in the 19th century and an answer was provided by the mathematician Edmund Landau, writing his first ever publication at the age of 18. This work is described in <span class="citation" data-cites="sinnLandauChessTournaments2022">(<a href="#ref-sinnLandauChessTournaments2022" role="doc-biblioref">Sinn and Ziegler 2022</a>)</span> and this post is largely based on that paper.</p>
+<section id="quality" class="level2">
+<h2 class="anchored" data-anchor-id="quality">Quality</h2>
+<p>We’ll come up with a way to rank the performance of players in a tournament by making the following assumptions:</p>
+<ol type="1">
+<li>We postulate the existence of a “quality score” for each player.</li>
+<li>The quality of a player is the sum of their game results (<span class="math inline">\(0\)</span>, <span class="math inline">\(½\)</span>, or <span class="math inline">\(1\)</span>) but with each result <em>weighted by the quality of the opponent</em>.</li>
+</ol>
+<p>Let’s number the players <span class="math inline">\(1..N\)</span> and define a tournament matrix <span class="math inline">\({\mathbf T}\)</span> where an entry <span class="math inline">\(t_{ij}\)</span> is player <span class="math inline">\(i\)</span>’s total result against player <span class="math inline">\(j\)</span>. So for example, if player 1 won both games against player 2, <span class="math inline">\(t_{12} = (1 + 1) = 2\)</span>.</p>
+<p>The quality of all the players can now be written as a set of simultaneous equations, illustrated here for a 4-player tournament:</p>
+<p><span class="math display">\[
+\begin{aligned}
+t_{11}\,q_1 + t_{12}\,q_2 + t_{13}\,q_3 + t_{14}\,q_4 &amp;= \lambda q_1 \\
+t_{21}\,q_1 + t_{22}\,q_2 +  t_{23}\,q_3 + t_{24}\,q_4 &amp;= \lambda q_2 \\
+t_{31}\,q_1 + t_{32}\,q_2 + t_{33}\,q_3 + t_{34}\,q_4 &amp;= \lambda q_3 \\
+t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
+\end{aligned}
+\]</span></p>
+<p>where all <span class="math inline">\(t_{ii} = 0\)</span>.</p>
+<p>If we think of the quality scores of all the players as the vector <span class="math inline">\({\mathbf q}\)</span>, the set of equations can be written as:</p>
+<p><span class="math display">\[
+\mathbf{T} \, \mathbf{q} = \lambda \, \mathbf{q}
+\]</span> This is nothing but the definition of <span class="math inline">\({\mathbf q}\)</span> as an <strong>eigenvector</strong>!</p>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Why do we need the factor <span class="math inline">\(\lambda\)</span>? The short answer is that the theorem that will guarantee the existence of the eigenvector requires it. Another way to think about it is that the <em>eigenvalue</em> <span class="math inline">\(\lambda\)</span> is not guaranteed to be <span class="math inline">\(1\)</span>. The value of <span class="math inline">\(\lambda\)</span> doesn’t matter for our purposes though because all we care about is the <em>ordering</em> of values within <span class="math inline">\({\mathbf q}\)</span>.</p>
+<p>Linear Algebra sometimes feels like just a long list of definitions, but here we encounter something non-obvious, the <em>Perron-Frobenius Theorem</em>:</p>
+<blockquote class="blockquote">
+<p>Any matrix with nonnegative real entries has a largest real eigenvalue and a corresponding eigenvector, unique up to scaling, whose entries are all nonnegative.</p>
+</blockquote>
+</div>
+</div>
+</div>
+<p>What is the intuitive understanding of <span class="math inline">\({\textbf q}\)</span> as an eigenvector? I think of it like this:</p>
+<ul>
+<li><p>For a tournament with <span class="math inline">\(N\)</span> players, there is an <span class="math inline">\(N\)</span>-dimensional space where each point represents one possible ordering of the players. To keep things simple we can focus only on vectors of magnitude <span class="math inline">\(1\)</span>, thus each possible ordering is a point on a hypersphere.</p></li>
+<li><p>The tournament matrix is a transformation on this space. It maps any hypothetical ranking <span class="math inline">\({\mathbf q}_\text{before}\)</span> to a new ranking <span class="math inline">\({\mathbf q}_\text{after}\)</span>. The act of holding the tournament is our attempt to discover the “true” value of <span class="math inline">\({\mathbf q}\)</span>.</p></li>
+<li><p>Now imagine we knew the “true” value of <span class="math inline">\({\mathbf q}\)</span> before the tournament. We would then expect the tournament matrix to <em>leave the vector unchanged</em>. An eigenvector of <span class="math inline">\({\mathbf T}\)</span> is in some sense the “axis of rotation” of the hypersphere we just mentioned, in that its direction is left unchanged when the matrix acts upon it. Thus this eigenvector is the true quality vector we seek.</p></li>
+</ul>
+<p>(The above explanation is necessarily a bit of a hand-wave because intuition demands sacrificing rigor).</p>
+</section>
+<section id="candidates-2024" class="level2">
+<h2 class="anchored" data-anchor-id="candidates-2024">Candidates 2024</h2>
+<p><em>Some code below is hidden for clarity but you can find everything on <a href="https://github.com/vikasgorur/gorur.dev/blob/main/src/posts/chessrank.qmd">github</a></em>.</p>
+<p>Let’s apply the above ranking method to a real tournament, the 2024 Candidates, won by Gukesh D who would go on to become the youngest world champion in Dec 2024.</p>
+<p>First we load the results into a <code>DataFrame</code> that looks like this (a few sample rows shown):</p>
+<div id="ccd8489d" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">white_player</th>
+<th data-quarto-table-cell-role="th">black_player</th>
+<th data-quarto-table-cell-role="th">white_points</th>
+<th data-quarto-table-cell-role="th">black_points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">37</td>
+<td>Pragg</td>
+<td>Fabi</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>Pragg</td>
+<td>Gukesh</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">49</td>
+<td>Abasov</td>
+<td>Pragg</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">44</td>
+<td>Pragg</td>
+<td>Vidit</td>
+<td>0.5</td>
+<td>0.5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Gukesh</td>
+<td>Nepo</td>
+<td>0.5</td>
+<td>0.5</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>
+</p><p>We then turn it into the matrix <code>T</code>:</p>
+<div id="28938379" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-stdout">
+<pre><code>[[0.0   0.5   0.5   0.0   0.5   1.0   0.0   1.0]
+ [1.5   0.0   0.5   1.0   0.0   0.5   1.0   0.5]
+ [1.5   1.5   0.0   1.0   0.5   1.0   1.5   1.5]
+ [2.0   1.0   1.0   0.0   1.0   1.0   1.5   1.5]
+ [1.5   2.0   1.5   1.0   0.0   1.0   1.5   0.0]
+ [1.0   1.5   1.0   1.0   1.0   0.0   1.0   2.0]
+ [2.0   1.0   0.5   0.5   0.5   1.0   0.0   1.5]
+ [1.0   1.5   0.5   0.5   2.0   0.0   0.5   0.0]]</code></pre>
+</div>
+</div>
+<p>When we follow the conventional method of just adding the points, we get the following tournament ranking:</p>
+<div id="f626f775" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Gukesh</td>
+<td>9.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Fabi</td>
+<td>8.5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Hikaru</td>
+<td>8.5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Nepo</td>
+<td>8.5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Pragg</td>
+<td>7.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Vidit</td>
+<td>6.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Alireza</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Abasov</td>
+<td>3.5</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="the-power-method" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-power-method">The power method</h2>
+<p>We could find the eigenvectors of this matrix simply by calling <code>np.linalg.eig(T)</code> but there is an elegant method that also scales better to really large matrices.</p>
+<p>The <strong>power iteration method</strong> can be described in one sentence as:</p>
+<p><span class="indent">If you start with a random vector and repeatedly apply a matrix, it converges to the eigenvector with the largest eigenvalue.</span></p>
+<p>The only further detail needed is that the vector should be normalized after each iteration to prevent it from growing without bounds. Let’s write the function and also have it return all the intermediate values because it’ll be useful later to visualize:</p>
+<div id="d8caa703" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> power_iters(T: np.array, n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">list</span>[np.array]:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Return the results of the applying the power method n times"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    q <span class="op">=</span> np.random.random(T.shape[<span class="dv">0</span>])</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> [q]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        Tq <span class="op">=</span> T <span class="op">@</span> q</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span> Tq <span class="op">/</span> np.linalg.norm(Tq)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        results.append(q)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Why does this work?</p>
+<p>Imagine that the eigenvectors of <span class="math inline">\({\mathbf T}\)</span> form the basis for our vector space. Ignore for a moment whether this is possible in general. When expressed in this basis, <span class="math inline">\({\mathbf T}\)</span> is a <em>diagonal matrix</em>, with the diagonal values being the eigenvalues. Let’s call the largest of these the dominant eigenvalue. Now if we take a random vector and repeatedly apply the matrix to it (while normalizing after each step), the dominant eigenvalue will make one of the components of the vector grow relative to the others. Eventually the vector will come to point almost entirely in the direction of that component. Given that we’re working in the eigenbasis, this vector is nothing but an eigenvector.</p>
+<p>Another way to think about it is that the power method continually “pulls” a vector towards the eigenvector with the dominant eigenvalue. We can see this in action with our dataset. We’ll start with a random vector that represents an arbitrary ranking of the players. After each iteration, we’ll mark the players that rose or fell in the rankings. The scores mentioned after each player name are the 3 digits after the decimal place (so <span class="math inline">\(0.919… = 919\)</span>).</p>
+<div id="1793582e" class="cell page-columns page-full" data-execution_count="5">
+<div class="cell-output cell-output-display page-columns page-full">
+<div class="page-columns page-full">
+<figure class="figure page-columns page-full">
+<p class="page-columns page-full"><img src="chessrank_files/figure-html/cell-6-output-1.png" width="772" height="611" class="figure-img column-screen-inset-right"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see that the starting vector converges quite quickly to a stable ordering. We also see that it’s the same order as the one obtained by adding up the points (except for the second place group, Nepo, Hikaru and Fabi, but it would be a mistake to think that the slight differences signify anything). I suspect that in most cases the method described here produces the same ranking as just adding up points, which explains why the simpler system is still used in tournaments.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The really cool thing I learned from reading the paper mentioned at the top <span class="citation" data-cites="sinnLandauChessTournaments2022">(<a href="#ref-sinnLandauChessTournaments2022" role="doc-biblioref">Sinn and Ziegler 2022</a>)</span> is that this method is the same as PageRank!</p>
+<p>Instead of a tournament matrix we have the matrix of links between web pages, <span class="math inline">\({\mathbf W}\)</span> and each entry <span class="math inline">\({\mathbf W}_{ij}\)</span> is the number of links from page <span class="math inline">\(i\)</span> to page <span class="math inline">\(j\)</span>. See the blog post <span class="citation" data-cites="jeremykunGooglesPageRankFirst2011">(<a href="#ref-jeremykunGooglesPageRankFirst2011" role="doc-biblioref">Jeremy Kun 2011</a>)</span> for a detailed description of PageRank.</p>
+<p>We can even think of it as a game. If <code>gorur.dev</code> has hundreds of links to <code>arxiv.org</code> while there are no links in the other direction, <code>arxiv.org</code> “wins” over <code>gorur.dev</code>. Computing the PageRank is like ranking the web pages in this “tournament”!</p>
 
 
 
-</main> <!-- /main -->
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-francoislabelleEloWinProbability2016" class="csl-entry" role="listitem">
+François Labelle. 2016. <span>“Elo <span>Win Probability Calculator</span>.”</span> <a href="https://wismuth.com/elo/calculator.html">https://wismuth.com/elo/calculator.html</a>.
+</div>
+<div id="ref-jeremykunGooglesPageRankFirst2011" class="csl-entry" role="listitem">
+Jeremy Kun. 2011. <span>“Google’s <span>PageRank</span>—<span>A First Attempt</span>.”</span> <em>Math <span><span class="math inline">\(\cap\)</span></span> Programming</em>. <a href="https://www.jeremykun.com/2011/06/18/googles-pagerank-a-first-attempt/">https://www.jeremykun.com/2011/06/18/googles-pagerank-a-first-attempt/</a>.
+</div>
+<div id="ref-sinnLandauChessTournaments2022" class="csl-entry" role="listitem">
+Sinn, Rainer, and Günter M. Ziegler. 2022. <span>“Landau on <span>Chess Tournaments</span> and <span>Google</span>’s <span>PageRank</span>.”</span> arXiv. <a href="https://doi.org/10.48550/ARXIV.2210.17300">https://doi.org/10.48550/ARXIV.2210.17300</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
