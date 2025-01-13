@@ -1,0 +1,11 @@
+---
+title: Cracking UNIX passwd
+---
+
+DES illustrated [@AlgorithmIllustrated]
+
+Applied Cryptography 2nd ed
+
+Unix passwd considered insecure paper
+
+Shannon confusion / diffusion paper
