@@ -14,7 +14,7 @@ Parts of an answer are found in an old paper, “Programming as Theory Building�
 
 **Programming is about modeling the real world in the computer through symbol manipulation.**
 
-This is obviously true of business software, but if we stretch the definition of "modeling" a little, it's true of system software as well. Let's say we're trying to build a data storage system. Should it be embeddable like SQLite or client-server like Redis? Will it run on a single machine or will it be a distributed system? The path we choose through the enormous search space of design decisions is ultimately driven by real-world constraints imposed by the ultimate purpose of the system.
+This is obviously true of business software, but if we stretch the definition of "modeling" a little, it's true of system software as well. Let's say we're trying to build a data storage system. Should it be embeddable like SQLite or client-server like Redis? Will it run on a single machine or will it be a distributed system? The path we choose through the enormous search space of design decisions is driven by real-world constraints imposed by the ultimate purpose of the system.
 
 **There is a theory of the program that’s in the minds of the programmers but not in the source code.**
 
