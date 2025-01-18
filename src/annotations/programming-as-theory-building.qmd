@@ -2,6 +2,63 @@
 title: Programming as Theory Building
 ---
 
-Notes on @peternaurProgrammingTheoryBuilding1985.
+_Last updated_: Jan 18, 2025.
 
 ---
+
+AI coding assistants arouse strong emotions in some programmers. This often takes the form of dismissing them outright as “fancy autocomplete” or “not useful for serious work”. These sentiments are ultimately rooted in the sinking feeling of having one’s labor devalued, an experience familiar to artists and artisans since the industrial revolution but foreign to programmers until now.
+
+The questions raised by AI assistants are real, though. If Cursor or Copilot can write most of the code, what am I even doing as a programmer?
+
+Parts of an answer are found in an old paper, “Programming as Theory Building” [@peternaurProgrammingTheoryBuilding1985]. In this post I won't summarize the short paper, which is worth reading in full. Instead I'll list the claims I think the paper is making and my thoughts on each claim.
+
+**Programming is about modeling the real world in the computer through symbol manipulation.**
+
+This is obviously true of business software, but if we stretch the definition of "modeling" a little, it's true of system software as well. Let's say we're trying to build a data storage system. Should it be embeddable like SQLite or client-server like Redis? Will it run on a single machine or will it be a distributed system? The path we choose through the enormous search space of design decisions is ultimately driven by real-world constraints imposed by the ultimate purpose of the system.
+
+**There is a theory of the program that’s in the minds of the programmers but not in the source code.**
+
+The strongest proof of this claim is the observation that when we model the real world in a program, we necessarily have to _leave some things out_. For example, let's say we're building an integration with Stripe to accept card payments. In our code we might only care about two states of a payment (1) the payment was authorized (a card "swipe") (2) the payment is settled and funds are in our account. This ignores the dozens of other states possible in a card transaction. The assumption that those states don't matter is the "theory" of the program.
+
+**The cost of program modification is not in the text manipulation.**
+
+Let's say a team of five engineers has built a system over the course of two years. Now let's assume this team is going to be replaced wholesale with a new team of equally capable five engineers. Let's further stipulate that there will be a generous hand-off period of a month.
+
+If this new team has to add a big new feature to the system, will they be able to do it as quickly as the old team? Anyone with any experience in software development knows that the answer in most cases is no.
+
+Why is that? Because no matter how many "knowledge transfer" sessions you schedule, there is always implicit knowledge, the theory of the program, that the old team possesses but the new team won't. Will the new team know which parts of the code are fragile and shouldn't be messed with? Will they know which "new and improved" ways have already been tried and failed?
+
+**The theory of the program can never be fully written down.**
+
+This is a claim I don't fully agree with. It might have been true in 1985 when all design discussions happened in-person and tools for collaboration and documentation were primitive or non-existent. Forty years later most of us are used to working remotely, writing design docs before writing code, and all of our communication (text or voice) could in principle be recorded, archived, transcribed, summarized. I think a sufficiently disciplined team can aspire to record the entire theory of the program and there are enormous benefits to doing that.
+
+::: {.callout-note}
+
+Don Knuth's _literate programming_ was a fascinating attempt to merge the theory and source code of a program. The idea is to write a program like a paper or a book with lots of prose explaining the code. The idea never really took off, probably because programmers as a tribe hate writing prose. Knuth himself used it to great success in writing TeX, a program that [famously](https://tug.org/whatis.html) has so few bugs that Knuth writes a check to anyone who finds one. See [@bentleyProgrammingPearlsLiterate1986] for an example of literate programming. This style is also the inspiration for some of the code I post on this site, like the [Advent of Code 2024](/programs-for-humans/advent-of-code-2024.qmd).
+
+:::
+
+**Theory-building is not the same as "intelligence".**
+
+A couple of quotes from the paper seem incredibly prescient in the age of AI-assisted coding:
+
+>  In intelligent behavior the person displays, not any particular knowledge of facts, but the ability to do certain things, such as to make and appreciate jokes, to talk grammatically, or to fish. More particularly, the intelligent performance is characterized in part by the person's doing them well, according to certain criteria, but further displays the person's ability to apply the criteria so as to detect and correct lapses, to learn from the examples of others, and so forth.
+
+Leaving aside the philosophical debate on the nature of intelligence, the above description to me exactly fits what LLMs are capable of today. They are a ["calculator for words"](https://simonwillison.net/2023/Apr/2/calculator-for-words/), in Simon Willison's memorable framing.
+
+What, in contrast, is theory-building?
+
+> the knowledge a person must have in order not only to do certain things intelligently but also to explain them, to answer queries about them, to argue about them, and so forth.
+
+> A main claim of the Theory Building View of programming is that an essential part of any program, the theory of it, is something that could not conceivably be expressed, but is inextricably bound to human beings.
+
+> The death of a program hapens when the programmer team possessing its theory is dissolved.
+
+If we adopt the view above, it's clear that AI coding tools must be used at the right level of abstraction. They have a certain intelligence that will allow them to write a function to extract fields from a JSON, but they shouldn't be asked to decide higher level questions. That is the domain of the theory-builder, the programmer. It's also why "agents" like Devin that promise to replace an engineer entirely are misguided, as people are [finding out](https://www.answer.ai/posts/2025-01-08-devin.html).
+
+**Programming is not an industrial process.**
+
+Every management fad in the history of software came with a promise to finally turn programming into an industrial process that could be predicted with GANTT charts and estimated using person-hours. They only succeed to the extent that the programming task _can_ be reduced to an industrial activity, writing repetitive code that can probably be automated away with AI in the coming years.
+
+The theory-building view argues that the _whole job_, from understanding a real-world problem to producing the code that solves it, can never be reduced to a systematic method. This should give us all programmers not just hope but a renewed sense of excitement about our craft.
+

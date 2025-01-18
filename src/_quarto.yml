@@ -36,7 +36,7 @@ website:
 
 format:
   html:
-    theme: journal
+    theme: journal 
     fontsize: 1.2em
     toc: false
     code-fold: false

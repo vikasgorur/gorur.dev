@@ -20,4 +20,8 @@ Programming is not an industrial process.
 
 Programmers should have the same status as professionals like lawyers and doctors.
 
+End notes:
+
 SQLite is in the public domain: https://sqlite.org/draft/copyright.html The original developers offer support as well and make a living that way. Why does anyone buy this? Because the original developers have the theory of the program.
+
+https://templ.guide/llms.md
