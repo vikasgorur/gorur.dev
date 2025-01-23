@@ -68,10 +68,11 @@ A couple of Clojure features make the solution very easy to read: (1) `map` in C
 
 ## Day 2
 
-> Part 1: Each line is a list of numbers called a "report". A report is safe if both are true:
+> Part 1: Each line is a list of numbers called a "report". A report
+> is safe if both are true:
 > 
 > - The numbers are either all increasing or all decreasing.
->  - Any two adjacent levels differ by  at least one  and at most three.
+> - Any two adjacent levels differ by at least one and at most three.
 
 First we write a function to read the rows of integers:
 
@@ -83,7 +84,9 @@ First we write a function to read the rows of integers:
     (map #(map Integer/parseInt (string/split % #"\s+")) lines)))
 ```
 
-For each row we will compute the successive differences and call it `deltas`. This will help us check if the row meets both of the conditions.
+For each row we will compute the successive differences and
+call it `deltas`. This will help us check if the row meets
+both of the conditions.
 
 ```clojure
 (defn deltas [xs] (map - (rest xs) (drop-last xs)))
@@ -91,16 +94,18 @@ For each row we will compute the successive differences and call it `deltas`. Th
 
 <span class="eval">(deltas [1 2 3 4 1]) => (1 1 1 -3)</span>
 
-The first condition can be understood as the row being _monotonic_: all the deltas have the same sign. We'll make use of the fact that `=` in Clojure can take any number of arguments, and that `apply` allows us to supply the arguments to a function as a sequence.
+The first condition can be understood as all the deltas _having the same
+sign_. We'll define `sign` that returns -1, 0, or 1 indicating the sign
+of a number. The function `same-sign?` implements the first condtion.
 
 ```clojure
-(defn sign [x] (if (zero? x) 1 (/ x (abs x))))
-(defn monotonic? [r] (apply = (map sign (deltas r))))
+(defn sign [x] (if (zero? x) 0 (/ x (abs x))))
+(defn same-sign? [r] (apply = (map sign (deltas r))))
 ```
 
-<span class="eval">(monotonic? [1 2 3 4 5]) => true</span>
-<span class="eval">(monotonic? [5 4 3 2 1]) => true</span>
-<span class="eval">(monotonic? [5 4 3 2 7]) => false</span>
+<span class="eval">(same-sign? [1 2 3 4 5]) => true</span>
+<span class="eval">(same-sign? [5 4 3 2 1]) => true</span>
+<span class="eval">(same-sign? [5 4 3 2 7]) => false</span>
 
 The second condition:
 
@@ -110,12 +115,12 @@ The second condition:
           (deltas r)))
 ```
 
-<span class="eval">(solve-day2-part1 "src/code/data/advent2024-2.txt")</span>
-<span class="eval-result">269</span>
+Now we go through every report and check it against both conditions, and
+count number of reports that are safe.
 
 ```clojure
 (defn safe-report? [r]
-  (and (monotonic? r) (bounded-deltas? r)))
+  (and (same-sign? r) (bounded-deltas? r)))
 
 (defn solve-day2-part1
   [input-path]
@@ -124,6 +129,35 @@ The second condition:
 
 <span class="eval">(solve-day2-part1 "src/code/data/advent2024-2.txt")</span>
 <span class="eval-result">269</span>
+
+> Part 2: Count the number of safe reports, but now a report is considered
+> safe if removing a _single level_ from it renders it safe according to
+> the two rules as per part 1.
+
+We'll write a function that returns all reports that result from dropping
+a single level.
+
+```clojure
+(defn filter-one
+  [r]
+  (for [i (range (count r))]
+    (concat (take i r) (drop (inc i) r))))
+```
+
+Clojure has a cool feature called a _threading macro_. This allows us to
+write the solution as a pipeline that reads very naturally: `slurp-rows -> filter -> count`.
+
+```clojure
+(defn solve-day2-part2
+  [input-path]
+  (->> (slurp-rows input-path)
+       (filter #(some safe-report? (filter-one %)))
+       count))
+```
+
+<span class="eval">(solve-day2-part2 "src/code/data/advent2024-2.txt")</span>
+<span class="eval-result">337</span>
+
 
 ## Day 3
 > Part 1: Scan the input and identify every instance of `mul(a, b)`. Compute `a * b` and sum all such results.

@@ -52,16 +52,16 @@
 ;;=> (1 1 1 -3)
 
 (defn sign [x] (if (zero? x) 0 (/ x (abs x))))
-(defn monotonic? [r] (apply = (map sign (deltas r))))
+(defn same-sign? [r] (apply = (map sign (deltas r))))
 
-(monotonic? [1 2 3 4 5])
+(same-sign? [1 2 3 4 5])
 ;;=> true
-(monotonic? [5 4 3 2 1])
+(same-sign? [5 4 3 2 1])
 ;;=> true
-(monotonic? [5 4 3 2 7])
+(same-sign? [5 4 3 2 7])
 ;;=> false
 
-(monotonic? [8 6 4 4 1])
+(same-sign? [8 6 4 4 1])
 
 (defn bounded-deltas? [r]
   (every? #(and (>= (abs %) 1) (<= (abs %) 3))
@@ -70,7 +70,7 @@
 (bounded-deltas? (deltas [7 6 4 2 1]))
 
 (defn safe-report? [r]
-  (and (monotonic? r) (bounded-deltas? r)))
+  (and (same-sign? r) (bounded-deltas? r)))
 
 (defn solve-day2-part1
   [input-path]
@@ -87,10 +87,9 @@
 
 (defn solve-day2-part2
   [input-path]
-  (count (filter true?
-                 (map (fn [r]
-                        (some true? (map safe-report? (filter-one r))))
-                      (slurp-rows input-path)))))
+  (->> (slurp-rows input-path)
+       (filter #(some safe-report? (filter-one %)))
+       count))
 
 (solve-day2-part2 "src/code/data/advent2024-2.txt")
 ;;=> 337

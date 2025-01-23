@@ -222,7 +222,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Part 1: Each line is a list of numbers called a “report”. A report is safe if both are true:</p>
 <ul>
 <li>The numbers are either&nbsp;all increasing or&nbsp;all decreasing.</li>
-<li>Any two adjacent levels differ by&nbsp; at least one&nbsp; and at most three.</li>
+<li>Any two adjacent levels differ by&nbsp;at least one&nbsp;and at most three.</li>
 </ul>
 </blockquote>
 <p>First we write a function to read the rows of integers:</p>
@@ -234,22 +234,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For each row we will compute the successive differences and call it <code>deltas</code>. This will help us check if the row meets both of the conditions.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> deltas </span>[xs] (<span class="kw">map</span> <span class="kw">-</span> (<span class="kw">rest</span> xs) (<span class="kw">drop-last</span> xs)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval">(deltas [1 2 3 4 1]) =&gt; (1 1 1 -3)</span></p>
-<p>The first condition can be understood as the row being <em>monotonic</em>: all the deltas have the same sign. We’ll make use of the fact that <code>=</code> in Clojure can take any number of arguments, and that <code>apply</code> allows us to supply the arguments to a function as a sequence.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sign </span>[x] (<span class="kw">if</span> (<span class="kw">zero?</span> x) <span class="dv">1</span> (<span class="kw">/</span> x (abs x))))</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> monotonic? </span>[r] (<span class="kw">apply</span> <span class="kw">=</span> (<span class="kw">map</span> sign (deltas r))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><span class="eval">(monotonic? [1 2 3 4 5]) =&gt; true</span> <span class="eval">(monotonic? [5 4 3 2 1]) =&gt; true</span> <span class="eval">(monotonic? [5 4 3 2 7]) =&gt; false</span></p>
+<p>The first condition can be understood as all the deltas <em>having the same sign</em>. We’ll define <code>sign</code> that returns -1, 0, or 1 indicating the sign of a number. The function <code>same-sign?</code> implements the first condtion.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sign </span>[x] (<span class="kw">if</span> (<span class="kw">zero?</span> x) <span class="dv">0</span> (<span class="kw">/</span> x (abs x))))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> same-sign? </span>[r] (<span class="kw">apply</span> <span class="kw">=</span> (<span class="kw">map</span> sign (deltas r))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval">(same-sign? [1 2 3 4 5]) =&gt; true</span> <span class="eval">(same-sign? [5 4 3 2 1]) =&gt; true</span> <span class="eval">(same-sign? [5 4 3 2 7]) =&gt; false</span></p>
 <p>The second condition:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> bounded-deltas? </span>[r]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">every?</span> #(<span class="kw">and</span> (<span class="kw">&gt;=</span> (abs <span class="va">%</span>) <span class="dv">1</span>) (<span class="kw">&lt;=</span> (abs <span class="va">%</span>) <span class="dv">3</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>          (deltas r)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><span class="eval">(solve-day2-part1 “src/code/data/advent2024-2.txt”)</span> <span class="eval-result">269</span></p>
+<p>Now we go through every report and check it against both conditions, and count number of reports that are safe.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> safe-report? </span>[r]</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">and</span> (monotonic? r) (bounded-deltas? r)))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">and</span> (same-sign? r) (bounded-deltas? r)))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-day2-part1</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  [input-path]</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">count</span> (<span class="kw">filter</span> safe-report? (slurp-rows input-path))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval">(solve-day2-part1 “src/code/data/advent2024-2.txt”)</span> <span class="eval-result">269</span></p>
+<blockquote class="blockquote">
+<p>Part 2: Count the number of safe reports, but now a report is considered safe if removing a <em>single level</em> from it renders it safe according to the two rules as per part 1.</p>
+</blockquote>
+<p>We’ll write a function that returns all reports that result from dropping a single level.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> filter-one</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  [r]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">for</span> [i (<span class="kw">range</span> (<span class="kw">count</span> r))]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">concat</span> (<span class="kw">take</span> i r) (<span class="kw">drop</span> (<span class="kw">inc</span> i) r))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Clojure has a cool feature called a <em>threading macro</em>. This allows us to write the solution as a pipeline that reads very naturally: <code>slurp-rows -&gt; filter -&gt; count</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-day2-part2</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  [input-path]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">-&gt;&gt;</span> (slurp-rows input-path)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">filter</span> #(<span class="kw">some</span> safe-report? (filter-one <span class="va">%</span>)))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>       <span class="kw">count</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval">(solve-day2-part2 “src/code/data/advent2024-2.txt”)</span> <span class="eval-result">337</span></p>
 </section>
 <section id="day-3" class="level2">
 <h2 class="anchored" data-anchor-id="day-3">Day 3</h2>
@@ -257,12 +272,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Part 1: Scan the input and identify every instance of <code>mul(a, b)</code>. Compute <code>a * b</code> and sum all such results.</p>
 </blockquote>
 <p><code>re-seq</code> returns a sequence of all the matches for the given regex. The groups of the match can be easily extracted using <em>destructuring</em> in the <code>let</code> binding: <code>[[_ a b] match]</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-day3-part1</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  [input-path]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">reduce</span> <span class="kw">+</span> <span class="dv">0</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">map</span> #(<span class="kw">let</span> [[_ a b] <span class="va">%</span>]</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">*</span> (Integer/parseInt a) (Integer/parseInt b)))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">re-seq</span> <span class="ss">#"mul\((\d+),(\d+)\)"</span> (<span class="kw">slurp</span> input-path)))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-day3-part1</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  [input-path]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">reduce</span> <span class="kw">+</span> <span class="dv">0</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">map</span> #(<span class="kw">let</span> [[_ a b] <span class="va">%</span>]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">*</span> (Integer/parseInt a) (Integer/parseInt b)))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">re-seq</span> <span class="ss">#"mul\((\d+),(\d+)\)"</span> (<span class="kw">slurp</span> input-path)))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval">(solve-day3-part1 “src/code/data/advent2024-3.txt”)</span> <span class="eval-result">171183089</span></p>
 <blockquote class="blockquote">
 <p>Part 2: The input now includes two new kinds of instructions. <code>don't()</code> disables future <code>mul</code> instructions while <code>do()</code> enables them. Only the most recent <code>do()</code> or <code>don't()</code> instruction applies. At the beginning of the program, mul instructions are enabled.</p>
@@ -275,34 +290,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>State is <code>[enabled? total]</code></p>
 <p>Reducer is:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> process-instruction</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  [result inst]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [[enabled sum] result]</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    (match inst</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">:do</span> [<span class="va">true</span> sum]</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">:dont</span> [<span class="va">false</span> sum]</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      [<span class="at">:mul</span> a b] (<span class="kw">if</span> enabled</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                   [enabled (<span class="kw">+</span> sum (<span class="kw">*</span> a b))]</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>                   [enabled sum])</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">:else</span> result)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> process-instruction</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  [result inst]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [[enabled sum] result]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    (match inst</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">:do</span> [<span class="va">true</span> sum]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">:dont</span> [<span class="va">false</span> sum]</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      [<span class="at">:mul</span> a b] (<span class="kw">if</span> enabled</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                   [enabled (<span class="kw">+</span> sum (<span class="kw">*</span> a b))]</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                   [enabled sum])</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">:else</span> result)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Parse the input</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> parse-instructions</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  [input]</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [matches (<span class="kw">re-seq</span> <span class="ss">#"mul\((\d+),(\d+)\)|do\(\)|don't\(\)"</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                        input)]</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">map</span> #(<span class="kw">let</span> [[text a b] <span class="va">%</span>]</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>           (<span class="kw">cond</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>             (.startsWith text <span class="st">"mul"</span>) [<span class="at">:mul</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                                       (Integer/parseInt a)</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                                       (Integer/parseInt b)]</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>             (<span class="kw">=</span> text <span class="st">"don't()"</span>) <span class="at">:dont</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>             (<span class="kw">=</span> text <span class="st">"do()"</span>) <span class="at">:do</span>))</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>         matches)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> parse-instructions</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  [input]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [matches (<span class="kw">re-seq</span> <span class="ss">#"mul\((\d+),(\d+)\)|do\(\)|don't\(\)"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                        input)]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">map</span> #(<span class="kw">let</span> [[text a b] <span class="va">%</span>]</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>           (<span class="kw">cond</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>             (.startsWith text <span class="st">"mul"</span>) [<span class="at">:mul</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                                       (Integer/parseInt a)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                                       (Integer/parseInt b)]</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>             (<span class="kw">=</span> text <span class="st">"don't()"</span>) <span class="at">:dont</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>             (<span class="kw">=</span> text <span class="st">"do()"</span>) <span class="at">:do</span>))</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>         matches)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval">(parse-instructions “xmul(2,4)&amp;mul[3,7]!^don’t()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))”) </span> <span class="eval-result">([:mul 2 4] :dont [:mul 5 5] [:mul 11 8] :do [:mul 8 5]) </span></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-day3-part2</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  [input-path]</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">reduce</span> process-instruction [<span class="va">true</span> <span class="dv">0</span>]</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>          (parse-instructions (<span class="kw">slurp</span> input-path))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-day3-part2</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  [input-path]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">reduce</span> process-instruction [<span class="va">true</span> <span class="dv">0</span>]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>          (parse-instructions (<span class="kw">slurp</span> input-path))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval">(solve-day3-part2 “src/code/data/advent2024-3.txt”) </span> <span class="eval-result">[false 63866497]</span></p>
 
 
