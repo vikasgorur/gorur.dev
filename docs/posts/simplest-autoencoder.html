@@ -209,7 +209,7 @@ window.Quarto = {
 </header>
 
 
-<p>Last updated: <em>Dec 21, 2024</em>.</p>
+<p>Last updated: <em>Jan 26, 2025</em>.</p>
 <hr>
 <p>The backpropagation algorithm for training neural networks seemed very complicated when I first encountered it. I only really understood it after implementing it from scratch following the excellent video by <span class="citation" data-cites="andrejkarpathySpelledoutIntroNeural2022">Andrej Karpathy (<a href="#ref-andrejkarpathySpelledoutIntroNeural2022" role="doc-biblioref">2022</a>)</span>. It also helped me to realize that backpropagation is a kind of <em>automatic differentiation</em> (AD) and can be understood without any reference to neural networks. See <span class="citation" data-cites="baydinAutomaticDifferentiationMachine2015">(<a href="#ref-baydinAutomaticDifferentiationMachine2015" role="doc-biblioref">Baydin et al. 2015</a>)</span> for an excellent survey of AD in machine learning.</p>
 <p>After understanding backprop, though, I had a different question: why did it take so long to discover and become popular? The story of that seems surprisingly complicated but a good starting point is the blog post by <span class="citation" data-cites="liuBackstoryBackpropagation2023">Liu (<a href="#ref-liuBackstoryBackpropagation2023" role="doc-biblioref">2023</a>)</span>.</p>
@@ -225,28 +225,29 @@ window.Quarto = {
 </blockquote>
 <p>I love learning about the history of computing so in this post we’ll try to recreate what Hinton must have done in that weekend.</p>
 <p>The neural network he’s describing (“8-3-8”) is an <strong>autoencoder</strong>, whose job is to learn to simply reproduce its output as faithfully as it can. This might seem pointless, but it makes more sense when you think of the network as containing both an <strong>encoder</strong> and a <strong>decoder</strong> along with a “bottleneck” in the middle where the input vector gets squashed to one with a lower dimension. This squashing can be variously understood as a lossy compression of the input, as dimensionality reduction, or as feature extraction. For our purposes here though, it’s just a toy historical example demonstrating the value of backpropagation.</p>
-<p>The input dataset for our network are the numbers <span class="math inline">\(0\)</span> - <span class="math inline">\(7\)</span> encoded as “one-hot” vectors.</p>
+<p>The input dataset for our network are the numbers <span class="math inline">\(1\)</span> - <span class="math inline">\(8\)</span> encoded as “one-hot” vectors.</p>
 <p><span class="math display">\[
-0 = [0 0 0 0 0 0 0 1] \\
-1 = [0 0 0 0 0 0 1 0] \\
+\begin{aligned}
+1 = [0 0 0 0 0 0 0 1] \\
+2 = [0 0 0 0 0 0 1 0] \\
 ... \\
-7 = [1 0 0 0 0 0 0 0]
+8 = [1 0 0 0 0 0 0 0]
+\end{aligned}
 \]</span></p>
-<p>Thus the input layer and output layers both have size <span class="math inline">\(8\)</span>, and we’ll introduce a hidden layer inbetween of size <span class="math inline">\(3\)</span>, hence giving the network the name “8-3-8” encoder. The hidden layer is of size <span class="math inline">\(3\)</span> because <span class="math inline">\(3\)</span> bits is all you need to represent the numbers upto <span class="math inline">\(7\)</span>. The network and the learning algorithm are described in detail in <span class="citation" data-cites="rumelhartLearningRepresentationsBackpropagating1986">(<a href="#ref-rumelhartLearningRepresentationsBackpropagating1986" role="doc-biblioref">Rumelhart, Hinton, and Williams 1986, chap. 8</a>)</span> though the terminology is a little archaic.</p>
-<p>We’ll implement this network in two different ways. First, using modern libraries (PyTorch and Keras) at the highest level of abstraction. Second, writing everything from scratch in Clojure (as a tribute to the Hinton version written in Lisp).</p>
+<p>Thus the input layer and output layers both have size <span class="math inline">\(8\)</span>, and we’ll introduce a hidden layer inbetween of size <span class="math inline">\(3\)</span>, hence giving the network the name “8-3-8” encoder. The hidden layer is of size <span class="math inline">\(3\)</span> because <span class="math inline">\(3\)</span> bits is all you need to represent eight unique values. The network and the learning algorithm are described in detail in <span class="citation" data-cites="rumelhartLearningRepresentationsBackpropagating1986">(<a href="#ref-rumelhartLearningRepresentationsBackpropagating1986" role="doc-biblioref">Rumelhart, Hinton, and Williams 1986, chap. 8</a>)</span> though the terminology is a little archaic.</p>
 <section id="in-pytorch" class="level2">
 <h2 class="anchored" data-anchor-id="in-pytorch">8-3-8 in PyTorch</h2>
-<div id="0a196dae" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> marimo <span class="im">as</span> mo</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Let’s implement the autoencoder using PyTorch.</p>
+<div id="ed2960f3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Define the inputs.</p>
-<div id="5bf17cab" class="cell" data-execution_count="2">
+<p>The eight inputs together can be represented as an 8x8 matrix.</p>
+<div id="76e2a251" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>INPUTS <span class="op">=</span> torch.diag(torch.ones(<span class="dv">8</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>INPUTS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="50">
 <pre><code>tensor([[1., 0., 0., 0., 0., 0., 0., 0.],
         [0., 1., 0., 0., 0., 0., 0., 0.],
         [0., 0., 1., 0., 0., 0., 0., 0.],
@@ -257,8 +258,8 @@ window.Quarto = {
         [0., 0., 0., 0., 0., 0., 0., 1.]])</code></pre>
 </div>
 </div>
-<p>Define the network</p>
-<div id="53107b64" class="cell" data-execution_count="3">
+<p>The network is a <code>Sequential</code> stack, which means the inputs only flow forward (“feed-forward”). We’ll use the <code>sigmoid</code> as the activation for historical accuracy.</p>
+<div id="d1467ca1" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> OrderedDict</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AutoEncoder(nn.Module):</span>
@@ -273,9 +274,16 @@ window.Quarto = {
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.stack(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Visualize:</p>
+<p>The network can be visually shown as:</p>
 <p><img src="images/838-autoencoder.png" class="img-fluid"></p>
-<div id="b2c14f85" class="cell" data-execution_count="4">
+<p>We need to pick a loss function before training the network. Given that the input and output are one-hot vectors, this could be seen as a classification task and thus the cross-entropy loss function is suitable. Using cross-entropy indeed works very well, but we’ll use the mean-squared loss instead to stay true to the historical paper.</p>
+<p>A couple of other notes on the training:</p>
+<ul>
+<li><p>We’ll use the entire set of 8 inputs in every batch.</p></li>
+<li><p>My first attempt at the training code didn’t work and I spent a lot of time tinkering with the loss function and the hyperparameters before someone pointed out that PyTorch doesn’t reset the gradient values automatically. Adding the line <code>sgd.zero_grad()</code> fixed the problem.</p></li>
+</ul>
+<p><em>Thanks to Prakhar Dixit for pointing out the above mistake</em>.</p>
+<div id="64ac405d" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(epochs: <span class="bu">int</span>, lr: <span class="bu">float</span>, momentum: <span class="bu">float</span>):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> AutoEncoder()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -297,24 +305,24 @@ window.Quarto = {
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        sgd.step()</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">%</span> <span class="dv">5000</span> <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"i = </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">, loss: </span><span class="sc">{</span>loss<span class="sc">:&gt;7f}</span><span class="ss">"</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"i = </span><span class="sc">{</span>i<span class="sc">:6}</span><span class="ss">, loss: </span><span class="sc">{</span>loss<span class="sc">:&gt;7f}</span><span class="ss">"</span>)</span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        losses.append(loss.item())</span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, losses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Train the thing</p>
-<div id="a2dc126b" class="cell" data-execution_count="5">
+<p>We can now run the training and plot the loss curve.</p>
+<div id="cbb38168" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>net, losses <span class="op">=</span> train(<span class="dv">20000</span>, <span class="fl">0.1</span>, <span class="fl">0.9</span>)</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(<span class="bu">len</span>(losses)), losses)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>i = 0, loss: 0.273701
-i = 5000, loss: 0.003292
-i = 10000, loss: 0.000732
-i = 15000, loss: 0.000383</code></pre>
+<pre><code>i =      0, loss: 0.273701
+i =   5000, loss: 0.003292
+i =  10000, loss: 0.000732
+i =  15000, loss: 0.000383</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -324,11 +332,11 @@ i = 15000, loss: 0.000383</code></pre>
 </div>
 </div>
 </div>
-<p>Print the outputs</p>
-<div id="e7067714" class="cell" data-execution_count="6">
+<p>We can see that the network has learnt to very closely match the inputs by printing the result of running all 8 inputs through it.</p>
+<div id="3e1e9545" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>torch.set_printoptions(linewidth<span class="op">=</span><span class="dv">120</span>, sci_mode<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>net(INPUTS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="54">
 <pre><code>tensor([[    0.9644,     0.0000,     0.0000,     0.0000,     0.0087,     0.0000,     0.0000,     0.0099],
         [    0.0087,     0.9795,     0.0143,     0.0000,     0.0000,     0.0000,     0.0000,     0.0128],
         [    0.0002,     0.0232,     0.9732,     0.0079,     0.0000,     0.0215,     0.0000,     0.0000],
@@ -340,15 +348,12 @@ i = 15000, loss: 0.000383</code></pre>
        grad_fn=&lt;SigmoidBackward0&gt;)</code></pre>
 </div>
 </div>
-</section>
-<section id="clojure" class="level2">
-
 
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Clojure</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-andrejkarpathySpelledoutIntroNeural2022" class="csl-entry" role="listitem">
 Andrej Karpathy. 2022. <span>“The Spelled-Out Intro to Neural Networks and Backpropagation: Building Micrograd.”</span> <a href="https://youtu.be/VMj-3S1tku0?si=ZdEa-gwxlrV6rhD7">https://youtu.be/VMj-3S1tku0?si=ZdEa-gwxlrV6rhD7</a>.
 </div>

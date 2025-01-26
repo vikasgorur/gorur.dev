@@ -50,6 +50,14 @@
           (dot (aget W i) x)))
   result)
 
+(defn transpose
+  "Stores the transpose of M into Mt"
+  [^"[[D" Mt ^"[[D" M]
+  (doseq [i (range (alength M))
+          j (range (alength (aget M 0)))]
+    (aset (aget Mt i) j
+          (aget (aget M j) i))))
+
 ;; forward pass
 
 ;; h = W0 * x + b0
@@ -95,9 +103,6 @@
                 (aset A i i 1))
               A))
 
-(mse-loss (feed-forward (aget INPUTS 3))
-          (aget INPUTS 3))
-
 (defn mse-loss
   [^"[D" y' ^"[D" y]
     (loop [i      0
@@ -106,6 +111,26 @@
        result
        (recur (inc i)
               (+ result (Math/pow (- (aget y i) (aget y' i)) 2))))))
+
+(defn batch-loss
+  []
+  (reduce + 0
+          (map #(mse-loss (aget INPUTS %) (feed-forward (aget INPUTS %)))
+               (range 0 8))))
+
+(defn reset-gradients
+  "Set all gradients to 0"
+  []
+  (let [{:keys [W0-grad b0-grad W1-grad b1-grad]} NETWORK]
+    (doseq [row W0-grad]
+      (java.util.Arrays/fill row 0.0))
+    (doseq [row W1-grad]
+      (java.util.Arrays/fill row 0.0))
+    
+    (java.util.Arrays/fill b0-grad 0.0)
+    (java.util.Arrays/fill b1-grad 0.0)))
+
+(reset-gradients)
 
 ;; Tests
 (deftest test-dot
