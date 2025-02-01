@@ -144,15 +144,46 @@
 ;; Challenge 5
 
 (defn repeating-key-xor [text key]
-  (bytes->hex (map bit-xor
-                   (map byte text)
-                   (cycle (map byte key)))))
+  (map bit-xor
+       (map byte text)
+       (cycle (map byte key))))
 
-(let [CH5-CIPHER "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
-      CH5-ANSWER "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"]
+(bytes->hex (repeating-key-xor
+              "The quick brown fox jumps over the lazy dog"
+              "XXX"))
+;;=> 24
+
+(count (frequencies (slurp "src/data/jabberwocky.txt")))
+;;=> 45
+
+(count (frequencies (repeating-key-xor
+              (slurp "src/data/jabberwocky.txt")
+              "XYZ")))
+;;=> 60
+
+(bytes->hex (byte-array (map byte "XYZ")))
+;;=> "58595a"
+
+;;=> "19181b19181b19181b19181b19181b19181b19181b19181b19181b19181b1918"
+;;=> "0314110314110314110314110314110314110314110314110314110314110314"
+
+;;=> "031713061016051d19081e1c0f1b1f12040211010514020818"
+;;=> "02130707140204190d091a080e1f0b13001610051115061c19"
+;;=> "1039216422642e302026712b25712d313e2a6f71372a236563186422223736232163282b367d643039216332252d7f64023f2063222c2671332a3d286d710d37712d307125633c253739212e30302a32252f712726233022382a372868"
+;;    AX BY CZ FX GY HZ
+;;=> "19 1b 19 1c 1c 1c 1f 11 131212161517150808080b0d0f0e0e020103"
+;;=> "02130707140204190d091a080e1f0b13001610051115061c1a0b"
+
+(defn solve-ch5
+  []
+  (let [CH5-CIPHER "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
+        CH5-ANSWER "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"]
 
   (verify (= CH5-ANSWER
-             (repeating-key-xor CH5-CIPHER "ICE"))))
+             (bytes->hex (repeating-key-xor CH5-CIPHER "ICE"))))))
+
+(solve-ch5)
+;;=> "✅"
 
 ;; Challenge 6
 

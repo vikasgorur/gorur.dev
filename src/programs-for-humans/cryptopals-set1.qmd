@@ -214,3 +214,41 @@ smallest gibberish score. We'll then pick the line from the file whose score is 
 <span class="eval-result">
   {:key \5, :score 0.03333333333333333, :plain "Now that the party is jumping\n"}
 </span>
+
+## Challenge 5
+
+> Here is the opening stanza of an important work of the English language [lyrics to "Ice Ice Baby"]
+>
+> In repeating-key XOR, you'll sequentially apply each byte of the key; the first byte of
+> plaintext will be XOR'd against I, the next C, the next E, then I again for the 4th byte, and so on.
+>
+> It should come out to: [output]
+>
+> Encrypt a bunch of stuff using your repeating-key XOR function. Encrypt your mail.
+> Encrypt your password file. Your .sig file. Get a feel for it. I promise, we aren't
+> wasting your time with this.
+
+Implementing this is straightforward.
+
+```clojure
+(defn repeating-key-xor [text key]
+  (map bit-xor
+       (map byte text)
+       (cycle (map byte key))))
+```
+
+After encrypting a bunch of stuff as suggested, the only thing I notice is that some sequences of
+bytes seem to be repeated often.
+
+```clojure
+(defn solve-ch5
+  []
+  (let [CH5-CIPHER "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
+        CH5-ANSWER "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"]
+
+  (verify (= CH5-ANSWER
+             (bytes->hex (repeating-key-xor CH5-CIPHER "ICE"))))))
+```
+
+<span class="eval">(solve-ch5)</span>
+<span class="eval-result">"✅"</span>

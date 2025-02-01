@@ -322,6 +322,29 @@ window.Quarto = {
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                       ciphers)]</span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">apply</span> <span class="kw">min-key</span> <span class="at">:score</span> best-scores)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval">(solve-ch4)</span> <span class="eval-result"> {:key \5, :score 0.03333333333333333, :plain “Now that the party is jumping”} </span></p>
+</section>
+<section id="challenge-5" class="level2">
+<h2 class="anchored" data-anchor-id="challenge-5">Challenge 5</h2>
+<blockquote class="blockquote">
+<p>Here is the opening stanza of an important work of the English language [lyrics to “Ice Ice Baby”]</p>
+<p>In repeating-key XOR, you’ll sequentially apply each byte of the key; the first byte of plaintext will be XOR’d against I, the next C, the next E, then I again for the 4th byte, and so on.</p>
+<p>It should come out to: [output]</p>
+<p>Encrypt a bunch of stuff using your repeating-key XOR function. Encrypt your mail. Encrypt your password file. Your .sig file. Get a feel for it. I promise, we aren’t wasting your time with this.</p>
+</blockquote>
+<p>Implementing this is straightforward.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> repeating-key-xor </span>[text <span class="kw">key</span>]</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">map</span> <span class="kw">bit-xor</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">map</span> <span class="kw">byte</span> text)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">cycle</span> (<span class="kw">map</span> <span class="kw">byte</span> <span class="kw">key</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After encrypting a bunch of stuff as suggested, the only thing I notice is that some sequences of bytes seem to be repeated often.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-ch5</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  []</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [CH5-CIPHER <span class="st">"Burning 'em, if you ain't quick and nimble</span><span class="sc">\n</span><span class="st">I go crazy when I hear a cymbal"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        CH5-ANSWER <span class="st">"0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"</span>]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  (verify (<span class="kw">=</span> CH5-ANSWER</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>             (bytes-&gt;hex (repeating-key-xor CH5-CIPHER <span class="st">"ICE"</span>))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval">(solve-ch5)</span> <span class="eval-result">“✅”</span></p>
 
 
 </section>

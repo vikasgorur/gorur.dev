@@ -572,5 +572,12 @@
     "title": "Everything is a Vector",
     "section": "Further reading",
     "text": "Further reading\nWord2vec paper, won the “test of time” award\nDistributed Representations of Words and Phrases and their Compositionality https://arxiv.org/abs/1310.4546\nThe illustrated Word2vec https://jalammar.github.io/illustrated-word2vec/"
+  },
+  {
+    "objectID": "programs-for-humans/cryptopals-set1.html#challenge-5",
+    "href": "programs-for-humans/cryptopals-set1.html#challenge-5",
+    "title": "Cryptopals, Set 1",
+    "section": "Challenge 5",
+    "text": "Challenge 5\n\nHere is the opening stanza of an important work of the English language [lyrics to “Ice Ice Baby”]\nIn repeating-key XOR, you’ll sequentially apply each byte of the key; the first byte of plaintext will be XOR’d against I, the next C, the next E, then I again for the 4th byte, and so on.\nIt should come out to: [output]\nEncrypt a bunch of stuff using your repeating-key XOR function. Encrypt your mail. Encrypt your password file. Your .sig file. Get a feel for it. I promise, we aren’t wasting your time with this.\n\nImplementing this is straightforward.\n(defn repeating-key-xor [text key]\n  (map bit-xor\n       (map byte text)\n       (cycle (map byte key))))\nAfter encrypting a bunch of stuff as suggested, the only thing I notice is that some sequences of bytes seem to be repeated often.\n(defn solve-ch5\n  []\n  (let [CH5-CIPHER \"Burning 'em, if you ain't quick and nimble\\nI go crazy when I hear a cymbal\"\n        CH5-ANSWER \"0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f\"]\n\n  (verify (= CH5-ANSWER\n             (bytes-&gt;hex (repeating-key-xor CH5-CIPHER \"ICE\"))))))\n(solve-ch5) “✅”"
   }
 ]
