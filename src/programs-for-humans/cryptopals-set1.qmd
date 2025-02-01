@@ -1,7 +1,7 @@
 ---
 title: Cryptopals, Set 1
 ---
-Last updated: _Feb 1, 2024_.
+Last updated: _Feb 1, 2025_.
 
 ---
 
@@ -181,4 +181,36 @@ What range of keys should we try? We can just try all possible byte values $0...
 
 ## Challenge 4
 
-> One of the 60-character strings in [this file](https://cryptopals.com/static/challenge-data/4.txt) has been encrypted by single-character XOR. Find it.
+> One of the 60-character strings in [this file](https://cryptopals.com/static/challenge-data/4.txt)
+has been encrypted by single-character XOR. Find it.
+
+To solve this we just need to repeat the process from challenge 3 on every line from the file and
+hopefully only one of them will yield an English-looking plaintext.
+
+First we write a helper function that returns the hex-encoded lines of a file as a sequence of
+byte arrays.
+
+```clojure
+(defn read-hex-lines [file-path]
+  (with-open [rdr (io/reader file-path)]
+    (doall (map hex->bytes (line-seq rdr)))))
+```
+
+For each line in the file we'll try the keys in the range $0...255$ and pick the key that yields the
+smallest gibberish score. We'll then pick the line from the file whose score is the lowest.
+
+```clojure
+(defn solve-ch4
+  []
+  (let [ciphers (read-hex-lines "src/data/4.txt")
+      trial-keys (range 0 255)
+      best-scores (map #(apply min-key :score
+                               (xor-trial-keys-scores % trial-keys))
+                       ciphers)]
+  (apply min-key :score best-scores)))
+```
+
+<span class="eval">(solve-ch4)</span>
+<span class="eval-result">
+  {:key \5, :score 0.03333333333333333, :plain "Now that the party is jumping\n"}
+</span>

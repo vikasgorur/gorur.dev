@@ -189,7 +189,7 @@ window.Quarto = {
 </header>
 
 
-<p>Last updated: <em>Feb 1, 2024</em>.</p>
+<p>Last updated: <em>Feb 1, 2025</em>.</p>
 <hr>
 <p>This post contains my solutions to the <a href="https://cryptopals.com">cryptopals</a> cryptography challenges. Most of the time I’ve optimized the Clojure code for readability and not performance. These challenges are a lot of fun and often rely on coming up with the right clever ideas, so I highly encourage you to try them yourself first if you want to avoid spoilers.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> set1</span>
@@ -305,8 +305,23 @@ window.Quarto = {
 <section id="challenge-4" class="level2">
 <h2 class="anchored" data-anchor-id="challenge-4">Challenge 4</h2>
 <blockquote class="blockquote">
-<p>One of the 60-character strings in&nbsp;<a href="https://cryptopals.com/static/challenge-data/4.txt">this file</a>&nbsp;has been encrypted by single-character XOR. Find it.</p>
+<p>One of the 60-character strings in&nbsp;<a href="https://cryptopals.com/static/challenge-data/4.txt">this file</a> has been encrypted by single-character XOR. Find it.</p>
 </blockquote>
+<p>To solve this we just need to repeat the process from challenge 3 on every line from the file and hopefully only one of them will yield an English-looking plaintext.</p>
+<p>First we write a helper function that returns the hex-encoded lines of a file as a sequence of byte arrays.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> read-hex-lines </span>[file-path]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">with-open</span> [rdr (io/reader file-path)]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">doall</span> (<span class="kw">map</span> hex-&gt;bytes (<span class="kw">line-seq</span> rdr)))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For each line in the file we’ll try the keys in the range <span class="math inline">\(0...255\)</span> and pick the key that yields the smallest gibberish score. We’ll then pick the line from the file whose score is the lowest.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-ch4</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  []</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [ciphers (read-hex-lines <span class="st">"src/data/4.txt"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      trial-keys (<span class="kw">range</span> <span class="dv">0</span> <span class="dv">255</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      best-scores (<span class="kw">map</span> #(<span class="kw">apply</span> <span class="kw">min-key</span> <span class="at">:score</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                               (xor-trial-keys-scores <span class="va">%</span> trial-keys))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                       ciphers)]</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">apply</span> <span class="kw">min-key</span> <span class="at">:score</span> best-scores)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval">(solve-ch4)</span> <span class="eval-result"> {:key \5, :score 0.03333333333333333, :plain “Now that the party is jumping”} </span></p>
 
 
 </section>

@@ -452,7 +452,7 @@
     "href": "programs-for-humans/cryptopals-set1.html",
     "title": "Cryptopals, Set 1",
     "section": "",
-    "text": "Last updated: Feb 1, 2024.\nThis post contains my solutions to the cryptopals cryptography challenges. Most of the time I’ve optimized the Clojure code for readability and not performance. These challenges are a lot of fun and often rely on coming up with the right clever ideas, so I highly encourage you to try them yourself first if you want to avoid spoilers.\nWe’ll write a little utility function to verify answers:"
+    "text": "Last updated: Feb 1, 2025.\nThis post contains my solutions to the cryptopals cryptography challenges. Most of the time I’ve optimized the Clojure code for readability and not performance. These challenges are a lot of fun and often rely on coming up with the right clever ideas, so I highly encourage you to try them yourself first if you want to avoid spoilers.\nWe’ll write a little utility function to verify answers:"
   },
   {
     "objectID": "programs-for-humans/cryptopals-set1.html#challenge-1",
@@ -480,7 +480,7 @@
     "href": "programs-for-humans/cryptopals-set1.html#challenge-4",
     "title": "Cryptopals, Set 1",
     "section": "Challenge 4",
-    "text": "Challenge 4\n\nOne of the 60-character strings in this file has been encrypted by single-character XOR. Find it."
+    "text": "Challenge 4\n\nOne of the 60-character strings in this file has been encrypted by single-character XOR. Find it.\n\nTo solve this we just need to repeat the process from challenge 3 on every line from the file and hopefully only one of them will yield an English-looking plaintext.\nFirst we write a helper function that returns the hex-encoded lines of a file as a sequence of byte arrays.\n(defn read-hex-lines [file-path]\n  (with-open [rdr (io/reader file-path)]\n    (doall (map hex-&gt;bytes (line-seq rdr)))))\nFor each line in the file we’ll try the keys in the range \\(0...255\\) and pick the key that yields the smallest gibberish score. We’ll then pick the line from the file whose score is the lowest.\n(defn solve-ch4\n  []\n  (let [ciphers (read-hex-lines \"src/data/4.txt\")\n      trial-keys (range 0 255)\n      best-scores (map #(apply min-key :score\n                               (xor-trial-keys-scores % trial-keys))\n                       ciphers)]\n  (apply min-key :score best-scores)))\n(solve-ch4)  {:key \\5, :score 0.03333333333333333, :plain “Now that the party is jumping”}"
   },
   {
     "objectID": "posts/varieties-of-silence.html",

@@ -125,16 +125,21 @@
 
 ;; Challenge 4
 
-(defn read-lines [file-path]
+(defn read-hex-lines [file-path]
   (with-open [rdr (io/reader file-path)]
     (doall (map hex->bytes (line-seq rdr)))))
 
-(let [ciphers (read-lines "src/data/4.txt")
+(defn solve-ch4
+  []
+  (let [ciphers (read-hex-lines "src/data/4.txt")
       trial-keys (range 0 255)
       best-scores (map #(apply min-key :score
-                               (byte-xor-decryption-scores % trial-keys))
+                               (xor-trial-keys-scores % trial-keys))
                        ciphers)]
-  (apply min-key :score best-scores))
+  (apply min-key :score best-scores)))
+
+(solve-ch4)
+;;=> {:key \5, :score 0.03333333333333333, :plain "Now that the party is jumping\n"}
 
 ;; Challenge 5
 
