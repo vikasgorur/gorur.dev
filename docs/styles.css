@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
 
 .content {
-  font-family: "Palatino", serif;
+  font-family: "Palatino", "Georgia", serif;
   text-align: justify;
   text-justify: inter-word;
   hyphens: auto;

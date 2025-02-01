@@ -1,0 +1,31 @@
+---
+title: "Everything is a Vector"
+jupyter: python3
+---
+
+_Last updated_: Jan 26, 2025.
+
+---
+
+There is a simple but powerful idea at the heart of all of Machine Learning. It is considered so obvious that many books and courses treat it as an after-thought. The idea is this:
+
+> All real-world data can be thought of as points in a high-dimensional space.
+
+When you understand this it's like realizing that everything in your computer is stored as bits.
+
+In this post we will explore the power of this idea by applying the same simple ML algorithm to
+different kinds of vectors.
+
+## Nearest neighbors
+
+Describe the Wifi dataset: https://archive.ics.uci.edu/dataset/422/wireless+indoor+localization
+
+Signal strength of 7 access points, collected in two rooms.
+We will use a simplified version with only `w5` and `w7`.
+
+
+## Recipes
+
+Plan:
+- Filter dataset to only 2 or 3 cuisines
+- Describe only the bag of words encoder

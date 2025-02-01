@@ -107,6 +107,11 @@
      :score (gibberish-score plain)
      :plain (String. plain)}))
 
+(xor-trial-keys-scores
+ (hex->bytes "1b3f89af9068")
+ [(byte \B)])
+;;=> ({:key \B, :score 0.8333333333333334, :plain "Y}���*"})
+
 ;; Challenge 3 answer is the key with the lowest gibberish score
 (defn solve-ch3
   [trial-keys]
@@ -115,7 +120,7 @@
     (apply min-key :score
          (xor-trial-keys-scores CH3-CIPHER trial-keys))))
 
-(solve-ch3 (range (byte \A) (byte \Z)))
+(solve-ch3 (range 0 255))
 ;;=> {:key \X, :score 0.029411764705882353, :plain "Cooking MC's like a pound of bacon"}
 
 ;; Challenge 4

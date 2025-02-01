@@ -1,0 +1,54 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Everything is a Vector\"\n",
+        "jupyter: python3\n",
+        "---\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "_Last updated_: Jan 26, 2025.\n",
+        "\n",
+        "---\n",
+        "\n",
+        "There is a simple but powerful idea at the heart of all of Machine Learning. It is considered so obvious that many books and courses treat it as an after-thought. The idea is this:\n",
+        "\n",
+        "> All real-world data can be thought of as points in a high-dimensional space.\n",
+        "\n",
+        "When you understand this it's like realizing that everything in your computer is stored as bits.\n",
+        "\n",
+        "In this post we will explore the power of this idea by applying the same simple ML algorithm to\n",
+        "different kinds of vectors.\n",
+        "\n",
+        "## Nearest neighbors\n",
+        "\n",
+        "Describe the Wifi dataset: https://archive.ics.uci.edu/dataset/422/wireless+indoor+localization\n",
+        "\n",
+        "Signal strength of 7 access points, collected in two rooms.\n",
+        "We will use a simplified version with only `w5` and `w7`.\n",
+        "\n",
+        "\n",
+        "## Recipes\n",
+        "\n",
+        "Plan:\n",
+        "- Filter dataset to only 2 or 3 cuisines\n",
+        "- Describe only the bag of words encoder"
+      ],
+      "id": "6d3da7e5"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

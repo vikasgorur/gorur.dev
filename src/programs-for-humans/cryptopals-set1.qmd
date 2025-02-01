@@ -1,10 +1,15 @@
 ---
 title: Cryptopals, Set 1
 ---
-Last updated: _Dec 22, 2024_.
+Last updated: _Feb 1, 2024_.
 
 ---
 
+This post contains my solutions to the [cryptopals](https://cryptopals.com) cryptography
+challenges. Most of the time I've optimized the Clojure code for readability and not
+performance. These challenges are a lot of fun and often rely on coming up with the
+right clever ideas, so I highly encourage you to try them yourself first if you want
+to avoid spoilers.
 
 ```clojure
 (ns set1
@@ -79,11 +84,13 @@ $6$ hex chars = $3$ bytes = $24$ bits = $4$ base64 chars.
 <span class="eval">(solve-ch2) => ✅</span>
 
 ## Challenge 3
-> The hex encoded string [input] has been XOR'd against a single character. Find the key, decrypt the message.
+> The hex encoded string [input] has been XOR'd against a single character. Find the key,
+> decrypt the message.
 > 
 > You can do this by hand. But don't: write code to do it for you.
 > 
-> How? Devise some method for "scoring" a piece of English plaintext. Character frequency is a good metric. Evaluate each output and choose the one with the best score.
+> How? Devise some method for "scoring" a piece of English plaintext. Character
+> frequency is a good metric. Evaluate each output and choose the one with the best score.
 
 ```clojure
 (def CH3-CIPHER
@@ -91,8 +98,19 @@ $6$ hex chars = $3$ bytes = $24$ bits = $4$ base64 chars.
    "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"))
 ```
 
-At first I thought of using something like the KL divergence (see [this post](/posts/breaking-caesar-cipher.html)) to score the plaintext but then 
-A readable ASCII byte is either in the range `A-Z`, or in the range `a-z` or a space. A non-readable byte is the negation of that.
+At first I thought of using something like the KL divergence (see 
+[this post](/posts/breaking-caesar-cipher.html)) to score the plaintext since I've always
+read that one of the ways to break simple ciphers is "frequency analysis". But these
+challenges are about doing whatever it takes to break the crypto, not about following
+textbooks. So I tried to formalize what I'd do if I was breaking this "by hand".
+
+If you decrypt the input with different keys, most of the results don't look anything
+like English. They look like gibberish. Solving this challenge is therefore just picking
+the key that results in the least-gibberish plaintext.
+
+We'll define the **gibberish score** of a piece of text as the ratio of "non-readable" ASCII
+bytes to the total number of bytes in the string. A readable ASCII byte is either in the range
+`A-Z`, or in the range `a-z` or a space. A non-readable byte is the negation of that.
 
 ```clojure
 (defn non-readable [b]
@@ -111,11 +129,14 @@ The gibberish score:
 
 (defn gibberish-score-str
   [text]
-  (byte-array (map byte text)))
+  (gibberish-score (byte-array (map byte text))))
 ```
 
 <span class="eval">(gibberish-score-str "ABCD?") => 0.2</span>
 <span class="eval">(gibberish-score-str "*@&#$*&@#") => 1.0</span>
+
+Now we need a function that takes a list of possible keys and computes the gibberish
+score and the plaintext for each key.
 
 ```clojure
 (defn xor-trial-keys-scores
@@ -129,6 +150,19 @@ The gibberish score:
      :plain (String. plain)}))
 ```
 
+Let's try it on a dummy input:
+
+<span class="eval">
+  (xor-trial-keys-scores
+  (hex->bytes "1b3f89af9068")
+  [(byte \\B)])
+</span>
+<span class="eval-result">
+  ({:key \\B, :score 0.8333333333333334, :plain "Y}���*"})
+</span>
+
+To solve the challenge we pick the key with the smallest value of `:score`. 
+
 ```clojure
 (defn solve-ch3
   [trial-keys]
@@ -138,8 +172,12 @@ The gibberish score:
          (xor-trial-keys-scores CH3-CIPHER trial-keys))))
 ```
 
-<span class="eval">(String. (:plain (solve-ch3 (range (byte \\A) (byte \\Z)))))</span>
-<span class="eval-result">{:key \\X, :score 0.029411764705882353, :plain "Cooking MC's like a pound of bacon"}</span>
+What range of keys should we try? We can just try all possible byte values $0...255$.
+
+<span class="eval">(solve-ch3 (range 0 255))</span>
+<span class="eval-result">{:key \\X,
+:score 0.029411764705882353,
+:plain "Cooking MC's like a pound of bacon"}</span>
 
 ## Challenge 4
 

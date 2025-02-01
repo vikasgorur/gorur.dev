@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Cryptopals, Set 1</title>
+<title>Everything is a Vector</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,40 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -172,7 +138,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Cryptopals, Set 1</h1>
+<h1 class="title">Everything is a Vector</h1>
 </div>
 
 
@@ -189,124 +155,130 @@ window.Quarto = {
 </header>
 
 
-<p>Last updated: <em>Feb 1, 2024</em>.</p>
+<p><em>Last updated</em>: Jan 26, 2025.</p>
 <hr>
-<p>This post contains my solutions to the <a href="https://cryptopals.com">cryptopals</a> cryptography challenges. Most of the time I’ve optimized the Clojure code for readability and not performance. These challenges are a lot of fun and often rely on coming up with the right clever ideas, so I highly encourage you to try them yourself first if you want to avoid spoilers.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">ns</span> set1</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  (<span class="at">:require</span> [clojure.data.codec.base64 <span class="at">:as</span> b64]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>We’ll write a little utility function to verify answers:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> verify</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Takes a boolean or sequence of booleans and returns emoji checkmarks or crosses"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  [input]</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [to-emoji #(<span class="kw">if</span> <span class="va">%</span> <span class="st">"✅"</span> <span class="st">"❌"</span>)]</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="kw">sequential?</span> input)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      (str/join <span class="st">" "</span> (<span class="kw">map</span> to-emoji input))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      (to-emoji input))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<section id="challenge-1" class="level2">
-<h2 class="anchored" data-anchor-id="challenge-1">Challenge 1</h2>
+<p>There is a simple but powerful idea at the heart of all of Machine Learning. It is considered so obvious that many books and courses treat it as an after-thought. The idea is this:</p>
 <blockquote class="blockquote">
-<p>Convert a hex string to its base64 equivalent.</p>
+<p>All real-world data can be thought of as points in a high-dimensional space.</p>
 </blockquote>
-<p>The key thing to understand here are the following equivalencies:</p>
-<p><span class="math inline">\(6\)</span> hex chars = <span class="math inline">\(3\)</span> bytes = <span class="math inline">\(24\)</span> bits = <span class="math inline">\(4\)</span> base64 chars.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> hex-&gt;bytes</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Convert a hex string to a byte array"</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  [hex-string]</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [hex-pairs (<span class="kw">re-seq</span> <span class="ss">#".{2}"</span> hex-string)]</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">byte-array</span> (<span class="kw">map</span> #(Integer/parseInt <span class="va">%</span> <span class="dv">16</span>) hex-pairs))))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> hex-&gt;base64</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  [input]</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">-&gt;</span> input</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      hex-&gt;bytes</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      b64/encode</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      String.))</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-ch1</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  []</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [CH1-INPUT <span class="st">"49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        CH1-ANSWER <span class="st">"SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"</span>]</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    (verify (<span class="kw">=</span> CH1-ANSWER</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>               (hex-&gt;base64 CH1-INPUT)))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><span class="eval">(solve-ch1) =&gt; ✅</span></p>
+<p>When you understand this it’s like realizing that everything in your computer is stored as bits.</p>
+<p>In this post we will explore the power of this idea by applying the same simple ML algorithm to different kinds of vectors.</p>
+<section id="nearest-neighbors" class="level2">
+<h2 class="anchored" data-anchor-id="nearest-neighbors">Nearest neighbors</h2>
+<p>Describe the Wifi dataset: https://archive.ics.uci.edu/dataset/422/wireless+indoor+localization</p>
+<p>Signal strength of 7 access points, collected in two rooms. We will use a simplified version with only <code>w5</code> and <code>w7</code>.</p>
+<pre class="{julia}"><code>using CSV, DataFrames, MarkdownTables
+
+wifi = CSV.read(
+    "data/wifi.tsv",
+    DataFrame,
+    header=["w1", "w2", "w3", "w4", "w5", "w6", "w7", "room"]
+)
+wifi = wifi[(wifi.room .== 1) .| (wifi.room .== 2), [:w5, :w7, :room]]
+markdown_table(wifi[rand(1:size(wifi, 1), 5), :])</code></pre>
+<p>A <strong>vector</strong> in machine learning is a point in <span class="math inline">\(n\)</span>-dimensional space.</p>
+<p>Distance between two points:</p>
+<pre class="{julia}"><code>distance(v1, v2) = sqrt(sum((v1 - v2).^2))
+distance([0, 0], [3, 4])</code></pre>
+<p><code>sortperm</code> - return indexes of the form [smallest element, next smallest element, …]</p>
+<pre class="{julia}"><code>print(sortperm([4, 3, 1, 2]))</code></pre>
+<p>Describe the knn algorithm.</p>
+<ul>
+<li>points with labels</li>
+<li>knn</li>
+</ul>
+<pre class="{julia}"><code>
+struct Point
+    xn::Vector{Float64}
+    label::String
+end
+
+function knn(X::Array{Point}, v::Vector{Float64}, k::Int)
+    ds = [distance(x.xn, v) for x in X]
+    return X[sortperm(ds)[1:k]]
+end</code></pre>
+<p>Example of knn working in 2 dimensions</p>
+<pre class="{julia}"><code>knn([
+    Point([0.0, 0.0], "zero"),
+    Point([1.0, 1.0], "one"),
+    Point([2.0, 2.0], "two"),
+    Point([3.0, 3.0], "three"),
+    Point([4.0, 4.0], "four"),
+    Point([5.0, 5.0], "five")
+], [3.0, 3.0], 3)</code></pre>
+<p>Turn the dataset into <code>Point</code>s.</p>
+<pre class="{julia}"><code>#| output: false
+# Iterate across each row of wifi and create a Point for it
+X = [
+    Point(collect(row[[:w5, :w7]]), string(row[:room]))
+    for row in eachrow(wifi)
+]</code></pre>
+<ul>
+<li>Explain the prediction algorithm.</li>
+<li>Describe train/test split.</li>
+<li>Result of running knn on the wifi dataset.</li>
+</ul>
+<pre class="{julia}"><code>using MLUtils
+
+X_test, X_train = splitobs(X, at=0.15)
+X_train = collect(X_train)
+X_test = collect(X_test)
+
+size(X_train)
+"Return the element that occurs most frequently in an array"
+function majority(items::Vector{T})::T where T
+    c = Dict{T, Int}()
+    for it in items
+        if !haskey(c, it)
+            c[it] = 1
+        else
+            c[it] += 1
+        end
+    end
+    return sort(collect(c), by=x-&gt;x[2], rev=true)[1][1]
+end
+
+# Compute the accuracy score
+total = 0
+correct = 0
+
+for p in X_test
+    neighbors = knn(X_train, p.xn, 7)
+    label = majority([x.label for x in neighbors])
+    if label == p.label
+        correct += 1
+    end
+    total += 1
+end
+
+println("Accuracy: $(correct / total * 100.0)%")</code></pre>
+<p>Draw the scatter plot</p>
+<pre class="{julia}"><code>using PlotlyJS
+
+plot(scatter(
+    x = [p.xn[1] for p in X_train],
+    y = [p.xn[2] for p in X_train],
+    mode = "markers",
+))</code></pre>
 </section>
-<section id="challenge-2" class="level2">
-<h2 class="anchored" data-anchor-id="challenge-2">Challenge 2</h2>
-<blockquote class="blockquote">
-<p>Write a function that takes two equal-length buffers and produces their XOR combination.</p>
-</blockquote>
-<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> bytes-&gt;hex</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Convert a byte array to a hex string"</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  [input]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">apply</span> <span class="kw">str</span> (<span class="kw">map</span> #(<span class="kw">format</span> <span class="st">"%02x"</span> <span class="va">%1</span>) input)))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-ch2</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  []</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [CH2-INPUT1 <span class="st">"1c0111001f010100061a024b53535009181c"</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        CH2-INPUT2 <span class="st">"686974207468652062756c6c277320657965"</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        CH2-ANSWER <span class="st">"746865206b696420646f6e277420706c6179"</span>]</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    (verify (<span class="kw">=</span> CH2-ANSWER</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>               (bytes-&gt;hex (<span class="kw">map</span> <span class="kw">bit-xor</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                                (hex-&gt;bytes CH2-INPUT1)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                                (hex-&gt;bytes CH2-INPUT2)))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><span class="eval">(solve-ch2) =&gt; ✅</span></p>
+<section id="words-as-vectors" class="level2">
+<h2 class="anchored" data-anchor-id="words-as-vectors">Words as vectors</h2>
+<p>Encode a recipe as a vector by doing a one-hot encoding of each of the words in the recipe.</p>
+<p>Use knn to predict the cuisine of a new recipe.</p>
 </section>
-<section id="challenge-3" class="level2">
-<h2 class="anchored" data-anchor-id="challenge-3">Challenge 3</h2>
-<blockquote class="blockquote">
-<p>The hex encoded string [input] has been XOR’d against a single character. Find the key, decrypt the message.</p>
-<p>You can do this by hand. But don’t: write code to do it for you.</p>
-<p>How? Devise some method for “scoring” a piece of English plaintext. Character frequency is a good metric. Evaluate each output and choose the one with the best score.</p>
-</blockquote>
-<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> CH3-CIPHER</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  (hex-&gt;bytes</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>At first I thought of using something like the KL divergence (see <a href="../posts/breaking-caesar-cipher.html">this post</a>) to score the plaintext since I’ve always read that one of the ways to break simple ciphers is “frequency analysis”. But these challenges are about doing whatever it takes to break the crypto, not about following textbooks. So I tried to formalize what I’d do if I was breaking this “by hand”.</p>
-<p>If you decrypt the input with different keys, most of the results don’t look anything like English. They look like gibberish. Solving this challenge is therefore just picking the key that results in the least-gibberish plaintext.</p>
-<p>We’ll define the <strong>gibberish score</strong> of a piece of text as the ratio of “non-readable” ASCII bytes to the total number of bytes in the string. A readable ASCII byte is either in the range <code>A-Z</code>, or in the range <code>a-z</code> or a space. A non-readable byte is the negation of that.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> non-readable </span>[b]</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">not</span> (<span class="kw">or</span> (<span class="kw">and</span> (<span class="kw">&gt;=</span> b (<span class="kw">byte</span> <span class="ch">\A</span>)) (<span class="kw">&lt;=</span> b (<span class="kw">byte</span> <span class="ch">\Z</span>)))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>           (<span class="kw">and</span> (<span class="kw">&gt;=</span> b (<span class="kw">byte</span> <span class="ch">\a</span>)) (<span class="kw">&lt;=</span> b (<span class="kw">byte</span> <span class="ch">\z</span>)))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>           (<span class="kw">=</span> b (<span class="kw">byte</span> <span class="ch">\space</span>)))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The gibberish score:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> gibberish-score</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  [^<span class="kw">bytes</span> text]</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">/</span> (<span class="kw">double</span> (<span class="kw">count</span> (<span class="kw">filter</span> non-readable text)))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">count</span> text)))</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> gibberish-score-str</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  [text]</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  (gibberish-score (<span class="kw">byte-array</span> (<span class="kw">map</span> <span class="kw">byte</span> text))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><span class="eval">(gibberish-score-str “ABCD?”) =&gt; 0.2</span> <span class="eval">(gibberish-score-str “<em>@&amp;#$</em>&amp;@#”) =&gt; 1.0</span></p>
-<p>Now we need a function that takes a list of possible keys and computes the gibberish score and the plaintext for each key.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> xor-trial-keys-scores</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  [ciphertext trial-keys]</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">for</span> [<span class="kw">key</span> trial-keys</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">:let</span> [plain (<span class="kw">byte-array</span> (<span class="kw">map</span> #(<span class="kw">bit-xor</span> <span class="kw">key</span> <span class="va">%</span>) ciphertext))]]</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    {<span class="at">:key</span> (<span class="kw">char</span> <span class="kw">key</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">:score</span> (gibberish-score plain)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">:plain</span> (String. plain)}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Let’s try it on a dummy input:</p>
-<p><span class="eval"> (xor-trial-keys-scores (hex-&gt;bytes “1b3f89af9068”) [(byte \B)]) </span> <span class="eval-result"> ({:key \B, :score 0.8333333333333334, :plain “Y}���*“}) </span></p>
-<p>To solve the challenge we pick the key with the smallest value of <code>:score</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> solve-ch3</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  [trial-keys]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [CH3-CIPHER (hex-&gt;bytes <span class="st">"1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"</span>)]</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">apply</span> <span class="kw">min-key</span> <span class="at">:score</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         (xor-trial-keys-scores CH3-CIPHER trial-keys))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>What range of keys should we try? We can just try all possible byte values <span class="math inline">\(0...255\)</span>.</p>
-<p><span class="eval">(solve-ch3 (range 0 255))</span> <span class="eval-result">{:key \X, :score 0.029411764705882353, :plain “Cooking MC’s like a pound of bacon”}</span></p>
+<section id="words-as-vectors-better" class="level2">
+<h2 class="anchored" data-anchor-id="words-as-vectors-better">Words as vectors (better)</h2>
+<p>Use text embeddings to turn a recipe into a vector. How to combine vectors for individual words into vector for the whole recipe?</p>
 </section>
-<section id="challenge-4" class="level2">
-<h2 class="anchored" data-anchor-id="challenge-4">Challenge 4</h2>
-<blockquote class="blockquote">
-<p>One of the 60-character strings in&nbsp;<a href="https://cryptopals.com/static/challenge-data/4.txt">this file</a>&nbsp;has been encrypted by single-character XOR. Find it.</p>
-</blockquote>
+<section id="closing-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="closing-thoughts">closing thoughts</h2>
+<p>what else are vectors? - images - sound</p>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>Word2vec paper, won the “test of time” award</p>
+<p><em>Distributed Representations of Words and Phrases and their Compositionality</em> https://arxiv.org/abs/1310.4546</p>
+<p>The illustrated Word2vec https://jalammar.github.io/illustrated-word2vec/</p>
 
 
 </section>
