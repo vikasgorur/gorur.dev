@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>stats110-practice1</title>
+<title>Project Euler problems</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
 }
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -154,42 +168,105 @@ window.Quarto = {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
 
-
-
-
-<section id="stats-110-practice-1" class="level1">
-<h1>Stats 110: Practice 1</h1>
-<p>Exercises from Chapter 1 of <span class="citation" data-cites="blitzsteinIntroductionProbability2019">Blitzstein and Hwang (<a href="#ref-blitzsteinIntroductionProbability2019" role="doc-biblioref">2019</a>)</span></p>
-<div class="callout callout-style-simple callout-note no-icon">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Project Euler problems</h1>
 </div>
-<div class="callout-body-container">
-<ol start="6" type="1">
-<li>There are 20 people at a chess club on a certain day. They each find opponents and start playing. How many possibilities are there for how they are matched up, assuming that in each game it <em>does</em> matter who has the white pieces?</li>
-</ol>
-</div>
-</div>
-</div>
-<p>Let the players be numbered <span class="math inline">\(1..20\)</span>. Each permutation of the list can be considered a pairing, if you draw bars like so:</p>
-<p><span class="math display">\[
-1 \, 3 \, | \, 4 \, 6 \, | \, 2 \, 5  \,|\, ...
-\]</span> The total number of permutations is <span class="math inline">\(20!\)</span></p>
-<p>Each pair like <span class="math inline">\(|1\,3|\)</span> is two people sitting down at a table for a game, with white and black pieces respectively. The order within a pair matters. However, the order of tables themselves doesn’t matter. There are <span class="math inline">\(10!\)</span> ways to permute the tables, and all those must be considered equivalent.</p>
-<p>Thus the total number of ways to match 20 people up is: <span class="math inline">\(\frac{20!}{10!}\)</span>.</p>
 
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Last updated: <em>Feb 21, 2025</em>.</p>
+<p>My solutions to the problems from <a href="https://projecteuler.net/archives">Project Euler</a>.</p>
+<section id="problem-1" class="level2">
+<h2 class="anchored" data-anchor-id="problem-1">Problem 1</h2>
+<p><em>Difficulty: 5%</em></p>
+<blockquote class="blockquote">
+<p>Find the sum of all multiples of 3 or 5 below 1000.</p>
+</blockquote>
+<div class="sourceCode" id="cb1"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;&gt;</span> (<span class="kw">range</span> <span class="dv">1000</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">filter</span> #(<span class="kw">or</span> (<span class="kw">zero?</span> (<span class="kw">mod</span> <span class="va">%</span> <span class="dv">3</span>)) (<span class="kw">zero?</span> (<span class="kw">mod</span> <span class="va">%</span> <span class="dv">5</span>))))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">reduce</span> <span class="kw">+</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">233168</span></p>
+</section>
+<section id="problem-2" class="level2">
+<h2 class="anchored" data-anchor-id="problem-2">Problem 2</h2>
+<p><em>Difficulty: 5%</em></p>
+<blockquote class="blockquote">
+<p>By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.</p>
+</blockquote>
+<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">loop</span> [f1 <span class="dv">1</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>       f2 <span class="dv">2</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>       even-sum <span class="dv">0</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">&gt;=</span> f2 <span class="dv">4000000</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    even-sum</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> (<span class="kw">zero?</span> (<span class="kw">mod</span> f2 <span class="dv">2</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">recur</span> f2 (<span class="kw">+</span> f1 f2) (<span class="kw">+</span> even-sum f2))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">recur</span> f2 (<span class="kw">+</span> f1 f2) even-sum))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">4613732</span></p>
+</section>
+<section id="problem-6" class="level2">
+<h2 class="anchored" data-anchor-id="problem-6">Problem 6</h2>
+<p><em>Difficulty: 5%</em></p>
+<blockquote class="blockquote">
+<p>Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.</p>
+</blockquote>
+<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-</span> (<span class="kw">int</span> (Math/pow (<span class="kw">-&gt;&gt;</span> (<span class="kw">range</span> <span class="dv">1</span> <span class="dv">101</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                       (<span class="kw">reduce</span> <span class="kw">+</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="dv">2</span>))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">-&gt;&gt;</span> (<span class="kw">range</span> <span class="dv">1</span> <span class="dv">101</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">map</span> #(<span class="kw">int</span> (Math/pow <span class="va">%</span> <span class="dv">2</span>)))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">reduce</span> <span class="kw">+</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">25164150</span></p>
+</section>
+<section id="problem-65" class="level2">
+<h2 class="anchored" data-anchor-id="problem-65">Problem 65</h2>
+<p><em>Difficulty: 15%</em></p>
+<blockquote class="blockquote">
+<p><span class="math inline">\(e\)</span> can be written as the continued fraction <span class="math inline">\([2; 1, 2, 1, 1, 4, 1, 1, 6, 1, ... , 1, 2k, 1, ...]\)</span></p>
+<p>The <span class="math inline">\(n\)</span>th “convergent” of a continued fraction is the result of summing it upto <span class="math inline">\(n\)</span> terms. Find the sum of the digits in the numerator of the 100th convergent of the fraction for <span class="math inline">\(e\)</span>.</p>
+</blockquote>
+<p>First we write a generic function to sum the first <span class="math inline">\(n\)</span> terms of a continued fraction.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sum-terms</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  [xs]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">empty?</span> xs)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">/</span> <span class="dv">1</span> (<span class="kw">+</span> (<span class="kw">first</span> xs) (sum-terms (<span class="kw">rest</span> xs))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can test that it works by computing <span class="math inline">\(\sqrt{2}\)</span> upto 10 terms.</p>
+<p><span class="eval">(float (+ 1 (sum-terms (repeat 9 2))))</span> <span class="eval-result">1.4142137</span></p>
+<p>The fraction for <span class="math inline">\(e\)</span> is slightly more complicated because the <span class="math inline">\(k\)</span>th term can be either <span class="math inline">\(2k\)</span> or <span class="math inline">\(1\)</span>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> e-terms</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first n terms of the continued fraction for e"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  [n]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">take</span> n (<span class="kw">map</span> (<span class="kw">fn</span> [k]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">case</span> (<span class="kw">mod</span> k <span class="dv">3</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">0</span> <span class="dv">1</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">1</span> (<span class="kw">*</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> k <span class="dv">3</span>)))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">2</span> <span class="dv">1</span>))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">range</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now sum the first 100 terms and compute the sum of the digits of the numerator.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">map</span> #(Character/digit <span class="va">%</span> <span class="dv">10</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">str</span> (numerator (<span class="kw">+</span> <span class="dv">2</span> (sum-terms (e-terms <span class="dv">99</span>)))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">272</span></p>
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-blitzsteinIntroductionProbability2019" class="csl-entry" role="listitem">
-Blitzstein, Joseph K., and Jessica Hwang. 2019. <em>Introduction to Probability</em>. Second edition. Boca Raton: CRC Press.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

@@ -17,8 +17,4 @@ Each pair like $|1\,3|$ is two people sitting down at a table for a game, with w
 
 Thus the total number of ways to match 20 people up is: $\frac{20!}{10!}$.
 
-::: {.callout-note}
-8. You are ordering two pizzas. A pizza can be small, medium, large, or extra large, with any combination of 8 possible toppings (getting no toppings is allowed, as is getting all 8). How many possibilities are there for your two pizzas?
-:::
-
 

@@ -21,6 +21,7 @@ project:
     - annotations/why-machines-learn.qmd
     - programs-for-humans/advent-of-code-2024.qmd
     - programs-for-humans/cryptopals-set1.qmd
+    - programs-for-humans/project-euler.qmd
     - exercises/stats110-practice1.qmd
 
 bibliography: /Users/vikas/study/gorur.dev/src/zotero.bib

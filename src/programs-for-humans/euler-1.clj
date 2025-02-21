@@ -1,7 +1,4 @@
-(ns euler-1
-  (:require [nextjournal.clerk :as clerk]))
-
-(clerk/serve! {:browse? true})
+(ns euler-1)
 
 ;; # Project Euler
 ;;
@@ -15,6 +12,7 @@
 (->> (range 1000)
      (filter #(or (zero? (mod % 3)) (zero? (mod % 5))))
      (reduce +))
+;;=> 233168
 
 ;; ## Problem 2
 ;; Difficulty: 5%
@@ -31,6 +29,7 @@
     (if (zero? (mod f2 2))
       (recur f2 (+ f1 f2) (+ even-sum f2))
       (recur f2 (+ f1 f2) even-sum))))
+;;=> 4613732
 
 ;; ## Problem 6
 ;; Difficulty: 5%
@@ -44,6 +43,7 @@
    (->> (range 1 101)
         (map #(int (Math/pow % 2)))
         (reduce +)))
+;;=> 25164150
 
 ;; ## Problem 7
 ;;
@@ -70,6 +70,7 @@
 
 ;; We can test that it works by computing $\sqrt{2}$ upto 10 terms.
 (float (+ 1 (sum-terms (repeat 9 2))))
+;;=> 1.4142137
 
 ;; The fraction for $e$ is slightly more complicated because the $k$th
 ;; term can be either $2k$ or $1$.
@@ -87,6 +88,7 @@
 ;; of the numerator.
 (reduce + (map #(Character/digit % 10)
                (str (numerator (+ 2 (sum-terms (e-terms 99)))))))
+;;=> 272
 
 
 
