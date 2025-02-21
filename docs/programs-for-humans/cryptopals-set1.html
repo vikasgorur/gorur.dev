@@ -345,6 +345,38 @@ window.Quarto = {
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  (verify (<span class="kw">=</span> CH5-ANSWER</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>             (bytes-&gt;hex (repeating-key-xor CH5-CIPHER <span class="st">"ICE"</span>))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval">(solve-ch5)</span> <span class="eval-result">“✅”</span></p>
+</section>
+<section id="challenge-6" class="level2">
+<h2 class="anchored" data-anchor-id="challenge-6">Challenge 6</h2>
+<blockquote class="blockquote">
+<p>There’s a file here. It’s been base64’d after being encrypted with repeating-key XOR. Decrypt it.</p>
+</blockquote>
+<p>We’re going to follow the steps described on the challenge page.</p>
+<p>The Hamming distance (edit distance) between two strings is the number of bits that are different. For two bytes, this is the number of 1 bits after XOR’ing them together. Summing this across all pairs of bytes gives us the edit distance.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> hamming-distance </span>[s1 s2]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">map</span> #(Integer/bitCount (<span class="kw">bit-xor</span> <span class="va">%1</span> <span class="va">%2</span>)) s1 s2)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre class="eval">  (hamming-distance (.getBytes "this is a test")
+                    (.getBytes "wokka wokka!!!"))
+</pre>
+<p><span class="eval-result"> 37 </span></p>
+<p>TODO: explain better</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> TRIAL-KEYSIZES </span>(<span class="kw">range</span> <span class="dv">2</span> <span class="dv">40</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> distances </span>(<span class="kw">into</span> (<span class="kw">sorted-map</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                     (<span class="kw">map</span> (<span class="kw">fn</span> [size]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                            (<span class="kw">vector</span> (<span class="kw">/</span> (hamming-distance</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                                        (<span class="kw">take</span> size CH6-CIPHER)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>                                        (<span class="kw">take</span> size (<span class="kw">drop</span> size CH6-CIPHER)))</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                                       (<span class="kw">double</span> size))</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                                    size))</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                          TRIAL-KEYSIZES)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Transposing blocks</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> block-transpose</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  [keysize input]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">for</span> [i (<span class="kw">range</span> keysize)]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">take-nth</span> keysize (<span class="kw">drop</span> i input))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre class="eval">(apply str (flatten (block-transpose 3 "abcdefghijklmnopqrstuvwxyz")))</pre>
+<p><span class="eval-result">“adgjmpsvybehknqtwzcfilorux”</span></p>
 
 
 </section>

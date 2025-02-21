@@ -252,3 +252,54 @@ bytes seem to be repeated often.
 
 <span class="eval">(solve-ch5)</span>
 <span class="eval-result">"✅"</span>
+
+## Challenge 6
+
+> There's a file here. It's been base64'd after being encrypted with repeating-key XOR.
+> Decrypt it.
+
+We're going to follow the steps described on the challenge page.
+
+The Hamming distance (edit distance) between two strings is the number of bits that are different. For
+two bytes, this is the number of 1 bits after XOR'ing them together. Summing this across all pairs of
+bytes gives us the edit distance.
+
+```clojure
+(defn hamming-distance [s1 s2]
+  (reduce + (map #(Integer/bitCount (bit-xor %1 %2)) s1 s2)))
+```
+
+<pre class="eval">
+  (hamming-distance (.getBytes "this is a test")
+                    (.getBytes "wokka wokka!!!"))
+</pre>                  
+<span class="eval-result">
+  37
+</span>
+
+TODO: explain better
+
+```clojure
+(def TRIAL-KEYSIZES (range 2 40))
+
+(def distances (into (sorted-map)
+                     (map (fn [size]
+                            (vector (/ (hamming-distance
+                                        (take size CH6-CIPHER)
+                                        (take size (drop size CH6-CIPHER)))
+                                       (double size))
+                                    size))
+                          TRIAL-KEYSIZES)))
+```
+
+Transposing blocks
+
+```clojure
+(defn block-transpose
+  [keysize input]
+  (for [i (range keysize)]
+    (take-nth keysize (drop i input))))
+```
+
+<pre class="eval">(apply str (flatten (block-transpose 3 "abcdefghijklmnopqrstuvwxyz")))</pre>
+<span class="eval-result">"adgjmpsvybehknqtwzcfilorux"</span>

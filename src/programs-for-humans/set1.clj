@@ -2,17 +2,9 @@
   (:require [clojure.data.codec.base64 :as b64]
             [clojure.string :as str]
             [clojure.java.io :as io]
-            [nextjournal.clerk :as clerk]
             [criterium.core :as c]
             [clojure.test :refer [deftest is testing test-var]]))
 
-(clerk/serve! {:browse? true})
-
-(comment
-  (clerk/build! {:paths ["src/programs-for-humans/set1.clj"]
-                 :bundle true
-                 :browse true
-                 :ssr true}))
 
 (defn hex->bytes
   "Convert a hex string to a byte array"
@@ -195,6 +187,10 @@ CH6-CIPHER
 (defn hamming-distance [s1 s2]
   (reduce + (map #(Integer/bitCount (bit-xor %1 %2)) s1 s2)))
 
+(hamming-distance (.getBytes "this is a test")
+                  (.getBytes "wokka wokka!!!"))
+;;=> 37
+
 (deftest hamming-distance-test
   (testing "hamming-distance function"
     (is (= 37 (hamming-distance (.getBytes "this is a test")
@@ -204,59 +200,58 @@ CH6-CIPHER
 (def TRIAL-KEYSIZES (range 2 40))
 
 (def distances (into (sorted-map)
-                     (map #(vector (/ (hamming-distance
-                                       (take % CH6-CIPHER)
-                                       (take % (drop % CH6-CIPHER)))
-                                      (double %1))
-                                   %1)
+                     (map (fn [size]
+                            (vector (/ (hamming-distance
+                                        (take size CH6-CIPHER)
+                                        (take size (drop size CH6-CIPHER)))
+                                       (double size))
+                                    size))
                           TRIAL-KEYSIZES)))
-
 distances
-;; => {1.2 5,
-;;     2.0 3,
-;;     2.5 2,
-;;     2.5384615384615383 13,
-;;     2.6363636363636362 11,
-;;     2.7 20,
-;;     2.7777777777777777 18,
-;;     2.8684210526315788 38,
-;;     2.933333333333333 15,
-;;     2.9411764705882355 17,
-;;     3.0 16,
-;;     3.0476190476190474 21,
-;;     3.096774193548387 31,
-;;     3.108108108108108 37,
-;;     3.1739130434782608 23,
-;;     3.206896551724138 29,
-;;     3.2142857142857144 14,
-;;     3.24 25,
-;;     3.25 12,
-;;     3.257142857142857 35,
-;;     3.272727272727273 33,
-;;     3.3 10,
-;;     3.3076923076923075 39,
-;;     3.3157894736842106 19,
-;;     3.323529411764706 34,
-;;     3.375 24,
-;;     3.4166666666666665 36,
-;;     3.433333333333333 30,
-;;     3.4375 32,
-;;     3.4814814814814814 27,
-;;     3.5 26,
-;;     3.5357142857142856 28,
-;;     3.5555555555555554 9,
-;;     3.727272727272727 22,
-;;     4.0 6}
+;;=> {1.2 5,
+;;    2.0 3,
+;;    2.5 2,
+;;    2.5384615384615383 13,
+;;    2.6363636363636362 11,
+;;    2.7 20,
+;;    2.7777777777777777 18,
+;;    2.8684210526315788 38,
+;;    2.933333333333333 15,
+;;    2.9411764705882355 17,
+;;    3.0 16,
+;;    3.0476190476190474 21,
+;;    3.096774193548387 31,
+;;    3.108108108108108 37,
+;;    3.1739130434782608 23,
+;;    3.206896551724138 29,
+;;    3.2142857142857144 14,
+;;    3.24 25,
+;;    3.25 12,
+;;    3.257142857142857 35,
+;;    3.272727272727273 33,
+;;    3.3 10,
+;;    3.3076923076923075 39,
+;;    3.3157894736842106 19,
+;;    3.323529411764706 34,
+;;    3.375 24,
+;;    3.4166666666666665 36,
+;;    3.433333333333333 30,
+;;    3.4375 32,
+;;    3.4814814814814814 27,
+;;    3.5 26,
+;;    3.5357142857142856 28,
+;;    3.5555555555555554 9,
+;;    3.727272727272727 22,
+;;    4.0 6}
 
 (defn block-transpose
-  "Return a sequence of blocks where each block is encrypted by successive chars of the key"
   [keysize input]
   (for [i (range keysize)]
     (take-nth keysize (drop i input))))
 
-(flatten (block-transpose 9 (flatten (block-transpose 3 "abcdefghijklmnopqrstuvwxyz"))))
-;; => (\a \b \c \d \e \f \g \h \i \j \k \l \m \n \o \p \q \r \s \t \u \v \w \x \y \z)
-
+(apply str
+       (flatten (block-transpose 3 "abcdefghijklmnopqrstuvwxyz")))
+;;=> "adgjmpsvybehknqtwzcfilorux"
 
 (def LIKELY-KEYSIZES [5 3 2 13 11 20 18 38 15 17 16 21 31 37 23 29])
 
@@ -268,9 +263,9 @@ distances
 
 ;; Break each of the 29 blocks
 
-(def CH6-KEY
+(comment (def CH6-KEY
   (map #(:key (solve-ch3 (nth (block-transpose KEYSIZE CH6-CIPHER) %1) (range 0 255)))
-       (range 0 KEYSIZE)))
+       (range 0 KEYSIZE))))
 
 (apply str CH6-KEY)
 ;; => "Terminator X: Bring the noise"

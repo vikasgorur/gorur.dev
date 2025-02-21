@@ -1,17 +1,47 @@
 import marimo
 
-__generated_with = "0.7.5"
-app = marimo.App()
+__generated_with = "0.11.0"
+app = marimo.App(width="medium", css_file="marimo.css")
 
 
 @app.cell
-def __():
+def _():
     import marimo as mo
-    return mo,
+    import numpy as np
+    return mo, np
 
 
 @app.cell
-def __():
+def _(mo):
+    mo.md(
+        """
+        ## Distributions
+
+        A distribution is a callable that returns one value when called.
+        """
+    )
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md("""### Discrete Uniform""")
+    return
+
+
+@app.cell
+def _(np):
+    class DiscreteUniform:
+        def __init__(self, values: list[float]):
+            self.values = values
+
+        def __call__(self):
+            return np.random.choice(self.values)
+    return (DiscreteUniform,)
+
+
+@app.cell
+def _():
     class Var:
         def __init__(self, name: str, desc: str, value: any):
             self.name = name
@@ -63,59 +93,56 @@ def __():
                 "quotient",
                 lambda: self.value() / other.value()
             )
-    return Var,
+    return (Var,)
 
 
 @app.cell
-def __(Var):
+def _(Var):
     class Param(Var):
         def __init__(self, name: str, desc: str, value: any):
             super().__init__(name, desc, value)
-
-
-    return Param,
+    return (Param,)
 
 
 @app.cell
-def __(Var):
+def _(Var):
     class Output(Var):
         def __init__(self, name: str, desc: str, value: any):
             super().__init__(name, desc, value)
 
         def simulate(n: int = 10000):
             pass
-    return Output,
+    return (Output,)
 
 
 @app.cell
-def __(Param, np):
+def _(Param, np):
     total = (
         Param("trips", "number of trips", lambda: np.random.poisson(5))
         * Param("cost", "cost per trip", 385)
     )
     total.value()
-    return total,
+    return (total,)
 
 
 @app.cell
-def __(total):
+def _(total):
     for i in range(10):
         print(total.value())
-    return i,
+    return (i,)
 
 
 @app.cell
-def __():
-    import numpy as np
+def _(np):
     import matplotlib.pyplot as plt
 
     plt.hist(np.random.poisson(10, 1000))
     plt.show()
-    return np, plt
+    return (plt,)
 
 
 @app.cell
-def __(Param, np):
+def _(Param, np):
     # Car buying v/s renting decision
 
     car_price = Param("price", "price of car", 20_50_000) # 12.5 lakh INR
@@ -133,7 +160,7 @@ def __(Param, np):
 
 
 @app.cell
-def __(cost_per_trip, np, plt):
+def _(cost_per_trip, np, plt):
     # Create an array of 10000 samples of cost_per_trip
     samples = np.array([cost_per_trip.value() for _ in range(10000)])
 
@@ -151,12 +178,11 @@ def __(cost_per_trip, np, plt):
     print(f"Standard deviation: {np.std(samples):.2f} INR")
     print(f"5th percentile: {np.percentile(samples, 5):.2f} INR")
     print(f"95th percentile: {np.percentile(samples, 95):.2f} INR")
-
-    return samples,
+    return (samples,)
 
 
 @app.cell
-def __(np, samples, stats):
+def _(np, samples, stats):
     # Calculate the 95% confidence interval from samples
     confidence_level = 0.95
     sample_mean = np.mean(samples)
@@ -171,7 +197,6 @@ def __(np, samples, stats):
     ci_upper = sample_mean + margin_of_error
 
     print(f"95% Confidence Interval: ({ci_lower:.2f}, {ci_upper:.2f}) INR")
-
     return (
         ci_lower,
         ci_upper,
@@ -181,6 +206,12 @@ def __(np, samples, stats):
         sample_size,
         sample_std,
     )
+
+
+@app.cell
+def _():
+    import scipy.stats as stats
+    return (stats,)
 
 
 if __name__ == "__main__":
