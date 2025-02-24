@@ -103,6 +103,16 @@
                (str (numerator (+ 2 (sum-terms (e-terms 99)))))))
 ;;=> 272
 
+;; ## Problem 7
+;; What is the 10001st prime number?
+
+(let [N 10001
+      approx-nth-prime (* N (Math/log N))]
+      (nth (primes/sieve-of-eratosthenes
+            (int (* 1.2 approx-nth-prime)))
+           (dec N)))
+
+;;=> 104743
 
 
 

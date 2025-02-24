@@ -72,6 +72,27 @@ _Difficulty: 5%_
 
 <span class="eval-result">25164150</span>
 
+## Problem 7
+
+> What is the 10,001st prime number?
+
+As a consequence of the Prime Number Theorem ([wiki](https://en.wikipedia.org/wiki/Prime_number_theorem)),
+the $N$th prime is approximately
+
+$$N \ ln(N)$$
+
+So we'll generate all primes upto a little more than that number and pick out the 10,001st one.
+
+```clojure
+(let [N 10001
+      approx-nth-prime (* N (Math/log N))]
+      (nth (primes/sieve-of-eratosthenes
+            (int (* 1.2 approx-nth-prime)))
+           (dec N)))
+```
+
+<span class="eval-result">104743</span>
+
 ## Problem 65
 _Difficulty: 15%_
 
@@ -123,6 +144,7 @@ of the numerator.
 ```
 
 <span class="eval-result">272</span>
+
 
 ## Helpers
 

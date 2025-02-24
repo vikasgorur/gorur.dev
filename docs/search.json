@@ -635,5 +635,12 @@
     "title": "Project Euler problems",
     "section": "Helpers",
     "text": "Helpers\nThese are helper functions used across problems.\nSince many of the problems deal with prime numbers, let’s write the Sieve of Eratosthenes to generate all prime numbers below \\(n\\).\n(defn sieve-of-eratosthenes\n  [n]\n  (let [sieve (BitSet. (inc n))]\n    ;; Set all bits to true initially\n    (.set sieve 0 (inc n))\n\n    ;; 0 and 1 are not prime\n    (.clear sieve 0)\n    (.clear sieve 1)\n\n    (doseq [x (range 2 (inc (int (Math/sqrt n))))]\n      (doseq [i (range 2 (inc (quot n x)))]\n        (.clear sieve (* x i))))\n    \n    (filter #(.get sieve %) (range 2 n))))"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-7",
+    "href": "programs-for-humans/project-euler.html#problem-7",
+    "title": "Project Euler problems",
+    "section": "Problem 7",
+    "text": "Problem 7\n\nWhat is the 10,001st prime number?\n\nAs a consequence of the Prime Number Theorem (wiki), the \\(N\\)th prime is approximately\n\\[N \\ ln(N)\\]\nSo we’ll generate all primes upto a little more than that number and pick out the 10,001st one.\n(let [N 10001\n      approx-nth-prime (* N (Math/log N))]\n      (nth (primes/sieve-of-eratosthenes\n            (int (* 1.2 approx-nth-prime)))\n           (dec N)))\n104743"
   }
 ]
