@@ -382,7 +382,7 @@
     "href": "index.html#programs-for-humans",
     "title": "Vikas Gorur",
     "section": "Programs for Humans",
-    "text": "Programs for Humans\n\nPrograms must be written for people to read, and only incidentally for machines to execute.\n\n— Abelson & Sussman, SICP.\nThese are programs I write solely to understand something and maybe help another human understand it.\n2025-02-21 Project Euler: first 100 problems\n2024-12-22 Cryptopals: Set 1\n2024-12-09 Advent of Code 2024 (Clojure)"
+    "text": "Programs for Humans\n\nPrograms must be written for people to read, and only incidentally for machines to execute.\n\n— Abelson & Sussman, SICP.\nThese are programs I write solely to understand something and maybe help another human understand it.\n2025-02-21 Project Euler - first 100 problems\n2024-12-22 Cryptopals: Set 1\n2024-12-09 Advent of Code 2024 (Clojure)"
   },
   {
     "objectID": "programs-for-humans/advent-of-code-2024.html",
@@ -590,57 +590,57 @@
   {
     "objectID": "programs-for-humans/project-euler.html",
     "href": "programs-for-humans/project-euler.html",
-    "title": "Project Euler problems",
+    "title": "Project Euler - first 100 problems",
     "section": "",
     "text": "Last updated: Feb 24, 2025.\nMy solutions to the problems from Project Euler."
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-1",
     "href": "programs-for-humans/project-euler.html#problem-1",
-    "title": "Project Euler problems",
+    "title": "Project Euler - first 100 problems",
     "section": "Problem 1",
     "text": "Problem 1\nDifficulty: 5%\n\nFind the sum of all multiples of 3 or 5 below 1000.\n\n(-&gt;&gt; (range 1000)\n     (filter #(or (zero? (mod % 3)) (zero? (mod % 5))))\n     (reduce +))\n233168"
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-2",
     "href": "programs-for-humans/project-euler.html#problem-2",
-    "title": "Project Euler problems",
+    "title": "Project Euler - first 100 problems",
     "section": "Problem 2",
     "text": "Problem 2\nDifficulty: 5%\n\nBy considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.\n\n(loop [f1 1,\n       f2 2,\n       even-sum 0]\n\n  (if (&gt;= f2 4000000)\n    even-sum\n    (if (zero? (mod f2 2))\n      (recur f2 (+ f1 f2) (+ even-sum f2))\n      (recur f2 (+ f1 f2) even-sum))))\n4613732"
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-6",
     "href": "programs-for-humans/project-euler.html#problem-6",
-    "title": "Project Euler problems",
+    "title": "Project Euler - first 100 problems",
     "section": "Problem 6",
     "text": "Problem 6\nDifficulty: 5%\n\nFind the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.\n\n(- (int (Math/pow (-&gt;&gt; (range 1 101)\n                       (reduce +))\n                  2))\n   (-&gt;&gt; (range 1 101)\n        (map #(int (Math/pow % 2)))\n        (reduce +)))\n25164150"
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-65",
     "href": "programs-for-humans/project-euler.html#problem-65",
-    "title": "Project Euler problems",
+    "title": "Project Euler - first 100 problems",
     "section": "Problem 65",
     "text": "Problem 65\nDifficulty: 15%\n\n\\(e\\) can be written as the continued fraction \\([2; 1, 2, 1, 1, 4, 1, 1, 6, 1, ... , 1, 2k, 1, ...]\\)\nThe \\(n\\)th “convergent” of a continued fraction is the result of summing it upto \\(n\\) terms. Find the sum of the digits in the numerator of the 100th convergent of the fraction for \\(e\\).\n\nFirst we write a generic function to sum the first \\(n\\) terms of a continued fraction.\n(defn sum-terms\n  [xs]\n  (if (empty? xs)\n    0\n    (/ 1 (+ (first xs) (sum-terms (rest xs))))))\nWe can test that it works by computing \\(\\sqrt{2}\\) upto 10 terms.\n(float (+ 1 (sum-terms (repeat 9 2)))) 1.4142137\nThe fraction for \\(e\\) is slightly more complicated because the \\(k\\)th term can be either \\(2k\\) or \\(1\\).\n(defn e-terms\n  \"The first n terms of the continued fraction for e\"\n  [n]\n  (take n (map (fn [k]\n                 (case (mod k 3)\n                   0 1\n                   1 (* 2 (inc (quot k 3)))\n                   2 1))\n               (range n))))\nNow sum the first 100 terms and compute the sum of the digits of the numerator.\n(reduce + (map #(Character/digit % 10)\n               (str (numerator (+ 2 (sum-terms (e-terms 99)))))))\n272"
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-3",
     "href": "programs-for-humans/project-euler.html#problem-3",
-    "title": "Project Euler problems",
+    "title": "Project Euler - first 100 problems",
     "section": "Problem 3",
     "text": "Problem 3\nDifficulty: 5%\n\nFind the largest prime factor of 600851475143.\n\nWe’ll just brute force all primes below \\(\\sqrt{N}\\) and try them as divisors.\n(let [N 600851475143]\n  (-&gt;&gt; (primes/sieve-of-eratosthenes (int (Math/sqrt N)))\n       reverse\n       (filter #(zero? (mod N %)))\n       first))\n6857"
   },
   {
     "objectID": "programs-for-humans/project-euler.html#helpers",
     "href": "programs-for-humans/project-euler.html#helpers",
-    "title": "Project Euler problems",
+    "title": "Project Euler - first 100 problems",
     "section": "Helpers",
     "text": "Helpers\nThese are helper functions used across problems.\nSince many of the problems deal with prime numbers, let’s write the Sieve of Eratosthenes to generate all prime numbers below \\(n\\).\n(defn sieve-of-eratosthenes\n  [n]\n  (let [sieve (BitSet. (inc n))]\n    ;; Set all bits to true initially\n    (.set sieve 0 (inc n))\n\n    ;; 0 and 1 are not prime\n    (.clear sieve 0)\n    (.clear sieve 1)\n\n    (doseq [x (range 2 (inc (int (Math/sqrt n))))]\n      (doseq [i (range 2 (inc (quot n x)))]\n        (.clear sieve (* x i))))\n    \n    (filter #(.get sieve %) (range 2 n))))"
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-7",
     "href": "programs-for-humans/project-euler.html#problem-7",
-    "title": "Project Euler problems",
+    "title": "Project Euler - first 100 problems",
     "section": "Problem 7",
-    "text": "Problem 7\n\nWhat is the 10,001st prime number?\n\nAs a consequence of the Prime Number Theorem (wiki), the \\(N\\)th prime is approximately\n\\[N \\ ln(N)\\]\nSo we’ll generate all primes upto a little more than that number and pick out the 10,001st one.\n(let [N 10001\n      approx-nth-prime (* N (Math/log N))]\n      (nth (primes/sieve-of-eratosthenes\n            (int (* 1.2 approx-nth-prime)))\n           (dec N)))\n104743"
+    "text": "Problem 7\nDifficulty: 5%\n\nWhat is the 10,001st prime number?\n\nAs a consequence of the Prime Number Theorem (wiki), the \\(N\\)th prime is approximately\n\\[N \\ ln(N)\\]\nSo we’ll generate all primes upto a little more than that number and pick out the 10,001st one.\n(let [N 10001\n      approx-nth-prime (* N (Math/log N))]\n      (nth (primes/sieve-of-eratosthenes\n            (int (* 1.2 approx-nth-prime)))\n           (dec N)))\n104743"
   }
 ]

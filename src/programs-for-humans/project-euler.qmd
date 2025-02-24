@@ -1,5 +1,5 @@
 ---
-title: Project Euler: first 100 problems
+title: Project Euler - first 100 problems
 toc: true
 ---
 Last updated: _Feb 24, 2025_.
@@ -73,6 +73,7 @@ _Difficulty: 5%_
 <span class="eval-result">25164150</span>
 
 ## Problem 7
+_Difficulty: 5%_
 
 > What is the 10,001st prime number?
 
