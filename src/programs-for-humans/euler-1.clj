@@ -1,4 +1,5 @@
-(ns euler-1)
+(ns euler-1
+  (:require [primes]))
 
 ;; # Project Euler
 ;;
@@ -30,6 +31,18 @@
       (recur f2 (+ f1 f2) (+ even-sum f2))
       (recur f2 (+ f1 f2) even-sum))))
 ;;=> 4613732
+
+;; ## Problem 3
+;; Largest prime factor of 600851475143
+
+(let [N 600851475143]
+  (->> (primes/sieve-of-eratosthenes (int (Math/sqrt N)))
+       reverse
+       (filter #(zero? (mod N %)))
+       first))
+;;=> 6857
+
+(quot 13195 5)
 
 ;; ## Problem 6
 ;; Difficulty: 5%

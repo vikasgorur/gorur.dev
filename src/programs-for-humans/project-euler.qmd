@@ -1,7 +1,8 @@
 ---
 title: Project Euler problems
+toc: true
 ---
-Last updated: _Feb 21, 2025_.
+Last updated: _Feb 24, 2025_.
 
 My solutions to the problems from [Project Euler](https://projecteuler.net/archives).
 
@@ -37,6 +38,22 @@ _Difficulty: 5%_
 ```
 
 <span class="eval-result">4613732</span>
+
+## Problem 3
+_Difficulty: 5%_
+
+> Find the largest prime factor of 600851475143.
+
+We'll just brute force all primes below $\sqrt{N}$ and try them as divisors.
+
+```clojure
+(let [N 600851475143]
+  (->> (primes/sieve-of-eratosthenes (int (Math/sqrt N)))
+       reverse
+       (filter #(zero? (mod N %)))
+       first))
+```
+<span class="eval-result">6857</span>
 
 ## Problem 6
 _Difficulty: 5%_
@@ -106,3 +123,28 @@ of the numerator.
 ```
 
 <span class="eval-result">272</span>
+
+## Helpers
+
+These are helper functions used across problems.
+
+Since many of the problems deal with prime numbers, let's write the Sieve of Eratosthenes to
+generate all prime numbers below $n$.
+
+```clojure
+(defn sieve-of-eratosthenes
+  [n]
+  (let [sieve (BitSet. (inc n))]
+    ;; Set all bits to true initially
+    (.set sieve 0 (inc n))
+
+    ;; 0 and 1 are not prime
+    (.clear sieve 0)
+    (.clear sieve 1)
+
+    (doseq [x (range 2 (inc (int (Math/sqrt n))))]
+      (doseq [i (range 2 (inc (quot n x)))]
+        (.clear sieve (* x i))))
+    
+    (filter #(.get sieve %) (range 2 n))))
+```
