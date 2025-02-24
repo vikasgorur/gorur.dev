@@ -39,7 +39,7 @@ My notes on papers and articles I've read.
 
 These are programs I write solely to understand something and maybe help another human understand it.
 
-<span class="pub-date">2025-02-21</span> [Project Euler problems](programs-for-humans/project-euler.qmd)</span> \
+<span class="pub-date">2025-02-21</span> [Project Euler: first 100 problems](programs-for-humans/project-euler.qmd)</span> \
 <span class="pub-date">2024-12-22</span> [Cryptopals: Set 1](programs-for-humans/cryptopals-set1.qmd)</span> \
 <span class="pub-date">2024-12-09</span> [Advent of Code 2024 (Clojure)](programs-for-humans/advent-of-code-2024.qmd)
 
