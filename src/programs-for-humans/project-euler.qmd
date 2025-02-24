@@ -1,5 +1,5 @@
 ---
-title: Project Euler problems
+title: Project Euler: first 100 problems
 toc: true
 ---
 Last updated: _Feb 24, 2025_.
