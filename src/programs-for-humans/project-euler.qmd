@@ -152,6 +152,8 @@ by imagining adding up the days for each month starting from 1901.
 <span class="eval-result">171</span>
 
 ## Problem 21
+_Difficulty: 5%_
+
 > Let $d(n)$ be the sum of all proper divisors of $n$ (numbers less than $n$ that divide $n$).
 > If $d(b) = a$ and $d(a) = b$ while $a \ne b$, then both $a$ and $b$ are called amicable numbers.
 > Find the sum of all amicable numbers under 10000.
