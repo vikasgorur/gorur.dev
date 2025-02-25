@@ -634,7 +634,7 @@
     "href": "programs-for-humans/project-euler.html#helpers",
     "title": "Project Euler - first 100 problems",
     "section": "Helpers",
-    "text": "Helpers\nThese are helper functions used across problems.\nSince many of the problems deal with prime numbers, let’s write the Sieve of Eratosthenes to generate all prime numbers below \\(n\\).\n(defn sieve-of-eratosthenes\n  [n]\n  (let [sieve (BitSet. (inc n))]\n    ;; Set all bits to true initially\n    (.set sieve 0 (inc n))\n\n    ;; 0 and 1 are not prime\n    (.clear sieve 0)\n    (.clear sieve 1)\n\n    (doseq [x (range 2 (inc (int (Math/sqrt n))))]\n      (doseq [i (range 2 (inc (quot n x)))]\n        (.clear sieve (* x i))))\n    \n    (filter #(.get sieve %) (range 2 n))))"
+    "text": "Helpers\nThese are helper functions used across problems.\nSince many of the problems deal with prime numbers, let’s write the Sieve of Eratosthenes to generate all prime numbers below \\(n\\).\n(defn sieve-of-eratosthenes\n  [n]\n  (let [sieve (BitSet. (inc n))]\n    ;; Set all bits to true initially\n    (.set sieve 0 (inc n))\n\n    ;; 0 and 1 are not prime\n    (.clear sieve 0)\n    (.clear sieve 1)\n\n    (doseq [x (range 2 (inc (int (Math/sqrt n))))]\n      (doseq [i (range 2 (inc (quot n x)))]\n        (.clear sieve (* x i))))\n\n    (filter #(.get sieve %) (range 2 n))))"
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-7",
@@ -642,5 +642,19 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 7",
     "text": "Problem 7\nDifficulty: 5%\n\nWhat is the 10,001st prime number?\n\nAs a consequence of the Prime Number Theorem (wiki), the \\(N\\)th prime is approximately\n\\[N \\ ln(N)\\]\nSo we’ll generate all primes upto a little more than that number and pick out the 10,001st one.\n(let [N 10001\n      approx-nth-prime (* N (Math/log N))]\n      (nth (primes/sieve-of-eratosthenes\n            (int (* 1.2 approx-nth-prime)))\n           (dec N)))\n104743"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-19",
+    "href": "programs-for-humans/project-euler.html#problem-19",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 19",
+    "text": "Problem 19\nDifficulty: 5%\n\nHow many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?\n\nFirst we need the definition of a leap year:\n(defn is-leap-year? [y]\n  (let [four (zero? (mod y 4))\n        hundred (zero? (mod y 100))\n        four-hundred (zero? (mod y 400))]\n    (or (and four (not hundred))\n        (and four hundred four-hundred))))\n(map is-leap-year? [1900 1996 2000]) (false true true)\nThen we need the number of days in any month of any year:\n(defn days-in-month [m y]\n  (case m\n    1 31\n    2 (if (is-leap-year? y) 29 28)\n    3 31\n    4 30\n    5 31\n    6 30\n    7 31\n    8 31\n    9 30\n    10 31\n    11 30\n    12 31))\nIdiomatic Clojure style is to write immutable code. But I find this problem easier to solve by imagining adding up the days for each month starting from 1901.\n(let [day (atom 2)      ;; Jan 1 1901 was a Tuesday\n      result (atom 0)]  \n\n  (doseq [year (range 1901 2001)\n          month (range 1 13)]\n    (reset! day (mod (+ @day (days-in-month month year)) 7))\n    (when (zero? @day)\n      (println year month)\n      (swap! result inc)))\n  @result)\n171"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-21",
+    "href": "programs-for-humans/project-euler.html#problem-21",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 21",
+    "text": "Problem 21\n\nLet \\(d(n)\\) be the sum of all proper divisors of \\(n\\) (numbers less than \\(n\\) that divide \\(n\\)). If \\(d(b) = a\\) and \\(d(a) = b\\) while \\(a \\ne b\\), then both \\(a\\) and \\(b\\) are called amicable numbers. Find the sum of all amicable numbers under 10000.\n\nWe sum the proper divisors of a number by brute force.\n(defn sum-proper-divisors\n  \"Returns the sum of all divisors of n, excluding n itself\"\n  [n]\n  (-&gt;&gt; (range 1 (inc (Math/ceil (/ n 2))))\n       (filter #(= (mod n %) 0))\n       (reduce + 0)))\nDefine an amicable number.\n(defn amicable? [a]\n  (let [b (sum-proper-divisors a)]\n    (and (not= a b)\n         (= (sum-proper-divisors b) a))))\nCheck each number under 10000.\n(-&gt;&gt; (range 2 10001)\n     (filter amicable?)\n     (reduce + 0))\n31626"
   }
 ]

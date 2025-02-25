@@ -94,6 +94,98 @@ So we'll generate all primes upto a little more than that number and pick out th
 
 <span class="eval-result">104743</span>
 
+## Problem 19
+_Difficulty: 5%_
+
+> How many Sundays fell on the first of the month during
+> the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
+First we need the definition of a leap year:
+
+```clojure
+(defn is-leap-year? [y]
+  (let [four (zero? (mod y 4))
+        hundred (zero? (mod y 100))
+        four-hundred (zero? (mod y 400))]
+    (or (and four (not hundred))
+        (and four hundred four-hundred))))
+```
+
+<span class="eval">(map is-leap-year? [1900 1996 2000])</span>
+<span class="eval-result">(false true true)</span>
+
+Then we need the number of days in any month of any year:
+
+```clojure
+(defn days-in-month [m y]
+  (case m
+    1 31
+    2 (if (is-leap-year? y) 29 28)
+    3 31
+    4 30
+    5 31
+    6 30
+    7 31
+    8 31
+    9 30
+    10 31
+    11 30
+    12 31))
+```
+
+Idiomatic Clojure style is to write immutable code. But I find this problem easier to solve
+by imagining adding up the days for each month starting from 1901.
+
+```clojure
+(let [day (atom 2)      ;; Jan 1 1901 was a Tuesday
+      result (atom 0)]  
+
+  (doseq [year (range 1901 2001)
+          month (range 1 13)]
+    (reset! day (mod (+ @day (days-in-month month year)) 7))
+    (when (zero? @day)
+      (println year month)
+      (swap! result inc)))
+  @result)
+```
+
+<span class="eval-result">171</span>
+
+## Problem 21
+> Let $d(n)$ be the sum of all proper divisors of $n$ (numbers less than $n$ that divide $n$).
+> If $d(b) = a$ and $d(a) = b$ while $a \ne b$, then both $a$ and $b$ are called amicable numbers.
+> Find the sum of all amicable numbers under 10000.
+
+We sum the proper divisors of a number by brute force.
+
+```clojure
+(defn sum-proper-divisors
+  "Returns the sum of all divisors of n, excluding n itself"
+  [n]
+  (->> (range 1 (inc (Math/ceil (/ n 2))))
+       (filter #(= (mod n %) 0))
+       (reduce + 0)))
+```
+
+Define an amicable number.
+
+```clojure
+(defn amicable? [a]
+  (let [b (sum-proper-divisors a)]
+    (and (not= a b)
+         (= (sum-proper-divisors b) a))))
+```
+
+Check each number under 10000.
+
+```clojure
+(->> (range 2 10001)
+     (filter amicable?)
+     (reduce + 0))
+```
+
+<span class="eval-result">31626</span>
+
 ## Problem 65
 _Difficulty: 15%_
 
@@ -101,7 +193,7 @@ _Difficulty: 15%_
 > $e$ can be written as the continued fraction
 > $[2; 1, 2, 1, 1, 4, 1, 1, 6, 1, ... , 1, 2k, 1, ...]$
 >
-> The $n$th "convergent" of a continued fraction is the result of 
+> The $n$th "convergent" of a continued fraction is the result of
 > summing it upto $n$ terms. Find the sum of the digits in the
 > numerator of the 100th convergent of the fraction for $e$.
 
@@ -168,6 +260,6 @@ generate all prime numbers below $n$.
     (doseq [x (range 2 (inc (int (Math/sqrt n))))]
       (doseq [i (range 2 (inc (quot n x)))]
         (.clear sieve (* x i))))
-    
+
     (filter #(.get sieve %) (range 2 n))))
 ```

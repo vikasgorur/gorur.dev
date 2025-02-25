@@ -61,7 +61,73 @@
 ;; ## Problem 7
 ;;
 ;; Difficulty: 5%
+(let [N 10001
+      approx-nth-prime (* N (Math/log N))]
+  (nth (primes/sieve-of-eratosthenes
+        (int (* 1.2 approx-nth-prime)))
+       (dec N)))
 
+;;=> 104743
+
+;; ## Problem 19
+;; How many Sundays fell on the first of the month during
+;; the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
+(defn days-in-month [m y]
+  (case m
+    1 31
+    2 (if (is-leap-year? y) 29 28)
+    3 31
+    4 30
+    5 31
+    6 30
+    7 31
+    8 31
+    9 30
+    10 31
+    11 30
+    12 31))
+
+(defn is-leap-year? [y]
+  (let [four (zero? (mod y 4))
+        hundred (zero? (mod y 100))
+        four-hundred (zero? (mod y 400))]
+    (or (and four (not hundred))
+        (and four hundred four-hundred))))
+
+(map is-leap-year? [1900 1996 2000])
+;;=> (false true true)
+
+(let [day (atom 2)      ;; Jan 1 1901 was a Tuesday
+      result (atom 0)]  
+
+  (doseq [year (range 1901 2001)
+          month (range 1 13)]
+    (reset! day (mod (+ @day (days-in-month month year)) 7))
+    (when (zero? @day)
+      (println year month)
+      (swap! result inc)))
+  @result)
+;;=> 171
+
+;; ## Problem 21 - Amicable numbers
+
+(defn sum-proper-divisors
+  "Returns the sum of all divisors of n, excluding n itself"
+  [n]
+  (->> (range 1 (inc (Math/ceil (/ n 2))))
+       (filter #(= (mod n %) 0))
+       (reduce + 0)))
+
+(defn amicable? [a]
+  (let [b (sum-proper-divisors a)]
+    (and (not= a b)
+         (= (sum-proper-divisors b) a))))
+
+(->> (range 2 10001)
+     (filter amicable?)
+     (reduce + 0))
+;;=> 31626
 
 ;; ## Problem 65
 ;; Difficulty: 15%
@@ -103,16 +169,6 @@
                (str (numerator (+ 2 (sum-terms (e-terms 99)))))))
 ;;=> 272
 
-;; ## Problem 7
-;; What is the 10001st prime number?
-
-(let [N 10001
-      approx-nth-prime (* N (Math/log N))]
-      (nth (primes/sieve-of-eratosthenes
-            (int (* 1.2 approx-nth-prime)))
-           (dec N)))
-
-;;=> 104743
 
 
 

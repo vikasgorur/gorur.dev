@@ -176,6 +176,8 @@ window.Quarto = {
   <li><a href="#problem-3" id="toc-problem-3" class="nav-link" data-scroll-target="#problem-3">Problem 3</a></li>
   <li><a href="#problem-6" id="toc-problem-6" class="nav-link" data-scroll-target="#problem-6">Problem 6</a></li>
   <li><a href="#problem-7" id="toc-problem-7" class="nav-link" data-scroll-target="#problem-7">Problem 7</a></li>
+  <li><a href="#problem-19" id="toc-problem-19" class="nav-link" data-scroll-target="#problem-19">Problem 19</a></li>
+  <li><a href="#problem-21" id="toc-problem-21" class="nav-link" data-scroll-target="#problem-21">Problem 21</a></li>
   <li><a href="#problem-65" id="toc-problem-65" class="nav-link" data-scroll-target="#problem-65">Problem 65</a></li>
   <li><a href="#helpers" id="toc-helpers" class="nav-link" data-scroll-target="#helpers">Helpers</a></li>
   </ul>
@@ -277,6 +279,71 @@ window.Quarto = {
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>           (<span class="kw">dec</span> N)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">104743</span></p>
 </section>
+<section id="problem-19" class="level2">
+<h2 class="anchored" data-anchor-id="problem-19">Problem 19</h2>
+<p><em>Difficulty: 5%</em></p>
+<blockquote class="blockquote">
+<p>How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?</p>
+</blockquote>
+<p>First we need the definition of a leap year:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> is-leap-year? </span>[y]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [four (<span class="kw">zero?</span> (<span class="kw">mod</span> y <span class="dv">4</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        hundred (<span class="kw">zero?</span> (<span class="kw">mod</span> y <span class="dv">100</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        four-hundred (<span class="kw">zero?</span> (<span class="kw">mod</span> y <span class="dv">400</span>))]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">or</span> (<span class="kw">and</span> four (<span class="kw">not</span> hundred))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">and</span> four hundred four-hundred))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval">(map is-leap-year? [1900 1996 2000])</span> <span class="eval-result">(false true true)</span></p>
+<p>Then we need the number of days in any month of any year:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> days-in-month </span>[m y]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">case</span> m</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span> <span class="dv">31</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span> (<span class="kw">if</span> (is-leap-year? y) <span class="dv">29</span> <span class="dv">28</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span> <span class="dv">31</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">4</span> <span class="dv">30</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span> <span class="dv">31</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">6</span> <span class="dv">30</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">7</span> <span class="dv">31</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">8</span> <span class="dv">31</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="dv">9</span> <span class="dv">30</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="dv">10</span> <span class="dv">31</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="dv">11</span> <span class="dv">30</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="dv">12</span> <span class="dv">31</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Idiomatic Clojure style is to write immutable code. But I find this problem easier to solve by imagining adding up the days for each month starting from 1901.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [day (<span class="kw">atom</span> <span class="dv">2</span>)      <span class="co">;; Jan 1 1901 was a Tuesday</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>      result (<span class="kw">atom</span> <span class="dv">0</span>)]  </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">doseq</span> [year (<span class="kw">range</span> <span class="dv">1901</span> <span class="dv">2001</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>          month (<span class="kw">range</span> <span class="dv">1</span> <span class="dv">13</span>)]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">reset!</span> day (<span class="kw">mod</span> (<span class="kw">+</span> <span class="at">@day</span> (days-in-month month year)) <span class="dv">7</span>))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">when</span> (<span class="kw">zero?</span> <span class="at">@day</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">println</span> year month)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">swap!</span> result <span class="kw">inc</span>)))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">@result</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">171</span></p>
+</section>
+<section id="problem-21" class="level2">
+<h2 class="anchored" data-anchor-id="problem-21">Problem 21</h2>
+<blockquote class="blockquote">
+<p>Let <span class="math inline">\(d(n)\)</span> be the sum of all proper divisors of <span class="math inline">\(n\)</span> (numbers less than <span class="math inline">\(n\)</span> that divide <span class="math inline">\(n\)</span>). If <span class="math inline">\(d(b) = a\)</span> and <span class="math inline">\(d(a) = b\)</span> while <span class="math inline">\(a \ne b\)</span>, then both <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are called amicable numbers. Find the sum of all amicable numbers under 10000.</p>
+</blockquote>
+<p>We sum the proper divisors of a number by brute force.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sum-proper-divisors</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Returns the sum of all divisors of n, excluding n itself"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  [n]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">-&gt;&gt;</span> (<span class="kw">range</span> <span class="dv">1</span> (<span class="kw">inc</span> (Math/ceil (<span class="kw">/</span> n <span class="dv">2</span>))))</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">filter</span> #(<span class="kw">=</span> (<span class="kw">mod</span> n <span class="va">%</span>) <span class="dv">0</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>       (<span class="kw">reduce</span> <span class="kw">+</span> <span class="dv">0</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Define an amicable number.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> amicable? </span>[a]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [b (sum-proper-divisors a)]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">and</span> (<span class="kw">not=</span> a b)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>         (<span class="kw">=</span> (sum-proper-divisors b) a))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Check each number under 10000.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;&gt;</span> (<span class="kw">range</span> <span class="dv">2</span> <span class="dv">10001</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">filter</span> amicable?)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">reduce</span> <span class="kw">+</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">31626</span></p>
+</section>
 <section id="problem-65" class="level2">
 <h2 class="anchored" data-anchor-id="problem-65">Problem 65</h2>
 <p><em>Difficulty: 15%</em></p>
@@ -285,47 +352,47 @@ window.Quarto = {
 <p>The <span class="math inline">\(n\)</span>th “convergent” of a continued fraction is the result of summing it upto <span class="math inline">\(n\)</span> terms. Find the sum of the digits in the numerator of the 100th convergent of the fraction for <span class="math inline">\(e\)</span>.</p>
 </blockquote>
 <p>First we write a generic function to sum the first <span class="math inline">\(n\)</span> terms of a continued fraction.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sum-terms</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  [xs]</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">empty?</span> xs)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">/</span> <span class="dv">1</span> (<span class="kw">+</span> (<span class="kw">first</span> xs) (sum-terms (<span class="kw">rest</span> xs))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sum-terms</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  [xs]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">empty?</span> xs)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">/</span> <span class="dv">1</span> (<span class="kw">+</span> (<span class="kw">first</span> xs) (sum-terms (<span class="kw">rest</span> xs))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can test that it works by computing <span class="math inline">\(\sqrt{2}\)</span> upto 10 terms.</p>
 <p><span class="eval">(float (+ 1 (sum-terms (repeat 9 2))))</span> <span class="eval-result">1.4142137</span></p>
 <p>The fraction for <span class="math inline">\(e\)</span> is slightly more complicated because the <span class="math inline">\(k\)</span>th term can be either <span class="math inline">\(2k\)</span> or <span class="math inline">\(1\)</span>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> e-terms</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first n terms of the continued fraction for e"</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  [n]</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">take</span> n (<span class="kw">map</span> (<span class="kw">fn</span> [k]</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">case</span> (<span class="kw">mod</span> k <span class="dv">3</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">0</span> <span class="dv">1</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">1</span> (<span class="kw">*</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> k <span class="dv">3</span>)))</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">2</span> <span class="dv">1</span>))</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">range</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> e-terms</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first n terms of the continued fraction for e"</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  [n]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">take</span> n (<span class="kw">map</span> (<span class="kw">fn</span> [k]</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">case</span> (<span class="kw">mod</span> k <span class="dv">3</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">0</span> <span class="dv">1</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">1</span> (<span class="kw">*</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> k <span class="dv">3</span>)))</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">2</span> <span class="dv">1</span>))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">range</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now sum the first 100 terms and compute the sum of the digits of the numerator.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">map</span> #(Character/digit <span class="va">%</span> <span class="dv">10</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">str</span> (numerator (<span class="kw">+</span> <span class="dv">2</span> (sum-terms (e-terms <span class="dv">99</span>)))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">map</span> #(Character/digit <span class="va">%</span> <span class="dv">10</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">str</span> (numerator (<span class="kw">+</span> <span class="dv">2</span> (sum-terms (e-terms <span class="dv">99</span>)))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">272</span></p>
 </section>
 <section id="helpers" class="level2">
 <h2 class="anchored" data-anchor-id="helpers">Helpers</h2>
 <p>These are helper functions used across problems.</p>
 <p>Since many of the problems deal with prime numbers, let’s write the Sieve of Eratosthenes to generate all prime numbers below <span class="math inline">\(n\)</span>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sieve-of-eratosthenes</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  [n]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [sieve (BitSet. (<span class="kw">inc</span> n))]</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; Set all bits to true initially</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    (.<span class="kw">set</span> sieve <span class="dv">0</span> (<span class="kw">inc</span> n))</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; 0 and 1 are not prime</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">0</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">1</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">doseq</span> [x (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">int</span> (Math/sqrt n))))]</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">doseq</span> [i (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> n x)))]</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        (.clear sieve (<span class="kw">*</span> x i))))</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">filter</span> #(.<span class="kw">get</span> sieve <span class="va">%</span>) (<span class="kw">range</span> <span class="dv">2</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sieve-of-eratosthenes</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  [n]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [sieve (BitSet. (<span class="kw">inc</span> n))]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; Set all bits to true initially</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    (.<span class="kw">set</span> sieve <span class="dv">0</span> (<span class="kw">inc</span> n))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; 0 and 1 are not prime</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">0</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">1</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">doseq</span> [x (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">int</span> (Math/sqrt n))))]</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">doseq</span> [i (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> n x)))]</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        (.clear sieve (<span class="kw">*</span> x i))))</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">filter</span> #(.<span class="kw">get</span> sieve <span class="va">%</span>) (<span class="kw">range</span> <span class="dv">2</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
