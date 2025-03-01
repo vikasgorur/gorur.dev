@@ -1,5 +1,6 @@
 (ns euler-1
-  (:require [primes]))
+  (:require [primes]
+            [clojure.core :as core]))
 
 ;; # Project Euler
 ;;
@@ -42,7 +43,21 @@
        first))
 ;;=> 6857
 
-(quot 13195 5)
+;; ## Problem 4
+
+(defn is-palindrome? [x]
+  (let [xstr (Integer/toString x)]
+    (= (map char xstr) (reverse xstr))))
+
+(is-palindrome? 99)
+
+(->> (for [a (range 100 1000)
+           b (range 100 1000)
+           :when (is-palindrome? (* a b))]
+       (* a b))
+     sort
+     last)
+;;=> 906609
 
 ;; ## Problem 6
 ;; Difficulty: 5%
@@ -69,9 +84,37 @@
 
 ;;=> 104743
 
+;; ## Problem 9
+;; Find the one Pythagorean triplet for which a + b + c = 1000
+(defn is-pythagorean? [v]
+  (let [[a b c] (sort v)]
+    (= (* c c)
+       (+ (* a a) (* b b)))))
+
+(->> (for [c (range 1 1000)
+           :let [aplusb (- 1000 c)]]
+       (for [a (range 1 aplusb)
+             :let [b (- aplusb a)]
+             :when (and (distinct? a b c)
+                        (is-pythagorean? (vector a b c)))]
+         (sort [a b c])))
+     (mapcat identity)
+     distinct
+     first
+     (reduce * 1))
+;;=> 31875000
+;;=> (200 375 425)
+
 ;; ## Problem 19
 ;; How many Sundays fell on the first of the month during
 ;; the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+
+(defn is-leap-year? [y]
+  (let [four (zero? (mod y 4))
+        hundred (zero? (mod y 100))
+        four-hundred (zero? (mod y 400))]
+    (or (and four (not hundred))
+        (and four hundred four-hundred))))
 
 (defn days-in-month [m y]
   (case m
@@ -87,13 +130,6 @@
     10 31
     11 30
     12 31))
-
-(defn is-leap-year? [y]
-  (let [four (zero? (mod y 4))
-        hundred (zero? (mod y 100))
-        four-hundred (zero? (mod y 400))]
-    (or (and four (not hundred))
-        (and four hundred four-hundred))))
 
 (map is-leap-year? [1900 1996 2000])
 ;;=> (false true true)
@@ -169,8 +205,12 @@
                (str (numerator (+ 2 (sum-terms (e-terms 99)))))))
 ;;=> 272
 
+;; Problem 54
+;; Who wins the poker hands?
 
-
+;; A hand is a vector [rank suite]
+(def RANKS [:2 :3 :4 :5 :6 :7 :8 :9 :T :J :Q :K :A])
+(def SUITES #{:H :D :S :C})
 
 
 

@@ -55,6 +55,31 @@ We'll just brute force all primes below $\sqrt{N}$ and try them as divisors.
 ```
 <span class="eval-result">6857</span>
 
+## Problem 4
+_Difficulty: 5%_
+
+> Find the largest palindrome made from the product of two 3-digit numbers.
+
+We write a function to check if an integer is a palindrome.
+
+```clojure
+(defn is-palindrome? [x]
+  (let [xstr (Integer/toString x)]
+    (= (map char xstr) (reverse xstr))))
+```
+
+Run through all $a \times b$ where $a, b \in [100, 999]$.
+
+```clojure
+(->> (for [a (range 100 1000)
+           b (range 100 1000)
+           :when (is-palindrome? (* a b))]
+       (* a b))
+     sort
+     last)
+```
+<span class="eval-result">906609</span>
+
 ## Problem 6
 _Difficulty: 5%_
 
@@ -93,6 +118,38 @@ So we'll generate all primes upto a little more than that number and pick out th
 ```
 
 <span class="eval-result">104743</span>
+
+## Problem 9
+_Difficulty: 5%_
+
+> Find the one Pythagorean triplet for which $a + b + c = 1000$.
+
+We first write a function to check if a triplet is Pythagorean ($a^2 + b^2 = c^2$).
+
+```clojure
+(defn is-pythagorean? [v]
+  (let [[a b c] (sort v)]
+    (= (* c c)
+       (+ (* a a) (* b b)))))
+```
+
+```clojure
+(->> (for [c (range 1 1000)
+           :let [aplusb (- 1000 c)]]
+       (for [a (range 1 aplusb)
+             :let [b (- aplusb a)]
+             :when (and (distinct? a b c)
+                        (is-pythagorean? (vector a b c)))]
+         (sort [a b c])))
+     (mapcat identity)
+     distinct
+     first
+     (reduce * 1))
+```
+
+<span class="eval-result">31875000</span>
+
+The triplet is `(200 375 425)`.
 
 ## Problem 19
 _Difficulty: 5%_

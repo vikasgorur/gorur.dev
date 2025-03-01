@@ -656,5 +656,19 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 21",
     "text": "Problem 21\nDifficulty: 5%\n\nLet \\(d(n)\\) be the sum of all proper divisors of \\(n\\) (numbers less than \\(n\\) that divide \\(n\\)). If \\(d(b) = a\\) and \\(d(a) = b\\) while \\(a \\ne b\\), then both \\(a\\) and \\(b\\) are called amicable numbers. Find the sum of all amicable numbers under 10000.\n\nWe sum the proper divisors of a number by brute force.\n(defn sum-proper-divisors\n  \"Returns the sum of all divisors of n, excluding n itself\"\n  [n]\n  (-&gt;&gt; (range 1 (inc (Math/ceil (/ n 2))))\n       (filter #(= (mod n %) 0))\n       (reduce + 0)))\nDefine an amicable number.\n(defn amicable? [a]\n  (let [b (sum-proper-divisors a)]\n    (and (not= a b)\n         (= (sum-proper-divisors b) a))))\nCheck each number under 10000.\n(-&gt;&gt; (range 2 10001)\n     (filter amicable?)\n     (reduce + 0))\n31626"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-9",
+    "href": "programs-for-humans/project-euler.html#problem-9",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 9",
+    "text": "Problem 9\nDifficulty: 5%\n\nFind the one Pythagorean triplet for which \\(a + b + c = 1000\\).\n\nWe first write a function to check if a triplet is Pythagorean (\\(a^2 + b^2 = c^2\\)).\n(defn is-pythagorean? [v]\n  (let [[a b c] (sort v)]\n    (= (* c c)\n       (+ (* a a) (* b b)))))\n(-&gt;&gt; (for [c (range 1 1000)\n           :let [aplusb (- 1000 c)]]\n       (for [a (range 1 aplusb)\n             :let [b (- aplusb a)]\n             :when (and (distinct? a b c)\n                        (is-pythagorean? (vector a b c)))]\n         (sort [a b c])))\n     (mapcat identity)\n     distinct\n     first\n     (reduce * 1))\n31875000\nThe triplet is (200 375 425)."
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-4",
+    "href": "programs-for-humans/project-euler.html#problem-4",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 4",
+    "text": "Problem 4\nDifficulty: 5%\n\nFind the largest palindrome made from the product of two 3-digit numbers.\n\nWe write a function to check if an integer is a palindrome.\n(defn is-palindrome? [x]\n  (let [xstr (Integer/toString x)]\n    (= (map char xstr) (reverse xstr))))\nRun through all \\(a \\times b\\) where \\(a, b \\in [100, 999]\\).\n(-&gt;&gt; (for [a (range 100 1000)\n           b (range 100 1000)\n           :when (is-palindrome? (* a b))]\n       (* a b))\n     sort\n     last)\n906609"
   }
 ]
