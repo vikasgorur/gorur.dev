@@ -53,7 +53,7 @@
     "href": "index.html#annotations",
     "title": "Vikas Gorur",
     "section": "Annotations",
-    "text": "Annotations\nMy notes on papers and articles I’ve read.\n2025-01-18 Programming as Theory Building\n2024-11-27 Why Machines Learn (book)\n2024-10-07 History of Language Modeling"
+    "text": "Annotations\nMy notes on papers and articles I’ve read.\n2025-03-01 Deep Dive into LLMs like ChatGPT (Karpathy)\n2025-01-18 Programming as Theory Building\n2024-11-27 Why Machines Learn (book)\n2024-10-07 History of Language Modeling"
   },
   {
     "objectID": "posts/learning-by-gradient-descent.html",
@@ -592,7 +592,7 @@
     "href": "programs-for-humans/project-euler.html",
     "title": "Project Euler - first 100 problems",
     "section": "",
-    "text": "Last updated: Feb 24, 2025.\nMy solutions to the problems from Project Euler."
+    "text": "Last updated: Mar 1, 2025.\nMy solutions to the problems from Project Euler."
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-1",
@@ -670,5 +670,12 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 4",
     "text": "Problem 4\nDifficulty: 5%\n\nFind the largest palindrome made from the product of two 3-digit numbers.\n\nWe write a function to check if an integer is a palindrome.\n(defn is-palindrome? [x]\n  (let [xstr (Integer/toString x)]\n    (= (map char xstr) (reverse xstr))))\nRun through all \\(a \\times b\\) where \\(a, b \\in [100, 999]\\).\n(-&gt;&gt; (for [a (range 100 1000)\n           b (range 100 1000)\n           :when (is-palindrome? (* a b))]\n       (* a b))\n     sort\n     last)\n906609"
+  },
+  {
+    "objectID": "annotations/deep-dive-into-llms.html",
+    "href": "annotations/deep-dive-into-llms.html",
+    "title": "Deep Dive into LLMs (Karpathy)",
+    "section": "",
+    "text": "These are my notes on Andrej Karpathy (2025). There isn’t a lot of new information in this video if you’re already familiar with LLMs, but Karpathy’s presentation always makes it worth watching. This video was a good refresher on the fundamentals.\nGathering data.\nLLMs are trained on a dataset derived from the whole internet. The FineWeb dataset is a representative example of such data. FineWeb has 15 trillion tokens and takes up 51 TB.\nA dataset like this is generated from sources like CommonCrawl. There are many filtering, deduplication, language selection (e.g., 60% English), cleanup (PII) steps involved.\nTokenization.\nThe raw text is converted to tokens using byte-pair encoding. This algorithm repeatedly replaces the most common byte/token pair with a new token. This is done until the desired vocabulary size is reached. GPT4 for example has a vocabulary size of 100,277. The process of tokenization can be visualized on the Tiktokenizer site.\nNeural network training.\nThe input to the neural network is the context window of text, for example 8192 tokens. The output is a prediction of the next token. This prediction is expressed as a probability for each of the possible tokens (the entire vocabulary) to be the next token. Inference is simply sampling from this probability distribution.\nThe structure of LLMs can be visualized on this tool.\nGPT-2.\nThis is the first “recognizably modern” LLM. It had 1.6B parameters, trained on 100B tokens, with a 1024 token context. The llm.c repo implements the entire training code in ~1200 lines of C. GPT-2 originally took $40,000 to train but now can be done with hundreds of dollars on rented Nvidia GPUs.\n\n\n\n\nReferences\n\nAndrej Karpathy. 2025. “Deep Dive into LLMs Like ChatGPT.” https://www.youtube.com/watch?v=7xTGNNLPyMI."
   }
 ]

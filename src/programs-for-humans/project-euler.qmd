@@ -2,7 +2,7 @@
 title: Project Euler - first 100 problems
 toc: true
 ---
-Last updated: _Feb 24, 2025_.
+Last updated: _Mar 1, 2025_.
 
 My solutions to the problems from [Project Euler](https://projecteuler.net/archives).
 

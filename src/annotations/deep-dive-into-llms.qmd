@@ -1,0 +1,49 @@
+---
+title: Deep Dive into LLMs (Karpathy)
+date: 2025-03-01
+---
+
+These are my notes on @andrejkarpathyDeepDiveLLMs2025. There isn't a lot of new
+information in this video if you're already familiar with LLMs, but Karpathy's
+presentation always makes it worth watching. This video was a good refresher on
+the fundamentals.
+
+**Gathering data**.
+
+LLMs are trained on a dataset derived from the whole internet. The
+[FineWeb](https://huggingface.co/datasets/HuggingFaceFW/fineweb) dataset is a
+representative example of such data. FineWeb has 15 trillion tokens and takes
+up 51 TB.
+
+A dataset like this is generated from sources like
+[CommonCrawl](https://commoncrawl.org/). There are many filtering,
+deduplication, language selection (e.g., 60% English), cleanup (PII) steps
+involved.
+
+**Tokenization**.
+
+The raw text is converted to tokens using byte-pair encoding. This algorithm
+repeatedly replaces the most common byte/token pair with a new token. This is
+done until the desired vocabulary size is reached. GPT4 for example has a
+vocabulary size of 100,277. The process of tokenization can be visualized on
+the [Tiktokenizer](https://tiktokenizer.vercel.app/) site.
+
+**Neural network training**.
+
+The input to the neural network is the _context window_ of text, for example
+8192 tokens. The output is a prediction of the next token. This prediction is
+expressed as a probability for each of the possible tokens (the entire
+vocabulary) to be the next token. Inference is simply sampling from this
+probability distribution.
+
+The structure of LLMs can be visualized on [this tool](https://bbycroft.net/llm).
+
+**GPT-2**.
+
+This is the first "recognizably modern" LLM. It had 1.6B parameters, trained on
+100B tokens, with a 1024 token context. The
+[llm.c](https://github.com/karpathy/llm.c) repo implements the entire training
+code in ~1200 lines of C. GPT-2 originally took \$40,000 to train but now can
+be done with hundreds of dollars on rented Nvidia GPUs.
+
+

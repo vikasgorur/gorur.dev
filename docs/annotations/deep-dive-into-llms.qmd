@@ -1,0 +1,16 @@
+---
+title: Deep Dive into LLMs (Karpathy)
+date: 2025-03-01
+---
+
+These are my notes on @andrejkarpathyDeepDiveLLMs2025. There isn't a lot of new information in this video if you're already familiar with LLMs, but Karpathy's presentation always makes it worth watching. This video was a good refresher on the fundamentals.
+
+**Gathering data**.
+
+LLMs are trained on a dataset derived from the whole internet. The [FineWeb](https://huggingface.co/datasets/HuggingFaceFW/fineweb) dataset is a representative example of such data. FineWeb has 15 trillion tokens and takes up 51 TB.
+
+A dataset like this is generated from sources like [CommonCrawl](https://commoncrawl.org/). There are many filtering, deduplication, language selection (e.g., 60% English), cleanup (PII) steps involved.
+
+**Tokenization**.
+
+

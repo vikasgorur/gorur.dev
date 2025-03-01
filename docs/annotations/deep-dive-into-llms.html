@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2025-03-01">
 
-<title>Vikas Gorur</title>
+<title>Deep Dive into LLMs (Karpathy)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,25 +21,45 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-7fccaa5a4effadb8a2e8cfc8e0465904.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-7fccaa5a4effadb8a2e8cfc8e0465904.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,7 +89,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed fullcontent">
@@ -84,7 +105,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -109,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Vikas Gorur</h1>
+<h1 class="title">Deep Dive into LLMs (Karpathy)</h1>
 </div>
 
 
@@ -117,6 +138,12 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-title-meta">
 
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 1, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -126,55 +153,26 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><img src="mysore.jpeg" alt="A drawing of the Mysore railway station" width="120%" style="margin-left:-10%;"></p>
-<p>Past work: <a href="https://www.airbase.com/">Airbase</a>, Twitter, <a href="https://www.gluster.org">Gluster</a>.</p>
-<section id="machine-learning" class="level2">
-<h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
-<p>This is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.</p>
-<p><span class="pub-date">2025-01-26</span> <a href="./posts/simplest-autoencoder.html">The Simplest Autoencoder</a><br>
-<span class="pub-date">2024-10-18</span> <a href="./posts/path-to-llms.html">Path to LLMs</a><br>
-<span class="pub-date">2024-09-01</span> <a href="./posts/breaking-caesar-cipher.html">Breaking Caesar Ciphers Using Relative Entropy</a><br>
-<span class="pub-date">2024-08-31</span> <a href="./posts/learning-by-gradient-descent.html">Learning by Gradient Descent</a></p>
-</section>
-<section id="applied-math" class="level2">
-<h2 class="anchored" data-anchor-id="applied-math">Applied Math</h2>
-<p><span class="pub-date">2025-01-03</span> <a href="./posts/chessrank.html">Chessrank: Who Should Win a Chess Tournament?</a><br>
-<span class="pub-date">2024-07-24</span> <a href="./posts/counting-is-hard.html">Counting is hard</a></p>
-</section>
-<section id="annotations" class="level2">
-<h2 class="anchored" data-anchor-id="annotations">Annotations</h2>
-<p>My notes on papers and articles I’ve read.</p>
-<p><span class="pub-date">2025-03-01</span> <a href="./annotations/deep-dive-into-llms.html">Deep Dive into LLMs like ChatGPT (Karpathy)</a><br>
-<span class="pub-date">2025-01-18</span> <a href="./annotations/programming-as-theory-building.html">Programming as Theory Building</a><br>
-<span class="pub-date">2024-11-27</span> <a href="./annotations/why-machines-learn.html"><em>Why Machines Learn</em></a> (book)<br>
-<span class="pub-date">2024-10-07</span> <a href="./annotations/history-of-language-models.html">History of Language Modeling</a></p>
-</section>
-<section id="programs-for-humans" class="level2">
-<h2 class="anchored" data-anchor-id="programs-for-humans">Programs for Humans</h2>
-<blockquote class="blockquote">
-<p>Programs must be written for people to read, and only incidentally for machines to execute.</p>
-</blockquote>
-<p>— Abelson &amp; Sussman, <a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-7.html#%_chap_Temp_4">SICP</a>.</p>
-<p>These are programs I write solely to understand something and maybe help another human understand it.</p>
-<p><span class="pub-date">2025-02-21</span> <a href="./programs-for-humans/project-euler.html">Project Euler - first 100 problems</a><br>
-<span class="pub-date">2024-12-22</span> <a href="./programs-for-humans/cryptopals-set1.html">Cryptopals: Set 1</a><br>
-<span class="pub-date">2024-12-09</span> <a href="./programs-for-humans/advent-of-code-2024.html">Advent of Code 2024 (Clojure)</a></p>
-</section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<p><span class="pub-date">2024-11-02</span> <a href="./exercises/stats110-practice1.html">Stats 110: Practice 1</a></p>
-</section>
-<section id="misc" class="level2">
-<h2 class="anchored" data-anchor-id="misc">Misc</h2>
-<p><span class="pub-date">2024-12-14</span> <a href="./posts/mysore-food-guide.html">Mysore Food Guide</a><br>
-<span class="pub-date">2022-04-25</span> <a href="./posts/varieties-of-silence.html">The Varieties of Silence</a><br>
-<span class="pub-date">2021-03-16</span> <a href="./posts/for-a-kannada-movie.html">For A Kannada Movie</a><br>
-<span class="pub-date">2020-04-30</span> <a href="./posts/feature-flags.html">How to do Feature Flag-Driven Development</a></p>
+<p>These are my notes on <span class="citation" data-cites="andrejkarpathyDeepDiveLLMs2025">Andrej Karpathy (<a href="#ref-andrejkarpathyDeepDiveLLMs2025" role="doc-biblioref">2025</a>)</span>. There isn’t a lot of new information in this video if you’re already familiar with LLMs, but Karpathy’s presentation always makes it worth watching. This video was a good refresher on the fundamentals.</p>
+<p><strong>Gathering data</strong>.</p>
+<p>LLMs are trained on a dataset derived from the whole internet. The <a href="https://huggingface.co/datasets/HuggingFaceFW/fineweb">FineWeb</a> dataset is a representative example of such data. FineWeb has 15 trillion tokens and takes up 51 TB.</p>
+<p>A dataset like this is generated from sources like <a href="https://commoncrawl.org/">CommonCrawl</a>. There are many filtering, deduplication, language selection (e.g., 60% English), cleanup (PII) steps involved.</p>
+<p><strong>Tokenization</strong>.</p>
+<p>The raw text is converted to tokens using byte-pair encoding. This algorithm repeatedly replaces the most common byte/token pair with a new token. This is done until the desired vocabulary size is reached. GPT4 for example has a vocabulary size of 100,277. The process of tokenization can be visualized on the <a href="https://tiktokenizer.vercel.app/">Tiktokenizer</a> site.</p>
+<p><strong>Neural network training</strong>.</p>
+<p>The input to the neural network is the <em>context window</em> of text, for example 8192 tokens. The output is a prediction of the next token. This prediction is expressed as a probability for each of the possible tokens (the entire vocabulary) to be the next token. Inference is simply sampling from this probability distribution.</p>
+<p>The structure of LLMs can be visualized on <a href="https://bbycroft.net/llm">this tool</a>.</p>
+<p><strong>GPT-2</strong>.</p>
+<p>This is the first “recognizably modern” LLM. It had 1.6B parameters, trained on 100B tokens, with a 1024 token context. The <a href="https://github.com/karpathy/llm.c">llm.c</a> repo implements the entire training code in ~1200 lines of C. GPT-2 originally took $40,000 to train but now can be done with hundreds of dollars on rented Nvidia GPUs.</p>
 
 
-</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-andrejkarpathyDeepDiveLLMs2025" class="csl-entry" role="listitem">
+Andrej Karpathy. 2025. <span>“Deep <span>Dive</span> into <span>LLMs</span> Like <span>ChatGPT</span>.”</span> <a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">https://www.youtube.com/watch?v=7xTGNNLPyMI</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

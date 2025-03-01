@@ -16,6 +16,7 @@ project:
     - posts/chessrank.qmd
     - posts/mysore-food-guide.qmd
     - posts/varieties-of-silence.qmd
+    - annotations/deep-dive-into-llms.qmd
     - annotations/history-of-language-models.qmd
     - annotations/programming-as-theory-building.qmd
     - annotations/why-machines-learn.qmd
