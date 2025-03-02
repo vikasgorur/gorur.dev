@@ -175,6 +175,7 @@ window.Quarto = {
   <li><a href="#problem-2" id="toc-problem-2" class="nav-link" data-scroll-target="#problem-2">Problem 2</a></li>
   <li><a href="#problem-3" id="toc-problem-3" class="nav-link" data-scroll-target="#problem-3">Problem 3</a></li>
   <li><a href="#problem-4" id="toc-problem-4" class="nav-link" data-scroll-target="#problem-4">Problem 4</a></li>
+  <li><a href="#problem-5" id="toc-problem-5" class="nav-link" data-scroll-target="#problem-5">Problem 5</a></li>
   <li><a href="#problem-6" id="toc-problem-6" class="nav-link" data-scroll-target="#problem-6">Problem 6</a></li>
   <li><a href="#problem-7" id="toc-problem-7" class="nav-link" data-scroll-target="#problem-7">Problem 7</a></li>
   <li><a href="#problem-9" id="toc-problem-9" class="nav-link" data-scroll-target="#problem-9">Problem 9</a></li>
@@ -270,6 +271,18 @@ window.Quarto = {
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>     <span class="kw">last</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">906609</span></p>
 </section>
+<section id="problem-5" class="level2">
+<h2 class="anchored" data-anchor-id="problem-5">Problem 5</h2>
+<blockquote class="blockquote">
+<p>What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?</p>
+</blockquote>
+<p>I was happy to solve this with just pen and paper. Let <span class="math inline">\(N\)</span> be the answer we seek. It has to be divisible by every prime and composite number <span class="math inline">\(\le 20\)</span>. But since the composite numbers upto <span class="math inline">\(20\)</span> are themselves just products of primes smaller than themselves, we can write</p>
+<p><span class="math display">\[
+N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^h
+\]</span></p>
+<p>For each prime above, the exponent has to be the highest exponent of that prime that appears in the factorization of any of the numbers <span class="math inline">\(1..20\)</span>. For example, <span class="math inline">\(a = 4\)</span> because <span class="math inline">\(16 = 2^4\)</span> and for <span class="math inline">\(N\)</span> to be divisible by <span class="math inline">\(16\)</span> it must have <span class="math inline">\(2^4\)</span> as a factor. Similarly for <span class="math inline">\(N\)</span> to be divisible by <span class="math inline">\(18\)</span> and <span class="math inline">\(9\)</span> it must have <span class="math inline">\(3^2\)</span> as a factor. By doing this for all the primes we get the answer:</p>
+<p><span class="eval">(* (* 2 2 2 2) (* 3 3) 5 7 11 13 17 19)</span> <span class="eval-result">232792560</span></p>
+</section>
 <section id="problem-6" class="level2">
 <h2 class="anchored" data-anchor-id="problem-6">Problem 6</h2>
 <p><em>Difficulty: 5%</em></p>
@@ -356,7 +369,7 @@ window.Quarto = {
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="dv">12</span> <span class="dv">31</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Idiomatic Clojure style is to write immutable code. But I find this problem easier to solve by imagining adding up the days for each month starting from 1901.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">let</span> [day (<span class="kw">atom</span> <span class="dv">2</span>)      <span class="co">;; Jan 1 1901 was a Tuesday</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>      result (<span class="kw">atom</span> <span class="dv">0</span>)]  </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>      result (<span class="kw">atom</span> <span class="dv">0</span>)]</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">doseq</span> [year (<span class="kw">range</span> <span class="dv">1901</span> <span class="dv">2001</span>)</span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>          month (<span class="kw">range</span> <span class="dv">1</span> <span class="dv">13</span>)]</span>

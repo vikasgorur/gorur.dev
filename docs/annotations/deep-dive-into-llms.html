@@ -164,6 +164,17 @@ div.csl-indent {
 <p>The structure of LLMs can be visualized on <a href="https://bbycroft.net/llm">this tool</a>.</p>
 <p><strong>GPT-2</strong>.</p>
 <p>This is the first “recognizably modern” LLM. It had 1.6B parameters, trained on 100B tokens, with a 1024 token context. The <a href="https://github.com/karpathy/llm.c">llm.c</a> repo implements the entire training code in ~1200 lines of C. GPT-2 originally took $40,000 to train but now can be done with hundreds of dollars on rented Nvidia GPUs.</p>
+<p><strong>Llama 3 and base model inference</strong>.</p>
+<p>A base model is just a “compression of the internet” and they “dream internet pages”. They can’t answer questions. They’ll just start yapping on even simple questions like “what is 2+2?”.</p>
+<p><a href="https://www.hyperbolic.xyz">Hyperbolic</a> is one place to run inference on base models.</p>
+<p>A base model can regurgitate its training data sometimes. For example, if you give it the first sentence of a Wikipedia article it might complete the rest of the article exactly.</p>
+<p>Even a base model can be made useful through in-context learning. For example, if the prompt is 10 pairs of English-Korean word translations, the model will pick up on the pattern and auto-complete the 11th word’s translation. You can also turn a base model into an assistant by giving it a long template of a human/assistant interaction.</p>
+<p><strong>Post-training</strong>.</p>
+<p>The base model is trained with a new dataset to turn it into a conversational assistant. The data used for this will have new special tokens like this:</p>
+<pre><code>&lt;|im_start&gt;user&lt;|im_sep&gt;What's a good name for a baby?&lt;|im_sep&gt;</code></pre>
+<p>where IM = “imaginary monologue”.</p>
+<p>The InstructGPT paper <span class="citation" data-cites="ouyangTrainingLanguageModels2022">Ouyang et al. (<a href="#ref-ouyangTrainingLanguageModels2022" role="doc-biblioref">2022</a>)</span> discusses how this was done for GPT-3. OpenAI hired expert human labelers to write hundreds of thousands of prompts and responses. So when we talk to ChatGPT, it’s useful to think of it as chatting with an “instant simulation” of one of these humans, rather than an omniscient magical “AI”.</p>
+<p>Extensive human labeling is no longer needed. We can now use LLMs themselves to produce the fine-tuning dataset. See <a href="https://github.com/thunlp/UltraChat">UltraChat</a> for an example.</p>
 
 
 
@@ -171,6 +182,9 @@ div.csl-indent {
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-andrejkarpathyDeepDiveLLMs2025" class="csl-entry" role="listitem">
 Andrej Karpathy. 2025. <span>“Deep <span>Dive</span> into <span>LLMs</span> Like <span>ChatGPT</span>.”</span> <a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">https://www.youtube.com/watch?v=7xTGNNLPyMI</a>.
+</div>
+<div id="ref-ouyangTrainingLanguageModels2022" class="csl-entry" role="listitem">
+Ouyang, Long, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L. Wainwright, Pamela Mishkin, Chong Zhang, et al. 2022. <span>“Training Language Models to Follow Instructions with Human Feedback.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.2203.02155">https://doi.org/10.48550/arXiv.2203.02155</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

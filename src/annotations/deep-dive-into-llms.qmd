@@ -46,4 +46,26 @@ This is the first "recognizably modern" LLM. It had 1.6B parameters, trained on
 code in ~1200 lines of C. GPT-2 originally took \$40,000 to train but now can
 be done with hundreds of dollars on rented Nvidia GPUs.
 
+**Llama 3 and base model inference**.
 
+A base model is just a "compression of the internet" and they "dream internet pages". They can't answer questions. They'll just start yapping on even simple questions like "what is 2+2?".
+
+[Hyperbolic](https://www.hyperbolic.xyz) is one place to run inference on base models.
+
+A base model can regurgitate its training data sometimes. For example, if you give it the first sentence of a Wikipedia article it might complete the rest of the article exactly.
+
+Even a base model can be made useful through in-context learning. For example, if the prompt is 10 pairs of English-Korean word translations, the model will pick up on the pattern and auto-complete the 11th word's translation. You can also turn a base model into an assistant by giving it a long template of a human/assistant interaction.
+
+**Post-training**.
+
+The base model is trained with a new dataset to turn it into a conversational assistant. The data used for this will have new special tokens like this:
+
+```
+<|im_start>user<|im_sep>What's a good name for a baby?<|im_sep>
+```
+
+where IM = "imaginary monologue".
+
+The InstructGPT paper @ouyangTrainingLanguageModels2022 discusses how this was done for GPT-3. OpenAI hired expert human labelers to write hundreds of thousands of prompts and responses. So when we talk to ChatGPT, it's useful to think of it as chatting with an "instant simulation" of one of these humans, rather than an omniscient magical "AI".
+
+Extensive human labeling is no longer needed. We can now use LLMs themselves to produce the fine-tuning dataset. See [UltraChat](https://github.com/thunlp/UltraChat) for an example.

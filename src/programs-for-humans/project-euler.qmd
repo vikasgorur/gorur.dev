@@ -80,6 +80,20 @@ Run through all $a \times b$ where $a, b \in [100, 999]$.
 ```
 <span class="eval-result">906609</span>
 
+## Problem 5
+> What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
+
+I was happy to solve this with just pen and paper. Let $N$ be the answer we seek. It has to be divisible by every prime and composite number $\le 20$. But since the composite numbers upto $20$ are themselves just products of primes smaller than themselves, we can write
+
+$$
+N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^h
+$$
+
+For each prime above, the exponent has to be the highest exponent of that prime that appears in the factorization of any of the numbers $1..20$. For example, $a = 4$ because $16 = 2^4$ and for $N$ to be divisible by $16$ it must have $2^4$ as a factor. Similarly for $N$ to be divisible by $18$ and $9$ it must have $3^2$ as a factor. By doing this for all the primes we get the answer:
+
+<span class="eval">(* (* 2 2 2 2) (* 3 3) 5 7 11 13 17 19)</span>
+<span class="eval-result">232792560</span>
+
 ## Problem 6
 _Difficulty: 5%_
 
@@ -195,7 +209,7 @@ by imagining adding up the days for each month starting from 1901.
 
 ```clojure
 (let [day (atom 2)      ;; Jan 1 1901 was a Tuesday
-      result (atom 0)]  
+      result (atom 0)]
 
   (doseq [year (range 1901 2001)
           month (range 1 13)]
