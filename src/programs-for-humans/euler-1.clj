@@ -1,10 +1,29 @@
 (ns euler-1
   (:require [primes]
-            [clojure.core :as core]))
+            [clojure.core :as core]
+            [clojure.string :as str]))
 
 ;; # Project Euler
 ;;
 ;; The first 100 problems.
+
+;; Progress report
+(defn count-solved []
+  (->> (slurp "src/programs-for-humans/project-euler.qmd")
+       str/split-lines
+       (filter #(.startsWith % "## Problem"))
+       count))
+
+(defn hundred-days-progress
+  []
+  (let [today (java.time.LocalDate/now)
+        feb-23 (java.time.LocalDate/of 2025 2 23)
+        days (.until feb-23 today java.time.temporal.ChronoUnit/DAYS)
+        solved (count-solved)]
+    (/ solved days)))
+
+(hundred-days-progress)
+;;=> 11/10
 
 ;; ## Problem 1
 ;; Difficulty: 5%
@@ -59,6 +78,12 @@
      last)
 ;;=> 906609
 
+;; ## Problem 5
+;; What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
+
+(* (* 2 2 2 2) (* 3 3) 5 7 11 13 17 19)
+;;=> 232792560
+
 ;; ## Problem 6
 ;; Difficulty: 5%
 ;;
@@ -83,6 +108,20 @@
        (dec N)))
 
 ;;=> 104743
+
+;; ## Problem 8
+;; Find the thirteen adjacent digits in the 1000-digit
+;; number that have the greatest product. What is the value of this product?
+
+(def INPUT-8 (filter #(not= % \newline)
+                     (slurp "src/code/data/euler-8-input.txt")))
+
+(->> (for [i (range 0 (- (count INPUT-8) 13))]
+       (reduce * 1 (map #(Character/digit % 10)
+                        (take 13 (drop i INPUT-8)))))
+     sort
+     last)
+;;=> 23514624000
 
 ;; ## Problem 9
 ;; Find the one Pythagorean triplet for which a + b + c = 1000

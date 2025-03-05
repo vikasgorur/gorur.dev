@@ -2,7 +2,7 @@
 title: Project Euler - first 100 problems
 toc: true
 ---
-Last updated: _Mar 1, 2025_.
+Last updated: _Mar 5, 2025_.
 
 My solutions to the problems from [Project Euler](https://projecteuler.net/archives).
 
@@ -132,6 +132,27 @@ So we'll generate all primes upto a little more than that number and pick out th
 ```
 
 <span class="eval-result">104743</span>
+
+## Problem 8
+_Difficulty: 5%_
+
+> Find the thirteen adjacent digits in the 1000-digit number that have the greatest product. What is the value
+> of this product?
+
+We slide a 13-digit window across the 1000-digit number, compute each product and pick the maximum.
+
+```clojure
+(def INPUT-8 (filter #(not= % \newline)
+                     (slurp "src/code/data/euler-8-input.txt")))
+
+(->> (for [i (range 0 (- (count INPUT-8) 13))]
+       (reduce * 1 (map #(Character/digit % 10)
+                        (take 13 (drop i INPUT-8)))))
+     sort
+     last)
+```
+
+<span class="eval-result">23514624000</span>
 
 ## Problem 9
 _Difficulty: 5%_

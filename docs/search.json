@@ -592,7 +592,7 @@
     "href": "programs-for-humans/project-euler.html",
     "title": "Project Euler - first 100 problems",
     "section": "",
-    "text": "Last updated: Mar 1, 2025.\nMy solutions to the problems from Project Euler."
+    "text": "Last updated: Mar 5, 2025.\nMy solutions to the problems from Project Euler."
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-1",
@@ -684,5 +684,12 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 5",
     "text": "Problem 5\n\nWhat is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?\n\nI was happy to solve this with just pen and paper. Let \\(N\\) be the answer we seek. It has to be divisible by every prime and composite number \\(\\le 20\\). But since the composite numbers upto \\(20\\) are themselves just products of primes smaller than themselves, we can write\n\\[\nN = 2^a \\cdot 3^b \\cdot 5^c \\cdot 7^d \\cdot 11^e \\cdot 13^f \\cdot 17^g \\cdot 19^h\n\\]\nFor each prime above, the exponent has to be the highest exponent of that prime that appears in the factorization of any of the numbers \\(1..20\\). For example, \\(a = 4\\) because \\(16 = 2^4\\) and for \\(N\\) to be divisible by \\(16\\) it must have \\(2^4\\) as a factor. Similarly for \\(N\\) to be divisible by \\(18\\) and \\(9\\) it must have \\(3^2\\) as a factor. By doing this for all the primes we get the answer:\n(* (* 2 2 2 2) (* 3 3) 5 7 11 13 17 19) 232792560"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-8",
+    "href": "programs-for-humans/project-euler.html#problem-8",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 8",
+    "text": "Problem 8\nDifficulty: 5%\n\nFind the thirteen adjacent digits in the 1000-digit number that have the greatest product. What is the value of this product?\n\nWe slide a 13-digit window across the 1000-digit number, compute each product and pick the maximum.\n(def INPUT-8 (filter #(not= % \\newline)\n                     (slurp \"src/code/data/euler-8-input.txt\")))\n\n(-&gt;&gt; (for [i (range 0 (- (count INPUT-8) 13))]\n       (reduce * 1 (map #(Character/digit % 10)\n                        (take 13 (drop i INPUT-8)))))\n     sort\n     last)\n23514624000"
   }
 ]
