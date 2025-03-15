@@ -186,6 +186,105 @@ We first write a function to check if a triplet is Pythagorean ($a^2 + b^2 = c^2
 
 The triplet is `(200 375 425)`.
 
+## Problem 10
+_Difficulty: 5%_
+
+> Find the sum of all the primes below two million.
+
+<span class="eval">(reduce + 0 (primes/sieve-of-eratosthenes 2000000))</span>
+<span class="eval-result">142913828922</span>
+
+## Problem 17
+_Difficulty: 5%_
+
+> Write out each number 1-1000 (inclusive) as words. For example $342$ = "three hundred and forty-two".
+> Count the total number of letters, excluding spaces and hyphens.
+
+We define all the words needed for this problem.
+
+```clojure
+(def DIGITS
+  {
+   1 "one"
+   2 "two"
+   3 "three" 
+   4 "four"
+   5 "five"
+   6 "six"
+   7 "seven"
+   8 "eight"
+   9 "nine"
+   }
+)
+
+(def TEENS
+  {
+   11 "eleven"
+   12 "twelve"
+   13 "thirteen"
+   14 "fourteen" 
+   15 "fifteen"
+   16 "sixteen"
+   17 "seventeen"
+   18 "eighteen"
+   19 "nineteen"
+  })
+
+(def TENS
+  {
+   10 "ten"
+   20 "twenty"
+   30 "thirty"
+   40 "forty"
+   50 "fifty"
+   60 "sixty"
+   70 "seventy"
+   80 "eighty"
+   90 "ninety"
+  })
+```
+
+Next we define two functions to count the number of letters needed to express the hundreds
+place value and the tens place value parts of a number.
+
+```clojure
+(defn hundreds-count [h]
+  (if (zero? h) 0
+      (+ (count (DIGITS h)) (count "hundred"))))
+
+(defn tens-count [t]
+  (cond 
+    (zero? t) 0                              ;; when t is 0
+    (< t 10) (count (DIGITS t))              ;; single digit numbers
+    (<= 11 t 19) (count (TEENS t))           ;; teen numbers
+    :else (+ (count (TENS (* 10 (quot t 10))))  ;; numbers 20-99
+             (if (zero? (mod t 10))
+               0
+               (count (DIGITS (mod t 10)))))))
+```
+
+When counting the letters for a number, we need to handle the special case of whether
+"and" needs to be included. For example, $342$ = "three hundred and forty-two" but $100$ = "one hundred".
+
+```clojure
+(defn number-in-words-count [x]
+  (let [h (quot x 100)
+        t (mod x 100)
+        and-count (if (and (> h 0) (not (zero? t))) (count "and") 0)]
+    (+ (hundreds-count h) (tens-count t) and-count)))
+```
+
+The last special case to handle is the number $1000$.
+
+```clojure
+(+ (->> (range 1 1000)
+     (map number-in-words-count)
+     (reduce + 0))
+   (count "onethousand"))
+```
+
+<span class="eval-result">21124</span>
+
 ## Problem 19
 _Difficulty: 5%_
 

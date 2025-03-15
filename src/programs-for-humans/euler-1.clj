@@ -1,7 +1,8 @@
-(ns euler-1
-  (:require [primes]
+(ns programs-for-humans.euler-1
+  (:require [programs-for-humans.primes :as primes]
             [clojure.core :as core]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [clojure.set :as set]))
 
 ;; # Project Euler
 ;;
@@ -20,10 +21,10 @@
         feb-23 (java.time.LocalDate/of 2025 2 23)
         days (.until feb-23 today java.time.temporal.ChronoUnit/DAYS)
         solved (count-solved)]
-    (/ solved days)))
+    [solved days]))
 
 (hundred-days-progress)
-;;=> 11/10
+;;=> [14 20]
 
 ;; ## Problem 1
 ;; Difficulty: 5%
@@ -143,6 +144,78 @@
      (reduce * 1))
 ;;=> 31875000
 ;;=> (200 375 425)
+
+;; ## Problem 10
+(reduce + 0 (primes/sieve-of-eratosthenes 2000000))
+;;=> 142913828922
+
+;; ## Problem 17
+
+(def DIGITS
+  {
+   1 "one"
+   2 "two"
+   3 "three" 
+   4 "four"
+   5 "five"
+   6 "six"
+   7 "seven"
+   8 "eight"
+   9 "nine"
+   }
+)
+
+(def TEENS
+  {
+   11 "eleven"
+   12 "twelve"
+   13 "thirteen"
+   14 "fourteen" 
+   15 "fifteen"
+   16 "sixteen"
+   17 "seventeen"
+   18 "eighteen"
+   19 "nineteen"
+  })
+
+(def TENS
+  {
+   10 "ten"
+   20 "twenty"
+   30 "thirty"
+   40 "forty"
+   50 "fifty"
+   60 "sixty"
+   70 "seventy"
+   80 "eighty"
+   90 "ninety"
+  })
+
+(defn hundreds-count [h]
+  (if (zero? h) 0
+      (+ (count (DIGITS h)) (count "hundred"))))
+
+(defn tens-count [t]
+  (cond 
+    (zero? t) 0                              ;; when t is 0
+    (< t 10) (count (DIGITS t))              ;; single digit numbers
+    (<= 11 t 19) (count (TEENS t))           ;; teen numbers
+    :else (+ (count (TENS (* 10 (quot t 10))))  ;; numbers 20-99
+             (if (zero? (mod t 10))
+               0
+               (count (DIGITS (mod t 10)))))))
+
+(defn number-in-words-count [x]
+  (let [h (quot x 100)
+        t (mod x 100)
+        and-count (if (and (> h 0) (not (zero? t))) (count "and") 0)]
+    (+ (hundreds-count h) (tens-count t) and-count)))
+
+(+ (->> (range 1 1000)
+     (map number-in-words-count)
+     (reduce + 0))
+   (count "onethousand"))
+;;=> 21124
 
 ;; ## Problem 19
 ;; How many Sundays fell on the first of the month during

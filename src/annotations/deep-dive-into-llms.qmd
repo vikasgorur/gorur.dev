@@ -69,3 +69,13 @@ where IM = "imaginary monologue".
 The InstructGPT paper @ouyangTrainingLanguageModels2022 discusses how this was done for GPT-3. OpenAI hired expert human labelers to write hundreds of thousands of prompts and responses. So when we talk to ChatGPT, it's useful to think of it as chatting with an "instant simulation" of one of these humans, rather than an omniscient magical "AI".
 
 Extensive human labeling is no longer needed. We can now use LLMs themselves to produce the fine-tuning dataset. See [UltraChat](https://github.com/thunlp/UltraChat) for an example.
+
+**Hallucinations and tool-use**
+
+Hallucinations were a big problem in the models from a couple of years ago, but they can be mitigated now. The mitigation works something like this:
+
+1. Take a random para from Wiki and generate 3 factual questions based on it.
+2. Ask the model these questions and probe its knowledge.
+3. Augment the training data set with examples of model getting things right or wrong, based on what we know about the model's knowledge. So for example if it doesn't know who won the cricket world cup in 1996, add a training example where it says "I don't know" for that particular question.
+
+The second enhancement/mitigation is tool use. Give the model training examples of the form `<SEARCH_START> ... </..>`, indicating that the model should use a tool. During inference, if you see tokens of that form, pause inference and run the tool and insert its output into the context and continue inference.

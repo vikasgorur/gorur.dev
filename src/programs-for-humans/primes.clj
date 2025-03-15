@@ -1,4 +1,4 @@
-(ns primes
+(ns programs-for-humans.primes
   (:import java.util.BitSet))
 
 (defn is-divisible-by-any?
