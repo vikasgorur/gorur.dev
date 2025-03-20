@@ -1,6 +1,11 @@
 (ns programs-for-humans.primes
   (:import java.util.BitSet))
 
+(defn divisors [n]
+  (concat (->> (range 1 (inc (Math/ceil (/ n 2))))
+               (filter #(= (mod n %) 0)))
+          [n]))
+
 (defn is-divisible-by-any?
   "Returns true if x is divisible by any of the ds"
   [x ds]

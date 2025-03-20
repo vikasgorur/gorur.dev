@@ -149,6 +149,19 @@
 (reduce + 0 (primes/sieve-of-eratosthenes 2000000))
 ;;=> 142913828922
 
+;; ## Problem 12
+;; Highly divisible triangular numbers
+
+(defn nth-triangle-number [n]
+  (/ (* n (inc n)) 2))
+
+(loop [i 1]
+  (let [triangle (nth-triangle-number i)
+        div-count (count (primes/divisors triangle))]
+    (if (> div-count 500)
+      triangle
+      (recur (inc i)))))
+
 ;; ## Problem 17
 
 (def DIGITS
