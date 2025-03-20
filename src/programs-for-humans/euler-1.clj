@@ -24,7 +24,7 @@
     [solved days]))
 
 (hundred-days-progress)
-;;=> [14 20]
+;;=> [14 25]
 
 ;; ## Problem 1
 ;; Difficulty: 5%
@@ -276,6 +276,25 @@
      (filter amicable?)
      (reduce + 0))
 ;;=> 31626
+
+;; ## Problem 22
+;; ## Names scores
+
+(defn word-score [w]
+  (reduce + 0 (map #(- (int (Character/toUpperCase %)) 64) w)))
+
+(word-score "COLIN")
+
+(let [sorted-names (->> (str/split
+                         (slurp "src/code/data/euler_0022_names.txt")
+                         #",")
+                        (map #(str/replace % #"\"" ""))
+                        sort)]
+  (reduce + 0 (map-indexed
+               #(* (inc %1) (word-score %2))
+               sorted-names)))
+
+;;=> 871198282
 
 ;; ## Problem 65
 ;; Difficulty: 15%

@@ -592,7 +592,7 @@
     "href": "programs-for-humans/project-euler.html",
     "title": "Project Euler - first 100 problems",
     "section": "",
-    "text": "Last updated: Mar 5, 2025.\nMy solutions to the problems from Project Euler."
+    "text": "Last updated: Mar 20, 2025.\nMy solutions to the problems from Project Euler."
   },
   {
     "objectID": "programs-for-humans/project-euler.html#problem-1",
@@ -705,5 +705,12 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 17",
     "text": "Problem 17\nDifficulty: 5%\n\nWrite out each number 1-1000 (inclusive) as words. For example \\(342\\) = “three hundred and forty-two”. Count the total number of letters, excluding spaces and hyphens.\n\nWe define all the words needed for this problem.\n(def DIGITS\n  {\n   1 \"one\"\n   2 \"two\"\n   3 \"three\" \n   4 \"four\"\n   5 \"five\"\n   6 \"six\"\n   7 \"seven\"\n   8 \"eight\"\n   9 \"nine\"\n   }\n)\n\n(def TEENS\n  {\n   11 \"eleven\"\n   12 \"twelve\"\n   13 \"thirteen\"\n   14 \"fourteen\" \n   15 \"fifteen\"\n   16 \"sixteen\"\n   17 \"seventeen\"\n   18 \"eighteen\"\n   19 \"nineteen\"\n  })\n\n(def TENS\n  {\n   10 \"ten\"\n   20 \"twenty\"\n   30 \"thirty\"\n   40 \"forty\"\n   50 \"fifty\"\n   60 \"sixty\"\n   70 \"seventy\"\n   80 \"eighty\"\n   90 \"ninety\"\n  })\nNext we define two functions to count the number of letters needed to express the hundreds place value and the tens place value parts of a number.\n(defn hundreds-count [h]\n  (if (zero? h) 0\n      (+ (count (DIGITS h)) (count \"hundred\"))))\n\n(defn tens-count [t]\n  (cond \n    (zero? t) 0                              ;; when t is 0\n    (&lt; t 10) (count (DIGITS t))              ;; single digit numbers\n    (&lt;= 11 t 19) (count (TEENS t))           ;; teen numbers\n    :else (+ (count (TENS (* 10 (quot t 10))))  ;; numbers 20-99\n             (if (zero? (mod t 10))\n               0\n               (count (DIGITS (mod t 10)))))))\nWhen counting the letters for a number, we need to handle the special case of whether “and” needs to be included. For example, \\(342\\) = “three hundred and forty-two” but \\(100\\) = “one hundred”.\n(defn number-in-words-count [x]\n  (let [h (quot x 100)\n        t (mod x 100)\n        and-count (if (and (&gt; h 0) (not (zero? t))) (count \"and\") 0)]\n    (+ (hundreds-count h) (tens-count t) and-count)))\nThe last special case to handle is the number \\(1000\\).\n(+ (-&gt;&gt; (range 1 1000)\n     (map number-in-words-count)\n     (reduce + 0))\n   (count \"onethousand\"))\n21124"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-22",
+    "href": "programs-for-humans/project-euler.html#problem-22",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 22",
+    "text": "Problem 22\nDifficulty: 5%\n\nLet the word-score of a name be the sum of its letters expressed as numbers (A = 1, B = 2, …). So for example COLIN = 53. Sort the list of names in the input file, compute the word score for each name, multiply the position of each name in the sorted list by its score and sum everything.\n\n(defn word-score [w]\n  (reduce + 0 (map #(- (int (Character/toUpperCase %)) 64) w)))\n(word-score “COLIN”) 53\nThe key useful function here is map-indexed that turns a sequence into (index, value) pairs and applies a function to each such pair.\n(let [sorted-names (-&gt;&gt; (str/split\n                         (slurp \"src/code/data/euler_0022_names.txt\")\n                         #\",\")\n                        (map #(str/replace % #\"\\\"\" \"\"))\n                        sort)]\n  (reduce + 0 (map-indexed\n               #(* (inc %1) (word-score %2))\n               sorted-names)))\n871198282"
   }
 ]

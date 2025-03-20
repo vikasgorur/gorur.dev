@@ -2,7 +2,7 @@
 title: Project Euler - first 100 problems
 toc: true
 ---
-Last updated: _Mar 5, 2025_.
+Last updated: _Mar 20, 2025_.
 
 My solutions to the problems from [Project Euler](https://projecteuler.net/archives).
 
@@ -378,6 +378,37 @@ Check each number under 10000.
 ```
 
 <span class="eval-result">31626</span>
+
+## Problem 22
+_Difficulty: 5%_
+
+> Let the _word-score_ of a name be the sum of its letters expressed as numbers (A = 1, B = 2, ...).
+> So for example `COLIN = 53`. Sort the list of names in the input file, compute the word score
+> for each name, multiply the position of each name in the sorted list by its score and sum everything.
+
+```clojure
+(defn word-score [w]
+  (reduce + 0 (map #(- (int (Character/toUpperCase %)) 64) w)))
+```
+
+<span class="eval">(word-score "COLIN")</span>
+<span class="eval-result">53</span>
+
+The key useful function here is `map-indexed` that turns a sequence into `(index, value)`
+pairs and applies a function to each such pair.
+
+```clojure
+(let [sorted-names (->> (str/split
+                         (slurp "src/code/data/euler_0022_names.txt")
+                         #",")
+                        (map #(str/replace % #"\"" ""))
+                        sort)]
+  (reduce + 0 (map-indexed
+               #(* (inc %1) (word-score %2))
+               sorted-names)))
+```
+
+<span class="eval-result">871198282</span>
 
 ## Problem 65
 _Difficulty: 15%_
