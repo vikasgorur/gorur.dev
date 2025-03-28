@@ -24,7 +24,6 @@
     [solved days]))
 
 (hundred-days-progress)
-;;=> [14 25]
 
 ;; ## Problem 1
 ;; Difficulty: 5%
@@ -155,12 +154,51 @@
 (defn nth-triangle-number [n]
   (/ (* n (inc n)) 2))
 
-(loop [i 1]
-  (let [triangle (nth-triangle-number i)
-        div-count (count (primes/divisors triangle))]
-    (if (> div-count 500)
-      triangle
-      (recur (inc i)))))
+(defn search-up
+  "Invoke predicate on successively larger intervals
+   ([1, 2], [2, 4], [4, 8] ...) and return the first interval
+   for which the predicate is true"
+  [pred]
+  
+  (loop [low 1
+         high 2]
+    (if (pred low high)
+      [low high]
+      (recur (* low 2) (* high 2)))))
+
+(search-up #(<= %1 499 %2))
+;;=> [256 512]
+
+(/ (+ 32 64) 2)
+(defn search-within
+  "Invoke a predicate within an interval and return the lowest number
+   that passes the test"
+  [pred low high]
+  (loop [l low
+         h high
+         mid (/ (+ l h) 2)]
+    (if (= l h)
+      l
+      (recur ))))
+
+
+(primes/divisors (.pow (BigInteger/valueOf 2) 32))
+
+;; ## Problem 14
+(defn collatz-length
+  "Return the length of the Collatz sequence starting at x"
+  [x]
+  (loop [n 1
+         xi x]
+    (cond
+      (= xi 1) [x n]
+      (= (mod xi 2) 0) (recur (inc n) (quot xi 2))
+      :else (recur (inc n) (+ (* 3 xi) 1)))))
+
+(->> (range 2 1000000)
+     (map collatz-length)
+     (apply max-key second))
+;;=> [837799 525]
 
 ;; ## Problem 17
 

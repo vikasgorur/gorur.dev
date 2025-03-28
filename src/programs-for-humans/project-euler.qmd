@@ -194,6 +194,32 @@ _Difficulty: 5%_
 <span class="eval">(reduce + 0 (primes/sieve-of-eratosthenes 2000000))</span>
 <span class="eval-result">142913828922</span>
 
+## Problem 14
+_Difficulty: 5%_
+
+> The Collatz sequence is defined as: $n_{i+1} = n_i / 2$ (when $n_i$ is even)
+> and $n_{i+1} = 3n_i + 1$ (when $n$ is odd). Assuming that every starting value
+> eventually converges to 1, which starting value under one million produces the longest
+> sequence?
+
+```clojure
+(defn collatz-length
+  "Return the length of the Collatz sequence starting at x"
+  [x]
+  (loop [n 1
+         xi x]
+    (cond
+      (= xi 1) [x n]
+      (= (mod xi 2) 0) (recur (inc n) (quot xi 2))
+      :else (recur (inc n) (+ (* 3 xi) 1)))))
+
+(->> (range 2 1000000)
+     (map collatz-length)
+     (apply max-key second))
+```
+
+<span class="eval-result">[837799 525]</span>
+
 ## Problem 17
 _Difficulty: 5%_
 
