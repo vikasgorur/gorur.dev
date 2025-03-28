@@ -719,5 +719,12 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 14",
     "text": "Problem 14\nDifficulty: 5%\n\nThe Collatz sequence is defined as: \\(n_{i+1} = n_i / 2\\) (when \\(n_i\\) is even) and \\(n_{i+1} = 3n_i + 1\\) (when \\(n\\) is odd). Assuming that every starting value eventually converges to 1, which starting value under one million produces the longest sequence?\n\n(defn collatz-length\n  \"Return the length of the Collatz sequence starting at x\"\n  [x]\n  (loop [n 1\n         xi x]\n    (cond\n      (= xi 1) [x n]\n      (= (mod xi 2) 0) (recur (inc n) (quot xi 2))\n      :else (recur (inc n) (+ (* 3 xi) 1)))))\n\n(-&gt;&gt; (range 2 1000000)\n     (map collatz-length)\n     (apply max-key second))\n[837799 525]"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-16",
+    "href": "programs-for-humans/project-euler.html#problem-16",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 16",
+    "text": "Problem 16\nDifficulty: 5%\n\nFind the sum of the digits of \\(2^{1000}\\).\n\n(-&gt;&gt; (.toString (.pow (BigInteger/valueOf 2) 1000))\n     (map #(Character/digit % 10))\n     (reduce + 0))\n1366"
   }
 ]

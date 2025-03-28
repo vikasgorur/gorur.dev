@@ -200,6 +200,13 @@
      (apply max-key second))
 ;;=> [837799 525]
 
+;; ## Problem 16
+
+(->> (.toString (.pow (BigInteger/valueOf 2) 1000))
+     (map #(Character/digit % 10))
+     (reduce + 0))
+;;=> 1366
+
 ;; ## Problem 17
 
 (def DIGITS

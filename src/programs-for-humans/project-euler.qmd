@@ -220,6 +220,19 @@ _Difficulty: 5%_
 
 <span class="eval-result">[837799 525]</span>
 
+## Problem 16
+_Difficulty: 5%_
+
+> Find the sum of the digits of $2^{1000}$.
+
+```clojure
+(->> (.toString (.pow (BigInteger/valueOf 2) 1000))
+     (map #(Character/digit % 10))
+     (reduce + 0))
+```
+
+<span class="eval-result">1366</span>
+
 ## Problem 17
 _Difficulty: 5%_
 
