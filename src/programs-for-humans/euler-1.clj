@@ -170,19 +170,21 @@
 ;;=> [256 512]
 
 (/ (+ 32 64) 2)
-(defn search-within
-  "Invoke a predicate within an interval and return the lowest number
-   that passes the test"
-  [pred low high]
-  (loop [l low
-         h high
-         mid (/ (+ l h) 2)]
-    (if (= l h)
-      l
-      (recur ))))
+
 
 
 (primes/divisors (.pow (BigInteger/valueOf 2) 32))
+
+;; ## Problem 13
+(->> (slurp "src/code/data/euler-13.txt")
+     str/split-lines
+     (map #(BigInteger. %))
+     (reduce + 0)
+     .toString
+     (take 10)
+     (apply str))
+
+;;=> "5537376230"
 
 ;; ## Problem 14
 (defn collatz-length

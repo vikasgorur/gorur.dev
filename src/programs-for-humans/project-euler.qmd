@@ -194,6 +194,37 @@ _Difficulty: 5%_
 <span class="eval">(reduce + 0 (primes/sieve-of-eratosthenes 2000000))</span>
 <span class="eval-result">142913828922</span>
 
+## Problem 13
+_Difficulty: 5%_
+
+> Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
+
+I absolutely love Clojure's [thread-last](https://clojure.org/guides/threading_macros#thread-last)
+macro because it makes certain transformations of sequences perfectly concise and natural.
+Compare the English description and the code in the solution to this problem. In English,
+
+1. Read the file with the input numbers.
+2. Split the file into lines.
+3. Convert each line (`String`) into a number (`BigInteger`).
+4. Sum all the numbers.
+5. Convert the sum back to a string.
+6. Take the first 10 characters of the string.
+7. Convert the sequence of 10 characters into a single string.
+
+In code:
+
+```clojure
+(->> (slurp "src/code/data/euler-13.txt")
+     str/split-lines
+     (map #(BigInteger. %))
+     (reduce + 0)
+     .toString
+     (take 10)
+     (apply str))
+```
+
+<span class="eval-result">"5537376230"</span>
+
 ## Problem 14
 _Difficulty: 5%_
 
