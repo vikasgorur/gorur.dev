@@ -28,7 +28,7 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 
 My notes on papers and articles I've read.
 
-<span class="pub-date">2025-03-01</span> [Deep Dive into LLMs like ChatGPT (Karpathy)](annotations/deep-dive-into-llms.qmd) \
+<span class="pub-date">2025-04-01</span> [Deep Dive into LLMs like ChatGPT (Karpathy)](annotations/deep-dive-into-llms.qmd) \
 <span class="pub-date">2025-01-18</span> [Programming as Theory Building](annotations/programming-as-theory-building.qmd) \
 <span class="pub-date">2024-11-27</span> [_Why Machines Learn_](annotations/why-machines-learn.qmd) (book) \
 <span class="pub-date">2024-10-07</span> [History of Language Modeling](annotations/history-of-language-models.qmd)
