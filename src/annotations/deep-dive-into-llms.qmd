@@ -1,6 +1,6 @@
 ---
 title: Deep Dive into LLMs (Karpathy)
-date: 2025-03-01
+date: 2025-04-01
 ---
 
 These are my notes on @andrejkarpathyDeepDiveLLMs2025. There isn't a lot of new
@@ -48,17 +48,26 @@ be done with hundreds of dollars on rented Nvidia GPUs.
 
 **Llama 3 and base model inference**.
 
-A base model is just a "compression of the internet" and they "dream internet pages". They can't answer questions. They'll just start yapping on even simple questions like "what is 2+2?".
+A base model is just a "compression of the internet" and they "dream internet
+pages". They can't answer questions. They'll just start yapping on even simple
+questions like "what is 2+2?".
 
 [Hyperbolic](https://www.hyperbolic.xyz) is one place to run inference on base models.
 
-A base model can regurgitate its training data sometimes. For example, if you give it the first sentence of a Wikipedia article it might complete the rest of the article exactly.
+A base model can regurgitate its training data sometimes. For example, if you
+give it the first sentence of a Wikipedia article it might complete the rest of
+the article exactly.
 
-Even a base model can be made useful through in-context learning. For example, if the prompt is 10 pairs of English-Korean word translations, the model will pick up on the pattern and auto-complete the 11th word's translation. You can also turn a base model into an assistant by giving it a long template of a human/assistant interaction.
+Even a base model can be made useful through in-context learning. For example,
+if the prompt is 10 pairs of English-Korean word translations, the model will
+pick up on the pattern and auto-complete the 11th word's translation. You can
+also turn a base model into an assistant by giving it a long template of a
+human/assistant interaction.
 
 **Post-training**.
 
-The base model is trained with a new dataset to turn it into a conversational assistant. The data used for this will have new special tokens like this:
+The base model is trained with a new dataset to turn it into a conversational
+assistant. The data used for this will have new special tokens like this:
 
 ```
 <|im_start>user<|im_sep>What's a good name for a baby?<|im_sep>
@@ -66,16 +75,119 @@ The base model is trained with a new dataset to turn it into a conversational as
 
 where IM = "imaginary monologue".
 
-The InstructGPT paper @ouyangTrainingLanguageModels2022 discusses how this was done for GPT-3. OpenAI hired expert human labelers to write hundreds of thousands of prompts and responses. So when we talk to ChatGPT, it's useful to think of it as chatting with an "instant simulation" of one of these humans, rather than an omniscient magical "AI".
+The InstructGPT paper @ouyangTrainingLanguageModels2022 discusses how this was
+done for GPT-3. OpenAI hired expert human labelers to write hundreds of
+thousands of prompts and responses. So when we talk to ChatGPT, it's useful to
+think of it as chatting with an "instant simulation" of one of these humans,
+rather than an omniscient magical "AI".
 
-Extensive human labeling is no longer needed. We can now use LLMs themselves to produce the fine-tuning dataset. See [UltraChat](https://github.com/thunlp/UltraChat) for an example.
+Extensive human labeling is no longer needed. We can now use LLMs themselves to
+produce the fine-tuning dataset. See
+[UltraChat](https://github.com/thunlp/UltraChat) for an example.
 
 **Hallucinations and tool-use**
 
-Hallucinations were a big problem in the models from a couple of years ago, but they can be mitigated now. The mitigation works something like this:
+Hallucinations were a big problem in the models from a couple of years ago, but
+they can be mitigated now. The mitigation works something like this:
 
 1. Take a random para from Wiki and generate 3 factual questions based on it.
 2. Ask the model these questions and probe its knowledge.
-3. Augment the training data set with examples of model getting things right or wrong, based on what we know about the model's knowledge. So for example if it doesn't know who won the cricket world cup in 1996, add a training example where it says "I don't know" for that particular question.
+3. Augment the training data set with examples of model getting things right or
+   wrong, based on what we know about the model's knowledge. So for example if
+   it doesn't know who won the cricket world cup in 1996, add a training
+   example where it says "I don't know" for that particular question.
 
-The second enhancement/mitigation is tool use. Give the model training examples of the form `<SEARCH_START> ... </..>`, indicating that the model should use a tool. During inference, if you see tokens of that form, pause inference and run the tool and insert its output into the context and continue inference.
+The second enhancement/mitigation is tool use. Give the model training examples
+of the form `<SEARCH_START> ... </..>`, indicating that the model should use a
+tool. During inference, if you see tokens of that form, pause inference and run
+the tool and insert its output into the context and continue inference.
+
+There really is just one trick to LLMs: SHOW IT MORE EXAMPLES. You can also
+just say "use web search to be sure". LLMs are still "calculators for words".
+It's just that there are many cool tricks you can do within that paradigm.
+
+**Knowledge of self**
+
+There is no "self" there. Asking questions like "who are you?" is silly. You
+can override or program that into the model by giving it suitable set of
+conversations in the SFT step. For example, for the
+[OLMo](https://github.com/allenai/OLMo) models, ~240 questions in its training
+set are enough to give it the correct sense of "self". You can also do this
+simply by adding stuff to the system prompt.
+
+**Models need time to think**
+
+A very useful piece of intuition is this: **the amount of computation the model
+can do to generate one token is fixed**. These are all the matrix
+multiplications and other math that's done through all the layers of the model
+when generating a single token. This in a sense imposes a fundamental
+limitation on how much "thinking" the model can do per token.
+
+This has practical implications. For example, if you're teaching the model word
+problems like "if apples cost $5 and oranges cost $4 ... then what is the price
+of ____?" your training answer shouldn't start with "$12 ...". Because you're
+then asking the model to figure out the entire answer before it has generated
+even the first token (since the very first token is the answer). Instead, an
+example answer like "Since an orange costs $4, 5 oranges will cost ..." is much
+better. This allows the model time to think. Or more precisely, tokens to
+think.
+
+Models can also be bad at counting, like "how many dots are below?" because
+you're asking it to do too much in one token. Failures of counting can also be
+due to tokenization. For example, it doesn't know how many r's are in
+"strawberry" because it might see "rr" as a single token.
+
+**A model cannot look inside tokens**.
+
+LLMs thus have a kind of jagged intelligence. They are fantastic at many tasks, but can fail at some tasks that seem extremely simple to us. For example, "Which is bigger, 9.11 or 9.9?"
+
+**Reinforcement learning**
+
+RL is like the models "going to school". The textbooks we learn from have the
+following components: exposition (training data), exercises & solutions (fine
+tuning), exams (RL).
+
+RL is trying to solve the problem that we don't know what the best SFT mixture needs to be. For example, how do we know which of the answers to the "apples and oranges" word problem is the better one?
+
+RL works like this: For a given prompt, generate many answers by doing
+inference over and over again. Mark each answer as good or bad based on whether
+the answer was correct. Use the "good" answers as part of the training again.
+Getting RL right with all the details is difficult.
+
+**DeepSeek**: This was a big deal because they talked about using RL publicly
+and shared a lot of details on how they did it. OpenAI etc. likely were using
+RL already for some time. DeepSeek interestingly sort of discovered
+chain-of-thought on its own. Just through RL it figured out that it needs to
+use more tokens to think.
+
+[together.ai](https://www.together.ai/) is a place where DeepSeek can be
+hosted, outside of China.
+
+We it's said that a model is a "reasoning model", it just means that it was
+trained with RL. AlphaGo was also trained using RL. This kind of training is
+great for verifiable domains like math or chess where the right answer is
+obvious. It's much harder to do in non-verifiable domains.
+
+A kind of RL that works for non-verifiable domains ("write a poem about a
+pelican") is RLHF, RL with human-feedback. In RLHF, we first train a reward
+model to simulate human preferences ("rank these 5 answers to a question based
+on helpfulness"). The scores from this reward model are used for RL.
+
+The downside of RLHF is that it will discover ways to game the reward model.
+For example, the best joke about pelicans becomes just "the the the the ...".
+
+**What's coming?**
+
+All models will become multi-modal. You can tokenize audio and images. Audio
+tokens are slices of the spectrogram (frequency decomposition). Image tokens
+are patches of the image. 
+
+When automation came to factories, people started talking about the "human to robot" ratio to measure the degree of automation. Similarly, we'll start talking about the "human to agent" ratio.
+
+**Keeping up**
+
+[LMArena](https://lmarena.ai/) is a leaderboard of all current LLMs.
+
+The [AI News](https://buttondown.com/ainews) newsletter has exhaustive coverage
+of everything that happens, across platforms.
+
