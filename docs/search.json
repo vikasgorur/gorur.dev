@@ -733,5 +733,12 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 13",
     "text": "Problem 13\nDifficulty: 5%\n\nWork out the first ten digits of the sum of the following one-hundred 50-digit numbers.\n\nI absolutely love Clojure’s thread-last macro because it makes certain transformations of sequences perfectly concise and natural. Compare the English description and the code in the solution to this problem. In English,\n\nRead the file with the input numbers.\nSplit the file into lines.\nConvert each line (String) into a number (BigInteger).\nSum all the numbers.\nConvert the sum back to a string.\nTake the first 10 characters of the string.\nConvert the sequence of 10 characters into a single string.\n\nIn code:\n(-&gt;&gt; (slurp \"src/code/data/euler-13.txt\")\n     str/split-lines\n     (map #(BigInteger. %))\n     (reduce + 0)\n     .toString\n     (take 10)\n     (apply str))\n“5537376230”"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-20",
+    "href": "programs-for-humans/project-euler.html#problem-20",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 20",
+    "text": "Problem 20\nDifficulty: 5%\n\nFind the sum of the digits in \\(100!\\).\n\nFor a change I did this in Kotlin.\nimport java.math.BigInteger\n\nfun fac(n: BigInteger): BigInteger {\n    var f: BigInteger = BigInteger.ONE\n    var i: BigInteger = n\n    while (i &gt; BigInteger.ONE) {\n        f *= i\n        i -= BigInteger.ONE\n    }\n    return f\n}\nIt’s almost as concise as Clojure.\nfun main() {\n    println(fac(BigInteger.valueOf(100))\n        .toString()\n        .toCharArray()\n        .fold(0) { result, c -&gt; result + c.digitToInt() }\n    )\n}\n648"
   }
 ]

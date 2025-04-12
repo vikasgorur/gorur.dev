@@ -412,6 +412,41 @@ by imagining adding up the days for each month starting from 1901.
 
 <span class="eval-result">171</span>
 
+## Problem 20
+_Difficulty: 5%_
+
+> Find the sum of the digits in $100!$.
+
+For a change I did this in Kotlin.
+
+```kotlin
+import java.math.BigInteger
+
+fun fac(n: BigInteger): BigInteger {
+    var f: BigInteger = BigInteger.ONE
+    var i: BigInteger = n
+    while (i > BigInteger.ONE) {
+        f *= i
+        i -= BigInteger.ONE
+    }
+    return f
+}
+```
+
+It's almost as concise as Clojure.
+
+```kotlin
+fun main() {
+    println(fac(BigInteger.valueOf(100))
+        .toString()
+        .toCharArray()
+        .fold(0) { result, c -> result + c.digitToInt() }
+    )
+}
+```
+
+<span class="eval-result">648</span>
+
 ## Problem 21
 _Difficulty: 5%_
 
