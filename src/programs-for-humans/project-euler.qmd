@@ -587,6 +587,61 @@ fun main() {
 
 <span class="eval-result">4179871</span>
 
+## Problem 25
+_Difficulty: 5%_
+
+> Find $n$ such that the $n$th Fibonacci number is the first one in the sequence to have
+> 1000 digits.
+
+A lot of these problems are meant to test your ability to deal with arbitrarily large
+integers, I think. They are easy to do when you have that capability in the standard library
+(`BigInteger`).
+
+```kotlin
+import java.math.BigInteger
+
+class Fibonacci() {
+    var i = 1
+
+    private var f1 = BigInteger.ONE
+    private var f2 = BigInteger.ONE
+
+    fun next(): BigInteger {
+        return when (i) {
+            1, 2 -> {
+                i += 1
+                BigInteger.ONE
+            }
+            else -> {
+                val fi = f1 + f2
+                i += 1
+                f1 = f2
+                f2 = fi
+                fi
+            }
+        }
+    }
+}
+```
+
+By writing this as an iterator class we make sure that we compute each Fibonacci number
+only once.
+
+```kotlin
+fun main() {
+    val fib = Fibonacci()
+    while (true) {
+        val f = fib.next()
+        if (f.toString().length == 1000) {
+            println("${fib.i-1}: $f")
+            break
+        }
+    }
+}
+```
+
+<span class="eval-result">4782</span>
+
 ## Problem 65
 _Difficulty: 15%_
 
