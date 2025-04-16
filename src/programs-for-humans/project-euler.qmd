@@ -277,7 +277,7 @@ We define all the words needed for this problem.
   {
    1 "one"
    2 "two"
-   3 "three" 
+   3 "three"
    4 "four"
    5 "five"
    6 "six"
@@ -292,7 +292,7 @@ We define all the words needed for this problem.
    11 "eleven"
    12 "twelve"
    13 "thirteen"
-   14 "fourteen" 
+   14 "fourteen"
    15 "fifteen"
    16 "sixteen"
    17 "seventeen"
@@ -323,7 +323,7 @@ place value and the tens place value parts of a number.
       (+ (count (DIGITS h)) (count "hundred"))))
 
 (defn tens-count [t]
-  (cond 
+  (cond
     (zero? t) 0                              ;; when t is 0
     (< t 10) (count (DIGITS t))              ;; single digit numbers
     (<= 11 t 19) (count (TEENS t))           ;; teen numbers
@@ -641,6 +641,29 @@ fun main() {
 ```
 
 <span class="eval-result">4782</span>
+
+## Problem 29
+_Difficulty: 5%_
+
+> With $2 \leq a \leq 100$ and $2 \leq b \leq 100$, how many distinct values of
+> $a^b$ are there?
+
+```kotlin
+import java.math.BigInteger
+
+fun main() {
+    val distinctPowers: HashSet<BigInteger> = HashSet(99*99)
+
+    for (a in 2..100) {
+        for (b in 2..100) {
+            distinctPowers.add(a.toBigInteger().pow(b))
+        }
+    }
+    println(distinctPowers.size)
+}
+```
+
+<span class="eval-result">9183</span>
 
 ## Problem 65
 _Difficulty: 15%_
