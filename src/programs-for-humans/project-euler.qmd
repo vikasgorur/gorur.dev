@@ -194,6 +194,100 @@ _Difficulty: 5%_
 <span class="eval">(reduce + 0 (primes/sieve-of-eratosthenes 2000000))</span>
 <span class="eval-result">142913828922</span>
 
+## Problem 11
+_Difficulty: 5%_
+
+> In the 20x20 grid of numbers, find the largest product of four adjacent numbers. Adjacent
+> is defined as up, down, left, right, and four diagonals.
+
+There is probably a much cleaner way of writing this, but this is the brute force solution.
+First we read the grid into a 2d array.
+
+```kotlin
+import java.io.File
+
+val GRID_SIZE = 20
+
+fun parseGrid(path: String): Array<Array<Int>> {
+    val grid: Array<Array<Int>> = Array<Array<Int>>(GRID_SIZE,
+        { _ -> Array<Int>(GRID_SIZE, { _ -> 0 }) })
+
+    val text = File(path).readText()
+    val lines = text.lines()
+    for ((i, line) in lines.withIndex()) {
+        val nums = line.split(" ")
+        for ((j, n) in nums.withIndex()) {
+            grid[i][j] = n.toInt()
+        }
+    }
+    return grid
+}
+```
+
+Then we just compute all possible sums and pick the maximum.
+
+```kotlin
+// For each "anchor" position (i, j) compute the max product among the
+// 8 possible adjacent quartets (four cardinal directions and four diagonals)
+fun maxProductForAnchor(i: Int, j: Int, grid: Array<Array<Int>>): Int {
+    val left = if (j >= 3) {
+        grid[i][j] * grid[i][j-1] * grid[i][j-2] * grid[i][j-3]
+    } else { 0 }
+
+    val right = if (j < GRID_SIZE - 3) {
+        grid[i][j] * grid[i][j+1] * grid[i][j+2] * grid[i][j+3]
+    } else { 0 }
+
+    val up = if (i >= 3) {
+        grid[i][j] * grid[i-1][j] * grid[i-2][j] * grid[i-3][j]
+    } else { 0 }
+    
+    val down = if (i < GRID_SIZE - 3) {
+        grid[i][j] * grid[i+1][j] * grid[i+2][j] * grid[i+3][j]
+    } else { 0 }
+
+    // north-west diagonal
+    val northWest = if (i >= 3 && j >= 3) {
+        grid[i][j] * grid[i-1][j-1] * grid[i-2][j-2] * grid[i-3][j-3]
+    } else { 0 }
+
+    // north-east diagonal
+    val northEast = if (i >= 3 && j < GRID_SIZE - 3) {
+        grid[i][j] * grid[i-1][j+1] * grid[i-2][j+2] * grid[i-3][j+3]
+    } else { 0 }
+
+    // south-west diagonal
+    val southWest = if (i < GRID_SIZE - 3 && j >= 3) {
+        grid[i][j] * grid[i+1][j-1] * grid[i+2][j-2] * grid[i+3][j-3]
+    } else { 0 }
+
+    // south-east diagonal
+    val southEast = if (i < GRID_SIZE - 3 && j < GRID_SIZE - 3) {
+        grid[i][j] * grid[i+1][j+1] * grid[i+2][j+2] * grid[i+3][j+3]
+    } else { 0 }
+
+    return arrayOf(
+        left, right, up, down,
+        northWest, northEast, southWest, southEast
+    ).max()
+}
+
+fun main() {
+    val grid = parseGrid("src/euler-11.txt")
+    var allMax = 0
+
+    for (i in 0..GRID_SIZE-1) {
+        for (j in 0..GRID_SIZE-1) {
+            val m = maxProductForAnchor(i, j, grid)
+            if (m > allMax) { allMax = m }
+        }
+    }
+    println(allMax)
+}
+```
+
+<span class="eval-result">70600674</span>
+
 ## Problem 13
 _Difficulty: 5%_
 
