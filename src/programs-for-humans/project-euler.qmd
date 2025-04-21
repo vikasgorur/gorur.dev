@@ -230,41 +230,30 @@ Then we just compute all possible sums and pick the maximum.
 // For each "anchor" position (i, j) compute the max product among the
 // 8 possible adjacent quartets (four cardinal directions and four diagonals)
 fun maxProductForAnchor(i: Int, j: Int, grid: Array<Array<Int>>): Int {
-    val left = if (j >= 3) {
-        grid[i][j] * grid[i][j-1] * grid[i][j-2] * grid[i][j-3]
-    } else { 0 }
+    val get = { i: Int, j: Int ->
+        if (i in 0..GRID_SIZE-1 && j in 0..GRID_SIZE-1) {
+            grid[i][j]
+        } else {
+            0
+        }
+    }
 
-    val right = if (j < GRID_SIZE - 3) {
-        grid[i][j] * grid[i][j+1] * grid[i][j+2] * grid[i][j+3]
-    } else { 0 }
-
-    val up = if (i >= 3) {
-        grid[i][j] * grid[i-1][j] * grid[i-2][j] * grid[i-3][j]
-    } else { 0 }
-    
-    val down = if (i < GRID_SIZE - 3) {
-        grid[i][j] * grid[i+1][j] * grid[i+2][j] * grid[i+3][j]
-    } else { 0 }
+    val left = get(i, j) * get(i, j-1) * get(i, j-2) * get(i, j-3)
+    val right = get(i, j) * get(i, j+1) * get(i, j+2) * get(i, j+3)
+    val up = get(i, j) * get(i-1, j) * get(i-2, j) * get(i-3, j)
+    val down = get(i, j) * get(i+1, j) * get(i+2, j) * get(i+3, j)
 
     // north-west diagonal
-    val northWest = if (i >= 3 && j >= 3) {
-        grid[i][j] * grid[i-1][j-1] * grid[i-2][j-2] * grid[i-3][j-3]
-    } else { 0 }
+    val northWest = get(i, j) * get(i-1, j-1) * get(i-2, j-2) * get(i-3, j-3)
 
     // north-east diagonal
-    val northEast = if (i >= 3 && j < GRID_SIZE - 3) {
-        grid[i][j] * grid[i-1][j+1] * grid[i-2][j+2] * grid[i-3][j+3]
-    } else { 0 }
+    val northEast = get(i, j) * get(i-1, j+1) * get(i-2, j+2) * get(i-3, j+3)
 
     // south-west diagonal
-    val southWest = if (i < GRID_SIZE - 3 && j >= 3) {
-        grid[i][j] * grid[i+1][j-1] * grid[i+2][j-2] * grid[i+3][j-3]
-    } else { 0 }
+    val southWest = get(i, j) * get(i+1, j-1) * get(i+2, j-2) * get(i+3, j-3)
 
     // south-east diagonal
-    val southEast = if (i < GRID_SIZE - 3 && j < GRID_SIZE - 3) {
-        grid[i][j] * grid[i+1][j+1] * grid[i+2][j+2] * grid[i+3][j+3]
-    } else { 0 }
+    val southEast = get(i, j) * get(i+1, j+1) * get(i+2, j+2) * get(i+3, j+3)
 
     return arrayOf(
         left, right, up, down,
