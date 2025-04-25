@@ -21,6 +21,14 @@
   file = {/Users/vikas/Zotero/storage/9Z6WLWWG/des.html}
 }
 
+@article{ameisen2025circuit,
+  title = {Circuit Tracing: {{Revealing}} Computational Graphs in Language Models},
+  author = {Ameisen, Emmanuel and Lindsey, Jack and Pearce, Adam and Gurnee, Wes and Turner, Nicholas L. and Chen, Brian and Citro, Craig and Abrahams, David and Carter, Shan and Hosmer, Basil and Marcus, Jonathan and Sklar, Michael and Templeton, Adly and Bricken, Trenton and McDougall, Callum and Cunningham, Hoagy and Henighan, Thomas and Jermyn, Adam and Jones, Andy and Persic, Andrew and Qi, Zhenyi and Ben Thompson, T. and Zimmerman, Sam and Rivoire, Kelley and Conerly, Thomas and Olah, Chris and Batson, Joshua},
+  year = {2025},
+  journal = {Transformer Circuits Thread},
+  url = {https://transformer-circuits.pub/2025/attribution-graphs/methods.html}
+}
+
 @book{ananthaswamyWhyMachinesLearn2024,
   title = {Why Machines Learn: The Elegant Math behind Modern {{AI}}},
   shorttitle = {Why Machines Learn},
@@ -345,6 +353,17 @@
   url = {https://soumith.ch/blog/2024-10-02-training-10k-scale.md.html}
 }
 
+@book{clarkeHowWorldWas1992,
+  title = {How the World Was One: Beyond the Global Village},
+  shorttitle = {How the World Was One},
+  author = {Clarke, Arthur C.},
+  year = {1992},
+  publisher = {Bantam Books},
+  address = {New York},
+  isbn = {978-0-553-07440-6},
+  langid = {english}
+}
+
 @article{coutrotGlobalDeterminantsNavigation2018,
   title = {Global {{Determinants}} of {{Navigation Ability}}},
   author = {Coutrot, Antoine and Silva, Ricardo and Manley, Ed and De Cothi, Will and Sami, Saber and Bohbot, V{\'e}ronique D. and Wiener, Jan M. and H{\"o}lscher, Christoph and Dalton, Ruth C. and Hornberger, Michael and Spiers, Hugo J.},
@@ -615,6 +634,14 @@
   abstract = {The Web as a Graph The goal of this post is to assign an ``importance score'' \$ x\_i {\textbackslash}in [0,1]\$ to each of a set of web pages indexed \$ v\_i\$ in a way that consistently captures our idea of which websites are likely to be important. But before we can extract information from the structure of the internet, we need to have a mathematical description of that structure. Enter graph theory.},
   chapter = {posts},
   langid = {american}
+}
+
+@misc{jeremykunMarkovChainMonte2015,
+  title = {Markov {{Chain Monte Carlo Without}} All the {{Bullshit}}},
+  author = {{Jeremy Kun}},
+  year = {2015},
+  month = apr,
+  url = {https://www.jeremykun.com/2015/04/06/markov-chain-monte-carlo-without-all-the-bullshit/}
 }
 
 @book{jeremykunProgrammersIntroductionMathematics2021,
@@ -918,6 +945,14 @@
   file = {/Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/Zotero Library/Lemire - 2018 - Fast Random Integer Generation in an Interval.pdf;/Users/vikas/Zotero/storage/ZSUS2DRI/1805.html}
 }
 
+@article{lindsey2025biology,
+  title = {On the Biology of a Large Language Model},
+  author = {Lindsey, Jack and Gurnee, Wes and Ameisen, Emmanuel and Chen, Brian and Pearce, Adam and Turner, Nicholas L. and Citro, Craig and Abrahams, David and Carter, Shan and Hosmer, Basil and Marcus, Jonathan and Sklar, Michael and Templeton, Adly and Bricken, Trenton and McDougall, Callum and Cunningham, Hoagy and Henighan, Thomas and Jermyn, Adam and Jones, Andy and Persic, Andrew and Qi, Zhenyi and Thompson, T. Ben and Zimmerman, Sam and Rivoire, Kelley and Conerly, Thomas and Olah, Chris and Batson, Joshua},
+  year = {2025},
+  journal = {Transformer Circuits Thread},
+  url = {https://transformer-circuits.pub/2025/attribution-graphs/biology.html}
+}
+
 @misc{liuBackstoryBackpropagation2023,
   title = {The {{Backstory}} of {{Backpropagation}}},
   author = {Liu, Yuxi},
@@ -952,6 +987,23 @@
   isbn = {978-1-84668-262-9},
   langid = {english},
   file = {/Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/Zotero Library/The Misbehavior of Markets_ A Fractal View of Financial Turbulence - Benoit Mandelbrot.pdf}
+}
+
+@misc{marksAuditingLanguageModels2025,
+  title = {Auditing Language Models for Hidden Objectives},
+  author = {Marks, Samuel and Treutlein, Johannes and Bricken, Trenton and Lindsey, Jack and Marcus, Jonathan and {Mishra-Sharma}, Siddharth and Ziegler, Daniel and Ameisen, Emmanuel and Batson, Joshua and Belonax, Tim and Bowman, Samuel R. and Carter, Shan and Chen, Brian and Cunningham, Hoagy and Denison, Carson and Dietz, Florian and Golechha, Satvik and Khan, Akbir and Kirchner, Jan and Leike, Jan and Meek, Austin and {Nishimura-Gasparian}, Kei and Ong, Euan and Olah, Christopher and Pearce, Adam and Roger, Fabien and Salle, Jeanne and Shih, Andy and Tong, Meg and Thomas, Drake and Rivoire, Kelley and Jermyn, Adam and MacDiarmid, Monte and Henighan, Tom and Hubinger, Evan},
+  year = {2025},
+  month = mar,
+  number = {arXiv:2503.10965},
+  eprint = {2503.10965},
+  primaryclass = {cs},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2503.10965},
+  url = {http://arxiv.org/abs/2503.10965},
+  urldate = {2025-04-25},
+  abstract = {We study the feasibility of conducting alignment audits: investigations into whether models have undesired objectives. As a testbed, we train a language model with a hidden objective. Our training pipeline first teaches the model about exploitable errors in RLHF reward models (RMs), then trains the model to exploit some of these errors. We verify via out-of-distribution evaluations that the model generalizes to exhibit whatever behaviors it believes RMs rate highly, including ones not reinforced during training. We leverage this model to study alignment audits in two ways. First, we conduct a blind auditing game where four teams, unaware of the model's hidden objective or training, investigate it for concerning behaviors and their causes. Three teams successfully uncovered the model's hidden objective using techniques including interpretability with sparse autoencoders (SAEs), behavioral attacks, and training data analysis. Second, we conduct an unblinded follow-up study of eight techniques for auditing the model, analyzing their strengths and limitations. Overall, our work provides a concrete example of using alignment audits to discover a model's hidden objective and proposes a methodology for practicing and validating progress in alignment auditing.},
+  archiveprefix = {arXiv},
+  file = {/Users/vikas/Zotero/storage/7W9AAA42/Marks et al. - 2025 - Auditing language models for hidden objectives.pdf;/Users/vikas/Zotero/storage/KDISMXVR/2503.html}
 }
 
 @article{mccullochLogicalCalculusIdeas1943,
@@ -1291,6 +1343,17 @@
   file = {/Users/vikas/Library/Mobile Documents/com~apple~CloudDocs/Zotero Library/Landau on Chess Tournaments and Google's PageRank.pdf}
 }
 
+@book{sontagRegardingPainOthers2003,
+  title = {Regarding the Pain of Others},
+  author = {Sontag, Susan},
+  year = {2003},
+  edition = {1. ed},
+  publisher = {{Farrar, Straus and Giroux}},
+  address = {New York, NY},
+  isbn = {978-0-374-24858-1},
+  langid = {english}
+}
+
 @book{suttonReinforcementLearningIntroduction2018,
   title = {Reinforcement Learning: An Introduction},
   shorttitle = {Reinforcement Learning},
@@ -1315,6 +1378,15 @@
   isbn = {978-0-262-03803-4},
   lccn = {Q325.5 .S45 2018},
   file = {/Users/vikasprasad/Downloads/The Deep Learning Revolution - Sejnowski.pdf}
+}
+
+@misc{thevaticanANTIQUANOVANote2025,
+  title = {{{ANTIQUA ET NOVA}}, {{Note}} on the {{Relationship Between Artificial Intelligence}} and {{Human Intelligence}}},
+  shorttitle = {{{ANTIQUA ET NOVA}}},
+  author = {{The Vatican}},
+  year = {2025},
+  month = jan,
+  url = {https://www.vatican.va/roman_curia/congregations/cfaith/documents/rc_ddf_doc_20250128_antiqua-et-nova_en.html}
 }
 
 @misc{touvronLlama2Open2023,
