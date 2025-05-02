@@ -1,80 +1,145 @@
 ---
 title: Project Euler - first 100 problems
-toc: true
+toc: false
 format: 
   html:
-    include-in-header: |
-      <style>
-        .problem-section {
-          display: none;
-        }
-        .problem-section.active {
-          display: block;
-        }
-        .toc-actions {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 1rem;
-        }
-        .toc-actions button {
-          padding: 0.5rem 1rem;
-          border: none;
-          background: #f0f0f0;
-          cursor: pointer;
-          border-radius: 4px;
-        }
-        .toc-actions button:hover {
-          background: #e0e0e0;
-        }
-      </style>
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          // Get all problem sections
-          const sections = document.querySelectorAll('.problem-section');
-          
-          // Create TOC actions
-          const tocActions = document.createElement('div');
-          tocActions.className = 'toc-actions';
-          
-          const showAllBtn = document.createElement('button');
-          showAllBtn.textContent = 'Show All';
-          showAllBtn.onclick = function() {
-            sections.forEach(section => section.classList.add('active'));
-          };
-          
-          const hideAllBtn = document.createElement('button');
-          hideAllBtn.textContent = 'Hide All';
-          hideAllBtn.onclick = function() {
-            sections.forEach(section => section.classList.remove('active'));
-          };
-          
-          tocActions.appendChild(showAllBtn);
-          tocActions.appendChild(hideAllBtn);
-          
-          // Insert TOC actions after the TOC
-          const toc = document.querySelector('#TOC');
-          toc.parentNode.insertBefore(tocActions, toc.nextSibling);
-          
-          // Add click handlers to TOC links
-          const tocLinks = document.querySelectorAll('#TOC a');
-          tocLinks.forEach(link => {
-            link.onclick = function(e) {
-              e.preventDefault();
-              const targetId = this.getAttribute('href').substring(1);
-              const targetSection = document.getElementById(targetId);
+    include-in-header: 
+      text: |
+        <style>
+          .problem-section {
+            display: none;
+            position: relative;
+          }
+          .problem-section.active {
+            display: block;
+          }
+          .problem-section h2 {
+            display: block !important;
+            margin-top: 0;
+          }
+          .problem-grid {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+            padding: 5px;
+            background: transparent;
+          }
+          .problem-number {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            text-decoration: none;
+            color: #495057;
+            font-size: 12px;
+            transition: color 0.2s;
+          }
+          .problem-number:hover {
+            color: #007bff;
+          }
+          .problem-number.active {
+            color: #007bff;
+            font-weight: bold;
+          }
+          .problem-number.exists {
+            font-weight: bold;
+          }
+          .problem-number.missing {
+            color: #dee2e6;
+            pointer-events: none;
+          }
+          .main-content {
+            margin-left: 100px;
+          }
+        </style>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            // Create problem grid
+            const grid = document.createElement('div');
+            grid.className = 'problem-grid';
+            
+            // Get all existing problem sections
+            const existingProblems = new Set();
+            document.querySelectorAll('section.problem-section').forEach(section => {
+              const h2 = section.querySelector('h2');
+              if (h2) {
+                const match = h2.textContent.match(/Problem (\d+)/);
+                if (match) {
+                  existingProblems.add(parseInt(match[1]));
+                }
+              }
+            });
+            
+            for (let i = 1; i <= 100; i++) {
+              const link = document.createElement('a');
+              link.href = `#problem-${i}`;
+              link.className = 'problem-number';
               
-              // Toggle the section
-              targetSection.classList.toggle('active');
+              if (existingProblems.has(i)) {
+                link.classList.add('exists');
+                link.onclick = function(e) {
+                  e.preventDefault();
+                  showProblem(i);
+                };
+              } else {
+                link.classList.add('missing');
+              }
               
-              // Scroll to the section
-              targetSection.scrollIntoView({ behavior: 'smooth' });
-            };
+              link.textContent = i;
+              grid.appendChild(link);
+            }
+            
+            document.body.appendChild(grid);
+            
+            // Add margin to main content
+            const mainContent = document.querySelector('.main-content');
+            if (!mainContent) {
+              const content = document.querySelector('.content');
+              if (content) {
+                content.classList.add('main-content');
+              }
+            }
+            
+            function showProblem(num) {
+              // Hide all problem sections
+              document.querySelectorAll('.problem-section').forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+              });
+              
+              // Show selected problem
+              const targetSection = document.getElementById(`problem-${num}`);
+              if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.style.display = 'block';
+                targetSection.scrollIntoView();
+              }
+              
+              // Update active number in grid
+              document.querySelectorAll('.problem-number').forEach(link => {
+                link.classList.remove('active');
+              });
+              document.querySelector(`.problem-number:nth-child(${num})`).classList.add('active');
+            }
+            
+            // Initially hide all sections
+            document.querySelectorAll('.problem-section').forEach(section => {
+              section.style.display = 'none';
+            });
+            
+            // Show first problem by default if it exists
+            if (existingProblems.has(1)) {
+              showProblem(1);
+            }
           });
-          
-          // Initially hide all sections
-          sections.forEach(section => section.classList.remove('active'));
-        });
-      </script>
+        </script>
 ---
 
 Last updated: _Mar 20, 2025_.
@@ -681,7 +746,7 @@ pairs and applies a function to each such pair.
 > Find the sum of all the positive integers which cannot be written as the sum of two abundant numbers.
 
 As much as I love Lisp and functional programming, there are times when writing loops is just
-easier. I suppose that's the lesson that Python learned as well. I solved this problem in Kotlin and I'm
+easier. I solved this problem in Kotlin and I'm
 starting to really like it.
 
 ```kotlin
@@ -876,7 +941,7 @@ of the numerator.
 <span class="eval-result">272</span>
 
 
-## Helpers
+## Helpers {.problem-section}
 
 These are helper functions used across problems.
 
