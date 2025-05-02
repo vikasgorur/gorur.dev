@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import { allDistinct, maxPrimePower, primeDivisors, primePowerFactors, sieveOfEratosthenes } from './euler';
+import { allDistinct, isGoldbachExpressible, maxPrimePower, primeDivisors, primePowerFactors, sieveOfEratosthenes } from './euler';
 
 let primes: number[];
 
@@ -26,5 +26,17 @@ describe('Problem 47', () => {
             primePowerFactors(14, primes), 
             primePowerFactors(15, primes)
         ])).toBeTruthy()
+    });
+});
+
+describe('problem 46', () => {
+    beforeAll(() => {
+        primes = sieveOfEratosthenes(1000);
+    });
+    it("should check if a number is expressible in the Goldbach form", () => {
+        const cases = [9, 15, 21, 25, 27, 33];
+        for (let n of cases) {
+            expect(isGoldbachExpressible(n, primes)).toBeTruthy();
+        }
     });
 });

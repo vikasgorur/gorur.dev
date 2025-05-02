@@ -888,6 +888,43 @@ fun main() {
 
 <span class="eval-result">9183</span>
 
+## Problem 46 {.problem-section}
+
+```typescript
+export function isGoldbachExpressible(
+    n: number, primes: Array<number>
+): boolean {
+
+    const isEven = (x: number) => x % 2 === 0;
+    const isSquare = (x: number) => Math.sqrt(x) === Math.floor(Math.sqrt(x));
+
+    for (let p of primes) {
+        const rest = n - p;
+        if (isEven(rest) && isSquare(rest/2)) {
+            return true;
+        }
+        if (p > n) break; 
+    }
+    return false;
+}
+
+function problem46() {
+    let n = 3;
+    const LIMIT = 100000;
+    const primes = sieveOfEratosthenes(LIMIT);
+
+    while (n < LIMIT) {
+        if (!isGoldbachExpressible(n, primes)) {
+            console.log(n);
+            break;
+        }
+        n += 2;
+    }
+}
+```
+
+<span class="eval-result">5777</span>
+
 ## Problem 47 {.problem-section}
 
 ```typescript
@@ -934,7 +971,7 @@ export function maxPrimePower(n: number, p: number): number {
 export function primePowerFactors(
     n: number, primes: Array<number>
 ): Array<number> {
-    
+
     return primeDivisors(n, primes).map((d, _) => maxPrimePower(n, d));
 }
 

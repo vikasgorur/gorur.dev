@@ -71,4 +71,37 @@ export function problem47() {
     console.log(`(${low}: ${seq[0]}) (${low+1}: ${seq[1]}) (${low+2}: ${seq[2]}) (${low+3}: ${seq[3]})`);
 }
 
-problem47();
+//problem47();
+
+export function isGoldbachExpressible(
+    n: number, primes: Array<number>
+): boolean {
+
+    const isEven = (x: number) => x % 2 === 0;
+    const isSquare = (x: number) => Math.sqrt(x) === Math.floor(Math.sqrt(x));
+
+    for (let p of primes) {
+        const rest = n - p;
+        if (isEven(rest) && isSquare(rest/2)) {
+            return true;
+        }
+        if (p > n) break; 
+    }
+    return false;
+}
+
+function problem46() {
+    let n = 3;
+    const LIMIT = 100000;
+    const primes = sieveOfEratosthenes(LIMIT);
+
+    while (n < LIMIT) {
+        if (!isGoldbachExpressible(n, primes)) {
+            console.log(n);
+            break;
+        }
+        n += 2;
+    }
+}
+
+problem46();
