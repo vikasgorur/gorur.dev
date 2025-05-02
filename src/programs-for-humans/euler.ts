@@ -68,7 +68,7 @@ export function problem47() {
         low++;
     }
     console.timeEnd('problem47');
-    console.log(`${low}: ${seq[0]} ${low+1}: ${seq[1]} ${low+2}: ${seq[2]} ${low+3}: ${seq[3]}`);
+    console.log(`(${low}: ${seq[0]}) (${low+1}: ${seq[1]}) (${low+2}: ${seq[2]}) (${low+3}: ${seq[3]})`);
 }
 
 problem47();
