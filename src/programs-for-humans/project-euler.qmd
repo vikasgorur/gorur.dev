@@ -1,12 +1,87 @@
 ---
 title: Project Euler - first 100 problems
 toc: true
+format: 
+  html:
+    include-in-header: |
+      <style>
+        .problem-section {
+          display: none;
+        }
+        .problem-section.active {
+          display: block;
+        }
+        .toc-actions {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1rem;
+        }
+        .toc-actions button {
+          padding: 0.5rem 1rem;
+          border: none;
+          background: #f0f0f0;
+          cursor: pointer;
+          border-radius: 4px;
+        }
+        .toc-actions button:hover {
+          background: #e0e0e0;
+        }
+      </style>
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // Get all problem sections
+          const sections = document.querySelectorAll('.problem-section');
+          
+          // Create TOC actions
+          const tocActions = document.createElement('div');
+          tocActions.className = 'toc-actions';
+          
+          const showAllBtn = document.createElement('button');
+          showAllBtn.textContent = 'Show All';
+          showAllBtn.onclick = function() {
+            sections.forEach(section => section.classList.add('active'));
+          };
+          
+          const hideAllBtn = document.createElement('button');
+          hideAllBtn.textContent = 'Hide All';
+          hideAllBtn.onclick = function() {
+            sections.forEach(section => section.classList.remove('active'));
+          };
+          
+          tocActions.appendChild(showAllBtn);
+          tocActions.appendChild(hideAllBtn);
+          
+          // Insert TOC actions after the TOC
+          const toc = document.querySelector('#TOC');
+          toc.parentNode.insertBefore(tocActions, toc.nextSibling);
+          
+          // Add click handlers to TOC links
+          const tocLinks = document.querySelectorAll('#TOC a');
+          tocLinks.forEach(link => {
+            link.onclick = function(e) {
+              e.preventDefault();
+              const targetId = this.getAttribute('href').substring(1);
+              const targetSection = document.getElementById(targetId);
+              
+              // Toggle the section
+              targetSection.classList.toggle('active');
+              
+              // Scroll to the section
+              targetSection.scrollIntoView({ behavior: 'smooth' });
+            };
+          });
+          
+          // Initially hide all sections
+          sections.forEach(section => section.classList.remove('active'));
+        });
+      </script>
 ---
+
 Last updated: _Mar 20, 2025_.
 
 My solutions to the problems from [Project Euler](https://projecteuler.net/archives).
 
-## Problem 1
+## Problem 1 {.problem-section}
 _Difficulty: 5%_
 
 > Find the sum of all multiples of 3 or 5 below 1000.
@@ -19,7 +94,7 @@ _Difficulty: 5%_
 
 <span class="eval-result">233168</span>
 
-## Problem 2
+## Problem 2 {.problem-section}
 _Difficulty: 5%_
 
 > By considering the terms in the Fibonacci sequence whose values
@@ -39,7 +114,7 @@ _Difficulty: 5%_
 
 <span class="eval-result">4613732</span>
 
-## Problem 3
+## Problem 3 {.problem-section}
 _Difficulty: 5%_
 
 > Find the largest prime factor of 600851475143.
@@ -55,7 +130,7 @@ We'll just brute force all primes below $\sqrt{N}$ and try them as divisors.
 ```
 <span class="eval-result">6857</span>
 
-## Problem 4
+## Problem 4 {.problem-section}
 _Difficulty: 5%_
 
 > Find the largest palindrome made from the product of two 3-digit numbers.
@@ -80,7 +155,7 @@ Run through all $a \times b$ where $a, b \in [100, 999]$.
 ```
 <span class="eval-result">906609</span>
 
-## Problem 5
+## Problem 5 {.problem-section}
 > What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
 
 I was happy to solve this with just pen and paper. Let $N$ be the answer we seek. It has to be divisible by every prime and composite number $\le 20$. But since the composite numbers upto $20$ are themselves just products of primes smaller than themselves, we can write
@@ -94,7 +169,7 @@ For each prime above, the exponent has to be the highest exponent of that prime 
 <span class="eval">(* (* 2 2 2 2) (* 3 3) 5 7 11 13 17 19)</span>
 <span class="eval-result">232792560</span>
 
-## Problem 6
+## Problem 6 {.problem-section}
 _Difficulty: 5%_
 
 > Find the difference between the sum of the squares of the first
@@ -111,7 +186,7 @@ _Difficulty: 5%_
 
 <span class="eval-result">25164150</span>
 
-## Problem 7
+## Problem 7 {.problem-section}
 _Difficulty: 5%_
 
 > What is the 10,001st prime number?
@@ -133,7 +208,7 @@ So we'll generate all primes upto a little more than that number and pick out th
 
 <span class="eval-result">104743</span>
 
-## Problem 8
+## Problem 8 {.problem-section}
 _Difficulty: 5%_
 
 > Find the thirteen adjacent digits in the 1000-digit number that have the greatest product. What is the value
@@ -154,7 +229,7 @@ We slide a 13-digit window across the 1000-digit number, compute each product an
 
 <span class="eval-result">23514624000</span>
 
-## Problem 9
+## Problem 9 {.problem-section}
 _Difficulty: 5%_
 
 > Find the one Pythagorean triplet for which $a + b + c = 1000$.
@@ -186,7 +261,7 @@ We first write a function to check if a triplet is Pythagorean ($a^2 + b^2 = c^2
 
 The triplet is `(200 375 425)`.
 
-## Problem 10
+## Problem 10 {.problem-section}
 _Difficulty: 5%_
 
 > Find the sum of all the primes below two million.
@@ -194,7 +269,7 @@ _Difficulty: 5%_
 <span class="eval">(reduce + 0 (primes/sieve-of-eratosthenes 2000000))</span>
 <span class="eval-result">142913828922</span>
 
-## Problem 11
+## Problem 11 {.problem-section}
 _Difficulty: 5%_
 
 > In the 20x20 grid of numbers, find the largest product of four adjacent numbers. Adjacent
@@ -277,7 +352,7 @@ fun main() {
 
 <span class="eval-result">70600674</span>
 
-## Problem 13
+## Problem 13 {.problem-section}
 _Difficulty: 5%_
 
 > Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
@@ -308,7 +383,7 @@ In code:
 
 <span class="eval-result">"5537376230"</span>
 
-## Problem 14
+## Problem 14 {.problem-section}
 _Difficulty: 5%_
 
 > The Collatz sequence is defined as: $n_{i+1} = n_i / 2$ (when $n_i$ is even)
@@ -334,7 +409,7 @@ _Difficulty: 5%_
 
 <span class="eval-result">[837799 525]</span>
 
-## Problem 16
+## Problem 16 {.problem-section}
 _Difficulty: 5%_
 
 > Find the sum of the digits of $2^{1000}$.
@@ -347,7 +422,7 @@ _Difficulty: 5%_
 
 <span class="eval-result">1366</span>
 
-## Problem 17
+## Problem 17 {.problem-section}
 _Difficulty: 5%_
 
 > Write out each number 1-1000 (inclusive) as words. For example $342$ = "three hundred and forty-two".
@@ -438,7 +513,7 @@ The last special case to handle is the number $1000$.
 
 <span class="eval-result">21124</span>
 
-## Problem 19
+## Problem 19 {.problem-section}
 _Difficulty: 5%_
 
 > How many Sundays fell on the first of the month during
@@ -495,7 +570,7 @@ by imagining adding up the days for each month starting from 1901.
 
 <span class="eval-result">171</span>
 
-## Problem 20
+## Problem 20 {.problem-section}
 _Difficulty: 5%_
 
 > Find the sum of the digits in $100!$.
@@ -530,7 +605,7 @@ fun main() {
 
 <span class="eval-result">648</span>
 
-## Problem 21
+## Problem 21 {.problem-section}
 _Difficulty: 5%_
 
 > Let $d(n)$ be the sum of all proper divisors of $n$ (numbers less than $n$ that divide $n$).
@@ -567,7 +642,7 @@ Check each number under 10000.
 
 <span class="eval-result">31626</span>
 
-## Problem 22
+## Problem 22 {.problem-section}
 _Difficulty: 5%_
 
 > Let the _word-score_ of a name be the sum of its letters expressed as numbers (A = 1, B = 2, ...).
@@ -598,7 +673,7 @@ pairs and applies a function to each such pair.
 
 <span class="eval-result">871198282</span>
 
-## Problem 23
+## Problem 23 {.problem-section}
 
 > A number is _abundant_ if the sum of its proper divisors is greater than the number. By analysis,
 > it can be shown that all integers greater than 28123 can be written as the sum of two abundant numbers.
@@ -670,7 +745,7 @@ fun main() {
 
 <span class="eval-result">4179871</span>
 
-## Problem 25
+## Problem 25 {.problem-section}
 _Difficulty: 5%_
 
 > Find $n$ such that the $n$th Fibonacci number is the first one in the sequence to have
@@ -725,7 +800,7 @@ fun main() {
 
 <span class="eval-result">4782</span>
 
-## Problem 29
+## Problem 29 {.problem-section}
 _Difficulty: 5%_
 
 > With $2 \leq a \leq 100$ and $2 \leq b \leq 100$, how many distinct values of
@@ -748,7 +823,7 @@ fun main() {
 
 <span class="eval-result">9183</span>
 
-## Problem 65
+## Problem 65 {.problem-section}
 _Difficulty: 15%_
 
 

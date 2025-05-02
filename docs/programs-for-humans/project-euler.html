@@ -222,8 +222,8 @@ window.Quarto = {
 
 <p>Last updated: <em>Mar 20, 2025</em>.</p>
 <p>My solutions to the problems from <a href="https://projecteuler.net/archives">Project Euler</a>.</p>
-<section id="problem-1" class="level2">
-<h2 class="anchored" data-anchor-id="problem-1">Problem 1</h2>
+<section id="problem-1" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-1">Problem 1</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the sum of all multiples of 3 or 5 below 1000.</p>
@@ -233,8 +233,8 @@ window.Quarto = {
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">reduce</span> <span class="kw">+</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">233168</span></p>
 </section>
-<section id="problem-2" class="level2">
-<h2 class="anchored" data-anchor-id="problem-2">Problem 2</h2>
+<section id="problem-2" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-2">Problem 2</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>By considering the terms in the Fibonacci sequence whose values do not exceed four million, find the sum of the even-valued terms.</p>
@@ -250,8 +250,8 @@ window.Quarto = {
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">recur</span> f2 (<span class="kw">+</span> f1 f2) even-sum))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">4613732</span></p>
 </section>
-<section id="problem-3" class="level2">
-<h2 class="anchored" data-anchor-id="problem-3">Problem 3</h2>
+<section id="problem-3" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-3">Problem 3</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the largest prime factor of 600851475143.</p>
@@ -264,8 +264,8 @@ window.Quarto = {
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>       <span class="kw">first</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">6857</span></p>
 </section>
-<section id="problem-4" class="level2">
-<h2 class="anchored" data-anchor-id="problem-4">Problem 4</h2>
+<section id="problem-4" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-4">Problem 4</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the largest palindrome made from the product of two 3-digit numbers.</p>
@@ -283,8 +283,8 @@ window.Quarto = {
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>     <span class="kw">last</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">906609</span></p>
 </section>
-<section id="problem-5" class="level2">
-<h2 class="anchored" data-anchor-id="problem-5">Problem 5</h2>
+<section id="problem-5" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-5">Problem 5</h2>
 <blockquote class="blockquote">
 <p>What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?</p>
 </blockquote>
@@ -295,8 +295,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <p>For each prime above, the exponent has to be the highest exponent of that prime that appears in the factorization of any of the numbers <span class="math inline">\(1..20\)</span>. For example, <span class="math inline">\(a = 4\)</span> because <span class="math inline">\(16 = 2^4\)</span> and for <span class="math inline">\(N\)</span> to be divisible by <span class="math inline">\(16\)</span> it must have <span class="math inline">\(2^4\)</span> as a factor. Similarly for <span class="math inline">\(N\)</span> to be divisible by <span class="math inline">\(18\)</span> and <span class="math inline">\(9\)</span> it must have <span class="math inline">\(3^2\)</span> as a factor. By doing this for all the primes we get the answer:</p>
 <p><span class="eval">(* (* 2 2 2 2) (* 3 3) 5 7 11 13 17 19)</span> <span class="eval-result">232792560</span></p>
 </section>
-<section id="problem-6" class="level2">
-<h2 class="anchored" data-anchor-id="problem-6">Problem 6</h2>
+<section id="problem-6" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-6">Problem 6</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.</p>
@@ -309,8 +309,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        (<span class="kw">reduce</span> <span class="kw">+</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">25164150</span></p>
 </section>
-<section id="problem-7" class="level2">
-<h2 class="anchored" data-anchor-id="problem-7">Problem 7</h2>
+<section id="problem-7" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-7">Problem 7</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>What is the 10,001st prime number?</p>
@@ -325,8 +325,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>           (<span class="kw">dec</span> N)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">104743</span></p>
 </section>
-<section id="problem-8" class="level2">
-<h2 class="anchored" data-anchor-id="problem-8">Problem 8</h2>
+<section id="problem-8" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-8">Problem 8</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the thirteen adjacent digits in the 1000-digit number that have the greatest product. What is the value of this product?</p>
@@ -342,8 +342,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>     <span class="kw">last</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">23514624000</span></p>
 </section>
-<section id="problem-9" class="level2">
-<h2 class="anchored" data-anchor-id="problem-9">Problem 9</h2>
+<section id="problem-9" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-9">Problem 9</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the one Pythagorean triplet for which <span class="math inline">\(a + b + c = 1000\)</span>.</p>
@@ -367,16 +367,16 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <p><span class="eval-result">31875000</span></p>
 <p>The triplet is <code>(200 375 425)</code>.</p>
 </section>
-<section id="problem-10" class="level2">
-<h2 class="anchored" data-anchor-id="problem-10">Problem 10</h2>
+<section id="problem-10" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-10">Problem 10</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the sum of all the primes below two million.</p>
 </blockquote>
 <p><span class="eval">(reduce + 0 (primes/sieve-of-eratosthenes 2000000))</span> <span class="eval-result">142913828922</span></p>
 </section>
-<section id="problem-11" class="level2">
-<h2 class="anchored" data-anchor-id="problem-11">Problem 11</h2>
+<section id="problem-11" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-11">Problem 11</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>In the 20x20 grid of numbers, find the largest product of four adjacent numbers. Adjacent is defined as up, down, left, right, and four diagonals.</p>
@@ -449,8 +449,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">70600674</span></p>
 </section>
-<section id="problem-13" class="level2">
-<h2 class="anchored" data-anchor-id="problem-13">Problem 13</h2>
+<section id="problem-13" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-13">Problem 13</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.</p>
@@ -475,8 +475,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">apply</span> <span class="kw">str</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">“5537376230”</span></p>
 </section>
-<section id="problem-14" class="level2">
-<h2 class="anchored" data-anchor-id="problem-14">Problem 14</h2>
+<section id="problem-14" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-14">Problem 14</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>The Collatz sequence is defined as: <span class="math inline">\(n_{i+1} = n_i / 2\)</span> (when <span class="math inline">\(n_i\)</span> is even) and <span class="math inline">\(n_{i+1} = 3n_i + 1\)</span> (when <span class="math inline">\(n\)</span> is odd). Assuming that every starting value eventually converges to 1, which starting value under one million produces the longest sequence?</p>
@@ -496,8 +496,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">apply</span> <span class="kw">max-key</span> <span class="kw">second</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">[837799 525]</span></p>
 </section>
-<section id="problem-16" class="level2">
-<h2 class="anchored" data-anchor-id="problem-16">Problem 16</h2>
+<section id="problem-16" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-16">Problem 16</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the sum of the digits of <span class="math inline">\(2^{1000}\)</span>.</p>
@@ -507,8 +507,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">reduce</span> <span class="kw">+</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">1366</span></p>
 </section>
-<section id="problem-17" class="level2">
-<h2 class="anchored" data-anchor-id="problem-17">Problem 17</h2>
+<section id="problem-17" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-17">Problem 17</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Write out each number 1-1000 (inclusive) as words. For example <span class="math inline">\(342\)</span> = “three hundred and forty-two”. Count the total number of letters, excluding spaces and hyphens.</p>
@@ -580,8 +580,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>   (<span class="kw">count</span> <span class="st">"onethousand"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">21124</span></p>
 </section>
-<section id="problem-19" class="level2">
-<h2 class="anchored" data-anchor-id="problem-19">Problem 19</h2>
+<section id="problem-19" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-19">Problem 19</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?</p>
@@ -622,8 +622,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">@result</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">171</span></p>
 </section>
-<section id="problem-20" class="level2">
-<h2 class="anchored" data-anchor-id="problem-20">Problem 20</h2>
+<section id="problem-20" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-20">Problem 20</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find the sum of the digits in <span class="math inline">\(100!\)</span>.</p>
@@ -650,8 +650,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">648</span></p>
 </section>
-<section id="problem-21" class="level2">
-<h2 class="anchored" data-anchor-id="problem-21">Problem 21</h2>
+<section id="problem-21" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-21">Problem 21</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Let <span class="math inline">\(d(n)\)</span> be the sum of all proper divisors of <span class="math inline">\(n\)</span> (numbers less than <span class="math inline">\(n\)</span> that divide <span class="math inline">\(n\)</span>). If <span class="math inline">\(d(b) = a\)</span> and <span class="math inline">\(d(a) = b\)</span> while <span class="math inline">\(a \ne b\)</span>, then both <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are called amicable numbers. Find the sum of all amicable numbers under 10000.</p>
@@ -674,8 +674,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">reduce</span> <span class="kw">+</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">31626</span></p>
 </section>
-<section id="problem-22" class="level2">
-<h2 class="anchored" data-anchor-id="problem-22">Problem 22</h2>
+<section id="problem-22" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-22">Problem 22</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Let the <em>word-score</em> of a name be the sum of its letters expressed as numbers (A = 1, B = 2, …). So for example <code>COLIN = 53</code>. Sort the list of names in the input file, compute the word score for each name, multiply the position of each name in the sorted list by its score and sum everything.</p>
@@ -694,8 +694,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>               sorted-names)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">871198282</span></p>
 </section>
-<section id="problem-23" class="level2">
-<h2 class="anchored" data-anchor-id="problem-23">Problem 23</h2>
+<section id="problem-23" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-23">Problem 23</h2>
 <blockquote class="blockquote">
 <p>A number is <em>abundant</em> if the sum of its proper divisors is greater than the number. By analysis, it can be shown that all integers greater than 28123 can be written as the sum of two abundant numbers.</p>
 </blockquote>
@@ -755,8 +755,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">4179871</span></p>
 </section>
-<section id="problem-25" class="level2">
-<h2 class="anchored" data-anchor-id="problem-25">Problem 25</h2>
+<section id="problem-25" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-25">Problem 25</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>Find <span class="math inline">\(n\)</span> such that the <span class="math inline">\(n\)</span>th Fibonacci number is the first one in the sequence to have 1000 digits.</p>
@@ -799,8 +799,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">4782</span></p>
 </section>
-<section id="problem-29" class="level2">
-<h2 class="anchored" data-anchor-id="problem-29">Problem 29</h2>
+<section id="problem-29" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-29">Problem 29</h2>
 <p><em>Difficulty: 5%</em></p>
 <blockquote class="blockquote">
 <p>With <span class="math inline">\(2 \leq a \leq 100\)</span> and <span class="math inline">\(2 \leq b \leq 100\)</span>, how many distinct values of <span class="math inline">\(a^b\)</span> are there?</p>
@@ -819,8 +819,8 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">9183</span></p>
 </section>
-<section id="problem-65" class="level2">
-<h2 class="anchored" data-anchor-id="problem-65">Problem 65</h2>
+<section id="problem-65" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-65">Problem 65</h2>
 <p><em>Difficulty: 15%</em></p>
 <blockquote class="blockquote">
 <p><span class="math inline">\(e\)</span> can be written as the continued fraction <span class="math inline">\([2; 1, 2, 1, 1, 4, 1, 1, 6, 1, ... , 1, 2k, 1, ...]\)</span></p>

@@ -12,5 +12,7 @@ __pycache__
 tw
 public
 marimo.toml
+node_modules
+dist
 
 data/holmes.txt
