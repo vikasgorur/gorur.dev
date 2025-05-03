@@ -1011,6 +1011,26 @@ export function problem47() {
 
 <span class="eval-result">(134043: 3,7,13,491) (134044: 4,23,31,47) (134045: 5,17,19,83) (134046: 2,9,11,677)</span>
 
+## Problem 48 {.problem-section}
+
+> Find the last ten digits of the series, $1^1 + 2^2 + 3^3 + ... + 1000^{1000}$.
+```kotlin
+import java.math.BigInteger
+
+fun main() {
+    var result = BigInteger.ZERO;
+    var i = BigInteger.ONE;
+    while (i <= BigInteger.valueOf(1000)) {
+        result += i.pow(i.toInt())
+        i += BigInteger.ONE
+    }
+    val digits = result.toString()
+    println(digits.substring(digits.length - 10, digits.length))
+}
+```
+
+<span class="eval-result">9110846700</span>
+
 ## Problem 65 {.problem-section}
 _Difficulty: 15%_
 

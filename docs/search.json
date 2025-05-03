@@ -796,5 +796,12 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 46",
     "text": "Problem 46\nexport function isGoldbachExpressible(\n    n: number, primes: Array&lt;number&gt;\n): boolean {\n\n    const isEven = (x: number) =&gt; x % 2 === 0;\n    const isSquare = (x: number) =&gt; Math.sqrt(x) === Math.floor(Math.sqrt(x));\n\n    for (let p of primes) {\n        const rest = n - p;\n        if (isEven(rest) && isSquare(rest/2)) {\n            return true;\n        }\n        if (p &gt; n) break; \n    }\n    return false;\n}\n\nfunction problem46() {\n    let n = 3;\n    const LIMIT = 100000;\n    const primes = sieveOfEratosthenes(LIMIT);\n\n    while (n &lt; LIMIT) {\n        if (!isGoldbachExpressible(n, primes)) {\n            console.log(n);\n            break;\n        }\n        n += 2;\n    }\n}\n5777"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-48",
+    "href": "programs-for-humans/project-euler.html#problem-48",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 48",
+    "text": "Problem 48\n\nFind the last ten digits of the series, \\(1^1 + 2^2 + 3^3 + ... + 1000^{1000}\\).\n\nimport java.math.BigInteger\n\nfun main() {\n    var result = BigInteger.ZERO;\n    var i = BigInteger.ONE;\n    while (i &lt;= BigInteger.valueOf(1000)) {\n        result += i.pow(i.toInt())\n        i += BigInteger.ONE\n    }\n    val digits = result.toString()\n    println(digits.substring(digits.length - 10, digits.length))\n}\n9110846700"
   }
 ]

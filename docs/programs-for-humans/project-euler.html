@@ -1040,6 +1040,25 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb36-79"><a href="#cb36-79" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">(134043: 3,7,13,491) (134044: 4,23,31,47) (134045: 5,17,19,83) (134046: 2,9,11,677)</span></p>
 </section>
+<section id="problem-48" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-48">Problem 48</h2>
+<blockquote class="blockquote">
+<p>Find the last ten digits of the series, <span class="math inline">\(1^1 + 2^2 + 3^3 + ... + 1000^{1000}\)</span>.</p>
+</blockquote>
+<div class="sourceCode" id="cb37"><pre class="sourceCode kotlin code-with-copy"><code class="sourceCode kotlin"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="im">java</span><span class="op">.</span><span class="im">math</span><span class="op">.</span><span class="im">BigInteger</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="kw">fun</span> <span class="fu">main</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> <span class="va">result</span> <span class="op">=</span> BigInteger<span class="op">.</span>ZERO<span class="op">;</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> <span class="va">i</span> <span class="op">=</span> BigInteger<span class="op">.</span>ONE<span class="op">;</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>i <span class="op">&lt;=</span> BigInteger<span class="op">.</span>valueOf<span class="op">(</span><span class="dv">1000</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>        result <span class="op">+=</span> i<span class="op">.</span>pow<span class="op">(</span>i<span class="op">.</span>toInt<span class="op">())</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>        i <span class="op">+=</span> BigInteger<span class="op">.</span>ONE</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">val</span> <span class="va">digits</span> <span class="op">=</span> result<span class="op">.</span>toString<span class="op">()</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    println<span class="op">(</span>digits<span class="op">.</span>substring<span class="op">(</span>digits<span class="op">.</span>length <span class="op">-</span> <span class="dv">10</span><span class="op">,</span> digits<span class="op">.</span>length<span class="op">))</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">9110846700</span></p>
+</section>
 <section id="problem-65" class="level2 problem-section">
 <h2 class="problem-section anchored" data-anchor-id="problem-65">Problem 65</h2>
 <p><em>Difficulty: 15%</em></p>
@@ -1048,47 +1067,47 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <p>The <span class="math inline">\(n\)</span>th “convergent” of a continued fraction is the result of summing it upto <span class="math inline">\(n\)</span> terms. Find the sum of the digits in the numerator of the 100th convergent of the fraction for <span class="math inline">\(e\)</span>.</p>
 </blockquote>
 <p>First we write a generic function to sum the first <span class="math inline">\(n\)</span> terms of a continued fraction.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sum-terms</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  [xs]</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">empty?</span> xs)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">/</span> <span class="dv">1</span> (<span class="kw">+</span> (<span class="kw">first</span> xs) (sum-terms (<span class="kw">rest</span> xs))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sum-terms</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  [xs]</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">empty?</span> xs)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">/</span> <span class="dv">1</span> (<span class="kw">+</span> (<span class="kw">first</span> xs) (sum-terms (<span class="kw">rest</span> xs))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can test that it works by computing <span class="math inline">\(\sqrt{2}\)</span> upto 10 terms.</p>
 <p><span class="eval">(float (+ 1 (sum-terms (repeat 9 2))))</span> <span class="eval-result">1.4142137</span></p>
 <p>The fraction for <span class="math inline">\(e\)</span> is slightly more complicated because the <span class="math inline">\(k\)</span>th term can be either <span class="math inline">\(2k\)</span> or <span class="math inline">\(1\)</span>.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> e-terms</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first n terms of the continued fraction for e"</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  [n]</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">take</span> n (<span class="kw">map</span> (<span class="kw">fn</span> [k]</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">case</span> (<span class="kw">mod</span> k <span class="dv">3</span>)</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">0</span> <span class="dv">1</span></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">1</span> (<span class="kw">*</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> k <span class="dv">3</span>)))</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">2</span> <span class="dv">1</span>))</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">range</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> e-terms</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first n terms of the continued fraction for e"</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  [n]</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">take</span> n (<span class="kw">map</span> (<span class="kw">fn</span> [k]</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">case</span> (<span class="kw">mod</span> k <span class="dv">3</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">0</span> <span class="dv">1</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">1</span> (<span class="kw">*</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> k <span class="dv">3</span>)))</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">2</span> <span class="dv">1</span>))</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">range</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now sum the first 100 terms and compute the sum of the digits of the numerator.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">map</span> #(Character/digit <span class="va">%</span> <span class="dv">10</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">str</span> (numerator (<span class="kw">+</span> <span class="dv">2</span> (sum-terms (e-terms <span class="dv">99</span>)))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">map</span> #(Character/digit <span class="va">%</span> <span class="dv">10</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">str</span> (numerator (<span class="kw">+</span> <span class="dv">2</span> (sum-terms (e-terms <span class="dv">99</span>)))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">272</span></p>
 </section>
 <section id="helpers" class="level2 problem-section">
 <h2 class="problem-section anchored" data-anchor-id="helpers">Helpers</h2>
 <p>These are helper functions used across problems.</p>
 <p>Since many of the problems deal with prime numbers, let’s write the Sieve of Eratosthenes to generate all prime numbers below <span class="math inline">\(n\)</span>.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sieve-of-eratosthenes</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  [n]</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [sieve (BitSet. (<span class="kw">inc</span> n))]</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; Set all bits to true initially</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    (.<span class="kw">set</span> sieve <span class="dv">0</span> (<span class="kw">inc</span> n))</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; 0 and 1 are not prime</span></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">0</span>)</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">1</span>)</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">doseq</span> [x (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">int</span> (Math/sqrt n))))]</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">doseq</span> [i (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> n x)))]</span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>        (.clear sieve (<span class="kw">*</span> x i))))</span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">filter</span> #(.<span class="kw">get</span> sieve <span class="va">%</span>) (<span class="kw">range</span> <span class="dv">2</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sieve-of-eratosthenes</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  [n]</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [sieve (BitSet. (<span class="kw">inc</span> n))]</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; Set all bits to true initially</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    (.<span class="kw">set</span> sieve <span class="dv">0</span> (<span class="kw">inc</span> n))</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; 0 and 1 are not prime</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">0</span>)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">1</span>)</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">doseq</span> [x (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">int</span> (Math/sqrt n))))]</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">doseq</span> [i (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> n x)))]</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>        (.clear sieve (<span class="kw">*</span> x i))))</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">filter</span> #(.<span class="kw">get</span> sieve <span class="va">%</span>) (<span class="kw">range</span> <span class="dv">2</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
