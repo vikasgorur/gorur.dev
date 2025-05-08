@@ -1,9 +1,9 @@
 ---
 title: Project Euler - first 100 problems
 toc: false
-format: 
+format:
   html:
-    include-in-header: 
+    include-in-header:
       text: |
         <style>
           .problem-section {
@@ -64,7 +64,7 @@ format:
             // Create problem grid
             const grid = document.createElement('div');
             grid.className = 'problem-grid';
-            
+
             // Get all existing problem sections
             const existingProblems = new Set();
             document.querySelectorAll('section.problem-section').forEach(section => {
@@ -76,12 +76,12 @@ format:
                 }
               }
             });
-            
+
             for (let i = 1; i <= 100; i++) {
               const link = document.createElement('a');
               link.href = `#problem-${i}`;
               link.className = 'problem-number';
-              
+
               if (existingProblems.has(i)) {
                 link.classList.add('exists');
                 link.onclick = function(e) {
@@ -91,13 +91,13 @@ format:
               } else {
                 link.classList.add('missing');
               }
-              
+
               link.textContent = i;
               grid.appendChild(link);
             }
-            
+
             document.body.appendChild(grid);
-            
+
             // Add margin to main content
             const mainContent = document.querySelector('.main-content');
             if (!mainContent) {
@@ -106,14 +106,14 @@ format:
                 content.classList.add('main-content');
               }
             }
-            
+
             function showProblem(num) {
               // Hide all problem sections
               document.querySelectorAll('.problem-section').forEach(section => {
                 section.classList.remove('active');
                 section.style.display = 'none';
               });
-              
+
               // Show selected problem
               const targetSection = document.getElementById(`problem-${num}`);
               if (targetSection) {
@@ -121,19 +121,19 @@ format:
                 targetSection.style.display = 'block';
                 targetSection.scrollIntoView();
               }
-              
+
               // Update active number in grid
               document.querySelectorAll('.problem-number').forEach(link => {
                 link.classList.remove('active');
               });
               document.querySelector(`.problem-number:nth-child(${num})`).classList.add('active');
             }
-            
+
             // Initially hide all sections
             document.querySelectorAll('.problem-section').forEach(section => {
               section.style.display = 'none';
             });
-            
+
             // Show first problem by default if it exists
             if (existingProblems.has(1)) {
               showProblem(1);
@@ -903,7 +903,7 @@ export function isGoldbachExpressible(
         if (isEven(rest) && isSquare(rest/2)) {
             return true;
         }
-        if (p > n) break; 
+        if (p > n) break;
     }
     return false;
 }
@@ -952,7 +952,7 @@ export function primeDivisors(
     let divisors = [];
     for (let p of primes) {
         if (n % p === 0) divisors.push(p);
-        if (p > n) break; 
+        if (p > n) break;
     }
     return divisors;
 }
@@ -997,7 +997,7 @@ export function problem47() {
         primePowerFactors(12, primes),
         primePowerFactors(13, primes),
     ];
-    
+
     const allAtleastFour = (seq: Array<Array<number>>) => seq.flat().length >= 16;
     while (!(allDistinct(seq) && allAtleastFour(seq))) {
         seq.shift();
@@ -1031,6 +1031,66 @@ fun main() {
 
 <span class="eval-result">9110846700</span>
 
+## Problem 52 {.problem-section}
+
+> Find the smallest positive integer $x$ such that $x$, $2x$, $3x$, $4x$, $5x$, and $6x$
+> all contain the same digits.
+
+```typescript
+import BitSet from "bitset";
+
+export function digitSet(n: number): BitSet {
+    const bs = new BitSet("0000000000");
+    const DIGITS: Record<string, number> = {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+    };
+    for (const c of n.toString()) {
+        bs.set(DIGITS[c]);
+    }
+    return bs;
+}
+
+export function allEqual(sets: Array<BitSet>): boolean {
+    const first = sets[0];
+    for (let i = 1; i < sets.length; i++) {
+        if (!first.equals(sets[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function tryNumber(n: number): boolean {
+    const sets: Array<BitSet> =
+        [1, 2, 3, 4, 5, 6].map((x) => digitSet(n * x));
+    return allEqual(sets);
+}
+
+function problem52() {
+    console.time("problem52");
+    for (let n = 1; n < 1000000; n++) {
+        if (tryNumber(n)) {
+            const vals = [1, 2, 3, 4, 5, 6].map((x) => n * x);
+            console.log(`${vals.join(" ")}`);
+        }
+    }
+    console.timeEnd("problem52");
+}
+
+problem52();
+```
+
+<span class="eval-result">142857</span>
+
 ## Problem 59 {.problem-section}
 
 ```typescript
@@ -1038,7 +1098,7 @@ function gibberishScore(text: number[]): number {
   let gibberishCount = 0;
   const isReadable = (c: number) => (
     c >= 'a'.charCodeAt(0) && c <= 'z'.charCodeAt(0)
-  ); 
+  );
 
   for (const c of text) {
     if (!isReadable(c)) gibberishCount++;
@@ -1049,7 +1109,7 @@ function gibberishScore(text: number[]): number {
 async function loadInput(filePath: string): Promise<number[]> {
   try {
     const data = await readFile(filePath, 'utf-8');
-    return data.split(",").map((code: string, _) => parseInt(code)); 
+    return data.split(",").map((code: string, _) => parseInt(code));
   } catch (error) {
     console.error('Error reading file:', error);
     throw error;
@@ -1076,7 +1136,7 @@ function allKeys(): number[][] {
         result.push([i, j, k]);
       }
     }
-  } 
+  }
   return result;
 }
 

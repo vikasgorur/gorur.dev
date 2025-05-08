@@ -937,7 +937,7 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="fu">isEven</span>(rest) <span class="op">&amp;&amp;</span> <span class="fu">isSquare</span>(rest<span class="op">/</span><span class="dv">2</span>)) {</span>
 <span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="kw">true</span><span class="op">;</span></span>
 <span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="op">&gt;</span> n) <span class="cf">break</span><span class="op">;</span> </span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="op">&gt;</span> n) <span class="cf">break</span><span class="op">;</span></span>
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
 <span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -983,7 +983,7 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> divisors <span class="op">=</span> []<span class="op">;</span></span>
 <span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> p <span class="kw">of</span> primes) {</span>
 <span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (n <span class="op">%</span> p <span class="op">===</span> <span class="dv">0</span>) divisors<span class="op">.</span><span class="fu">push</span>(p)<span class="op">;</span></span>
-<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="op">&gt;</span> n) <span class="cf">break</span><span class="op">;</span> </span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="op">&gt;</span> n) <span class="cf">break</span><span class="op">;</span></span>
 <span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> divisors<span class="op">;</span></span>
 <span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>}</span>
@@ -1028,7 +1028,7 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb36-67"><a href="#cb36-67" aria-hidden="true" tabindex="-1"></a>        <span class="fu">primePowerFactors</span>(<span class="dv">12</span><span class="op">,</span> primes)<span class="op">,</span></span>
 <span id="cb36-68"><a href="#cb36-68" aria-hidden="true" tabindex="-1"></a>        <span class="fu">primePowerFactors</span>(<span class="dv">13</span><span class="op">,</span> primes)<span class="op">,</span></span>
 <span id="cb36-69"><a href="#cb36-69" aria-hidden="true" tabindex="-1"></a>    ]<span class="op">;</span></span>
-<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-70"><a href="#cb36-70" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-71"><a href="#cb36-71" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> allAtleastFour <span class="op">=</span> (seq<span class="op">:</span> <span class="bu">Array</span><span class="op">&lt;</span><span class="bu">Array</span><span class="op">&lt;</span><span class="dt">number</span><span class="op">&gt;&gt;</span>) <span class="kw">=&gt;</span> seq<span class="op">.</span><span class="fu">flat</span>()<span class="op">.</span><span class="at">length</span> <span class="op">&gt;=</span> <span class="dv">16</span><span class="op">;</span></span>
 <span id="cb36-72"><a href="#cb36-72" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> (<span class="op">!</span>(<span class="fu">allDistinct</span>(seq) <span class="op">&amp;&amp;</span> <span class="fu">allAtleastFour</span>(seq))) {</span>
 <span id="cb36-73"><a href="#cb36-73" aria-hidden="true" tabindex="-1"></a>        seq<span class="op">.</span><span class="fu">shift</span>()<span class="op">;</span></span>
@@ -1059,77 +1059,134 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">9110846700</span></p>
 </section>
-<section id="problem-59" class="level2 problem-section">
-<h2 class="problem-section anchored" data-anchor-id="problem-59">Problem 59</h2>
-<div class="sourceCode" id="cb38"><pre class="sourceCode typescript code-with-copy"><code class="sourceCode typescript"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">gibberishScore</span>(text<span class="op">:</span> <span class="dt">number</span>[])<span class="op">:</span> <span class="dt">number</span> {</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> gibberishCount <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> isReadable <span class="op">=</span> (c<span class="op">:</span> <span class="dt">number</span>) <span class="kw">=&gt;</span> (</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    c <span class="op">&gt;=</span> <span class="st">'a'</span><span class="op">.</span><span class="fu">charCodeAt</span>(<span class="dv">0</span>) <span class="op">&amp;&amp;</span> c <span class="op">&lt;=</span> <span class="st">'z'</span><span class="op">.</span><span class="fu">charCodeAt</span>(<span class="dv">0</span>)</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span> </span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> c <span class="kw">of</span> text) {</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="fu">isReadable</span>(c)) gibberishCount<span class="op">++;</span></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> gibberishCount <span class="op">/</span> text<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">loadInput</span>(filePath<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span><span class="dt">number</span>[]<span class="op">&gt;</span> {</span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> <span class="fu">readFile</span>(filePath<span class="op">,</span> <span class="st">'utf-8'</span>)<span class="op">;</span></span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> data<span class="op">.</span><span class="fu">split</span>(<span class="st">","</span>)<span class="op">.</span><span class="fu">map</span>((code<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> _) <span class="kw">=&gt;</span> <span class="pp">parseInt</span>(code))<span class="op">;</span> </span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> (error) {</span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(<span class="st">'Error reading file:'</span><span class="op">,</span> error)<span class="op">;</span></span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> error<span class="op">;</span></span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<section id="problem-52" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-52">Problem 52</h2>
+<blockquote class="blockquote">
+<p>Find the smallest positive integer <span class="math inline">\(x\)</span> such that <span class="math inline">\(x\)</span>, <span class="math inline">\(2x\)</span>, <span class="math inline">\(3x\)</span>, <span class="math inline">\(4x\)</span>, <span class="math inline">\(5x\)</span>, and <span class="math inline">\(6x\)</span> all contain the same digits.</p>
+</blockquote>
+<div class="sourceCode" id="cb38"><pre class="sourceCode typescript code-with-copy"><code class="sourceCode typescript"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> BitSet <span class="im">from</span> <span class="st">"bitset"</span><span class="op">;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">digitSet</span>(n<span class="op">:</span> <span class="dt">number</span>)<span class="op">:</span> BitSet {</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> bs <span class="op">=</span> <span class="kw">new</span> <span class="fu">BitSet</span>(<span class="st">"0000000000"</span>)<span class="op">;</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> DIGITS<span class="op">:</span> <span class="bu">Record</span><span class="op">&lt;</span><span class="dt">string</span><span class="op">,</span> <span class="dt">number</span><span class="op">&gt;</span> <span class="op">=</span> {</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"0"</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"1"</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"2"</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"3"</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"4"</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"5"</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"6"</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"7"</span><span class="op">:</span> <span class="dv">7</span><span class="op">,</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"8"</span><span class="op">:</span> <span class="dv">8</span><span class="op">,</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"9"</span><span class="op">:</span> <span class="dv">9</span><span class="op">,</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>    }<span class="op">;</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">const</span> c <span class="kw">of</span> n<span class="op">.</span><span class="fu">toString</span>()) {</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>        bs<span class="op">.</span><span class="fu">set</span>(DIGITS[c])<span class="op">;</span></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> bs<span class="op">;</span></span>
 <span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">decrypt</span>(cipher<span class="op">:</span> <span class="dt">number</span>[]<span class="op">,</span> key<span class="op">:</span> <span class="dt">number</span>[])<span class="op">:</span> <span class="dt">number</span>[] {</span>
-<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (cipher<span class="op">.</span><span class="at">length</span> <span class="op">%</span> key<span class="op">.</span><span class="at">length</span> <span class="op">!=</span> <span class="dv">0</span>) {</span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="bu">Error</span>(<span class="st">"cipher must be multiple of key length"</span>)<span class="op">;</span></span>
-<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> keyLength <span class="op">=</span> key<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
-<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> cipher<span class="op">.</span><span class="fu">map</span>((c<span class="op">,</span> i) <span class="kw">=&gt;</span> c <span class="op">^</span> key[i <span class="op">%</span> keyLength])<span class="op">;</span></span>
-<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">allKeys</span>()<span class="op">:</span> <span class="dt">number</span>[][] {</span>
-<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> a <span class="op">=</span> <span class="st">"a"</span><span class="op">.</span><span class="fu">charCodeAt</span>(<span class="dv">0</span>)<span class="op">;</span></span>
-<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> z <span class="op">=</span> <span class="st">"z"</span><span class="op">.</span><span class="fu">charCodeAt</span>(<span class="dv">0</span>)<span class="op">;</span></span>
-<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> a<span class="op">;</span> i <span class="op">&lt;=</span> z<span class="op">;</span> i<span class="op">++</span>) {</span>
-<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> j <span class="op">=</span> a<span class="op">;</span> j <span class="op">&lt;=</span> z<span class="op">;</span> j<span class="op">++</span>) {</span>
-<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (<span class="kw">let</span> k <span class="op">=</span> a<span class="op">;</span> k <span class="op">&lt;=</span> z<span class="op">;</span> k<span class="op">++</span>) {</span>
-<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>        result<span class="op">.</span><span class="fu">push</span>([i<span class="op">,</span> j<span class="op">,</span> k])<span class="op">;</span></span>
-<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>  } </span>
-<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> result<span class="op">;</span></span>
-<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">problem59</span>() {</span>
-<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cipher <span class="op">=</span> <span class="cf">await</span> <span class="fu">loadInput</span>(<span class="st">"src/code/data/euler-59.txt"</span>)<span class="op">;</span></span>
-<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> bestGuess<span class="op">:</span> {</span>
-<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a>    key<span class="op">:</span> <span class="dt">number</span>[]<span class="op">,</span></span>
-<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a>    plain<span class="op">:</span> <span class="dt">number</span>[]<span class="op">,</span></span>
-<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a>    score<span class="op">:</span> <span class="dt">number</span></span>
-<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a>  } <span class="op">=</span> {</span>
-<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a>    key<span class="op">:</span> []<span class="op">,</span></span>
-<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a>    plain<span class="op">:</span> []<span class="op">,</span></span>
-<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>    score<span class="op">:</span> <span class="dv">1</span></span>
-<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> k <span class="kw">of</span> <span class="fu">allKeys</span>()) {</span>
-<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> plain <span class="op">=</span> <span class="fu">decrypt</span>(cipher<span class="op">,</span> k)<span class="op">;</span></span>
-<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> score <span class="op">=</span> <span class="fu">gibberishScore</span>(plain)<span class="op">;</span></span>
-<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (score <span class="op">&lt;</span> bestGuess<span class="op">.</span><span class="at">score</span>) {</span>
-<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a>      bestGuess<span class="op">.</span><span class="at">key</span> <span class="op">=</span> k<span class="op">;</span></span>
-<span id="cb38-64"><a href="#cb38-64" aria-hidden="true" tabindex="-1"></a>      bestGuess<span class="op">.</span><span class="at">plain</span> <span class="op">=</span> plain<span class="op">;</span></span>
-<span id="cb38-65"><a href="#cb38-65" aria-hidden="true" tabindex="-1"></a>      bestGuess<span class="op">.</span><span class="at">score</span> <span class="op">=</span> score<span class="op">;</span></span>
-<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb38-67"><a href="#cb38-67" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb38-68"><a href="#cb38-68" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(bestGuess<span class="op">.</span><span class="at">plain</span><span class="op">.</span><span class="fu">reduce</span>((total<span class="op">,</span> x) <span class="kw">=&gt;</span> total <span class="op">+</span> x<span class="op">,</span> <span class="dv">0</span>))<span class="op">;</span></span>
-<span id="cb38-69"><a href="#cb38-69" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">allEqual</span>(sets<span class="op">:</span> <span class="bu">Array</span><span class="op">&lt;</span>BitSet<span class="op">&gt;</span>)<span class="op">:</span> <span class="dt">boolean</span> {</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> first <span class="op">=</span> sets[<span class="dv">0</span>]<span class="op">;</span></span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;</span> sets<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="op">!</span>first<span class="op">.</span><span class="fu">equals</span>(sets[i])) {</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="kw">false</span><span class="op">;</span></span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="kw">true</span><span class="op">;</span></span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">tryNumber</span>(n<span class="op">:</span> <span class="dt">number</span>)<span class="op">:</span> <span class="dt">boolean</span> {</span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sets<span class="op">:</span> <span class="bu">Array</span><span class="op">&lt;</span>BitSet<span class="op">&gt;</span> <span class="op">=</span></span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>        [<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span>]<span class="op">.</span><span class="fu">map</span>((x) <span class="kw">=&gt;</span> <span class="fu">digitSet</span>(n <span class="op">*</span> x))<span class="op">;</span></span>
+<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">allEqual</span>(sets)<span class="op">;</span></span>
+<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">problem52</span>() {</span>
+<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">time</span>(<span class="st">"problem52"</span>)<span class="op">;</span></span>
+<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> n <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> n <span class="op">&lt;</span> <span class="dv">1000000</span><span class="op">;</span> n<span class="op">++</span>) {</span>
+<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (<span class="fu">tryNumber</span>(n)) {</span>
+<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>            <span class="kw">const</span> vals <span class="op">=</span> [<span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span>]<span class="op">.</span><span class="fu">map</span>((x) <span class="kw">=&gt;</span> n <span class="op">*</span> x)<span class="op">;</span></span>
+<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>            <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`</span><span class="sc">${</span>vals<span class="op">.</span><span class="fu">join</span>(<span class="st">" "</span>)<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">timeEnd</span>(<span class="st">"problem52"</span>)<span class="op">;</span></span>
+<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a><span class="fu">problem52</span>()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">142857</span></p>
+</section>
+<section id="problem-59" class="level2 problem-section">
+<h2 class="problem-section anchored" data-anchor-id="problem-59">Problem 59</h2>
+<div class="sourceCode" id="cb39"><pre class="sourceCode typescript code-with-copy"><code class="sourceCode typescript"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">gibberishScore</span>(text<span class="op">:</span> <span class="dt">number</span>[])<span class="op">:</span> <span class="dt">number</span> {</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> gibberishCount <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> isReadable <span class="op">=</span> (c<span class="op">:</span> <span class="dt">number</span>) <span class="kw">=&gt;</span> (</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    c <span class="op">&gt;=</span> <span class="st">'a'</span><span class="op">.</span><span class="fu">charCodeAt</span>(<span class="dv">0</span>) <span class="op">&amp;&amp;</span> c <span class="op">&lt;=</span> <span class="st">'z'</span><span class="op">.</span><span class="fu">charCodeAt</span>(<span class="dv">0</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> c <span class="kw">of</span> text) {</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span><span class="fu">isReadable</span>(c)) gibberishCount<span class="op">++;</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> gibberishCount <span class="op">/</span> text<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">loadInput</span>(filePath<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span><span class="dt">number</span>[]<span class="op">&gt;</span> {</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">try</span> {</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> data <span class="op">=</span> <span class="cf">await</span> <span class="fu">readFile</span>(filePath<span class="op">,</span> <span class="st">'utf-8'</span>)<span class="op">;</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> data<span class="op">.</span><span class="fu">split</span>(<span class="st">","</span>)<span class="op">.</span><span class="fu">map</span>((code<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> _) <span class="kw">=&gt;</span> <span class="pp">parseInt</span>(code))<span class="op">;</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">catch</span> (error) {</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(<span class="st">'Error reading file:'</span><span class="op">,</span> error)<span class="op">;</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> error<span class="op">;</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">decrypt</span>(cipher<span class="op">:</span> <span class="dt">number</span>[]<span class="op">,</span> key<span class="op">:</span> <span class="dt">number</span>[])<span class="op">:</span> <span class="dt">number</span>[] {</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (cipher<span class="op">.</span><span class="at">length</span> <span class="op">%</span> key<span class="op">.</span><span class="at">length</span> <span class="op">!=</span> <span class="dv">0</span>) {</span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">throw</span> <span class="bu">Error</span>(<span class="st">"cipher must be multiple of key length"</span>)<span class="op">;</span></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> keyLength <span class="op">=</span> key<span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> cipher<span class="op">.</span><span class="fu">map</span>((c<span class="op">,</span> i) <span class="kw">=&gt;</span> c <span class="op">^</span> key[i <span class="op">%</span> keyLength])<span class="op">;</span></span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">allKeys</span>()<span class="op">:</span> <span class="dt">number</span>[][] {</span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> a <span class="op">=</span> <span class="st">"a"</span><span class="op">.</span><span class="fu">charCodeAt</span>(<span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> z <span class="op">=</span> <span class="st">"z"</span><span class="op">.</span><span class="fu">charCodeAt</span>(<span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> a<span class="op">;</span> i <span class="op">&lt;=</span> z<span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (<span class="kw">let</span> j <span class="op">=</span> a<span class="op">;</span> j <span class="op">&lt;=</span> z<span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (<span class="kw">let</span> k <span class="op">=</span> a<span class="op">;</span> k <span class="op">&lt;=</span> z<span class="op">;</span> k<span class="op">++</span>) {</span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>        result<span class="op">.</span><span class="fu">push</span>([i<span class="op">,</span> j<span class="op">,</span> k])<span class="op">;</span></span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> result<span class="op">;</span></span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">problem59</span>() {</span>
+<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cipher <span class="op">=</span> <span class="cf">await</span> <span class="fu">loadInput</span>(<span class="st">"src/code/data/euler-59.txt"</span>)<span class="op">;</span></span>
+<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> bestGuess<span class="op">:</span> {</span>
+<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a>    key<span class="op">:</span> <span class="dt">number</span>[]<span class="op">,</span></span>
+<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a>    plain<span class="op">:</span> <span class="dt">number</span>[]<span class="op">,</span></span>
+<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a>    score<span class="op">:</span> <span class="dt">number</span></span>
+<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a>  } <span class="op">=</span> {</span>
+<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a>    key<span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a>    plain<span class="op">:</span> []<span class="op">,</span></span>
+<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a>    score<span class="op">:</span> <span class="dv">1</span></span>
+<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> k <span class="kw">of</span> <span class="fu">allKeys</span>()) {</span>
+<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> plain <span class="op">=</span> <span class="fu">decrypt</span>(cipher<span class="op">,</span> k)<span class="op">;</span></span>
+<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> score <span class="op">=</span> <span class="fu">gibberishScore</span>(plain)<span class="op">;</span></span>
+<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (score <span class="op">&lt;</span> bestGuess<span class="op">.</span><span class="at">score</span>) {</span>
+<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a>      bestGuess<span class="op">.</span><span class="at">key</span> <span class="op">=</span> k<span class="op">;</span></span>
+<span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a>      bestGuess<span class="op">.</span><span class="at">plain</span> <span class="op">=</span> plain<span class="op">;</span></span>
+<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a>      bestGuess<span class="op">.</span><span class="at">score</span> <span class="op">=</span> score<span class="op">;</span></span>
+<span id="cb39-66"><a href="#cb39-66" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb39-67"><a href="#cb39-67" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-68"><a href="#cb39-68" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(bestGuess<span class="op">.</span><span class="at">plain</span><span class="op">.</span><span class="fu">reduce</span>((total<span class="op">,</span> x) <span class="kw">=&gt;</span> total <span class="op">+</span> x<span class="op">,</span> <span class="dv">0</span>))<span class="op">;</span></span>
+<span id="cb39-69"><a href="#cb39-69" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">129448</span></p>
 </section>
 <section id="problem-65" class="level2 problem-section">
@@ -1140,47 +1197,47 @@ N = 2^a \cdot 3^b \cdot 5^c \cdot 7^d \cdot 11^e \cdot 13^f \cdot 17^g \cdot 19^
 <p>The <span class="math inline">\(n\)</span>th “convergent” of a continued fraction is the result of summing it upto <span class="math inline">\(n\)</span> terms. Find the sum of the digits in the numerator of the 100th convergent of the fraction for <span class="math inline">\(e\)</span>.</p>
 </blockquote>
 <p>First we write a generic function to sum the first <span class="math inline">\(n\)</span> terms of a continued fraction.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sum-terms</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  [xs]</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">empty?</span> xs)</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">/</span> <span class="dv">1</span> (<span class="kw">+</span> (<span class="kw">first</span> xs) (sum-terms (<span class="kw">rest</span> xs))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sum-terms</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  [xs]</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">if</span> (<span class="kw">empty?</span> xs)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">/</span> <span class="dv">1</span> (<span class="kw">+</span> (<span class="kw">first</span> xs) (sum-terms (<span class="kw">rest</span> xs))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We can test that it works by computing <span class="math inline">\(\sqrt{2}\)</span> upto 10 terms.</p>
 <p><span class="eval">(float (+ 1 (sum-terms (repeat 9 2))))</span> <span class="eval-result">1.4142137</span></p>
 <p>The fraction for <span class="math inline">\(e\)</span> is slightly more complicated because the <span class="math inline">\(k\)</span>th term can be either <span class="math inline">\(2k\)</span> or <span class="math inline">\(1\)</span>.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> e-terms</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first n terms of the continued fraction for e"</span></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  [n]</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">take</span> n (<span class="kw">map</span> (<span class="kw">fn</span> [k]</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">case</span> (<span class="kw">mod</span> k <span class="dv">3</span>)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">0</span> <span class="dv">1</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">1</span> (<span class="kw">*</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> k <span class="dv">3</span>)))</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">2</span> <span class="dv">1</span>))</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">range</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> e-terms</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first n terms of the continued fraction for e"</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  [n]</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">take</span> n (<span class="kw">map</span> (<span class="kw">fn</span> [k]</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>                 (<span class="kw">case</span> (<span class="kw">mod</span> k <span class="dv">3</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">0</span> <span class="dv">1</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">1</span> (<span class="kw">*</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> k <span class="dv">3</span>)))</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>                   <span class="dv">2</span> <span class="dv">1</span>))</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">range</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Now sum the first 100 terms and compute the sum of the digits of the numerator.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">map</span> #(Character/digit <span class="va">%</span> <span class="dv">10</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">str</span> (numerator (<span class="kw">+</span> <span class="dv">2</span> (sum-terms (e-terms <span class="dv">99</span>)))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">reduce</span> <span class="kw">+</span> (<span class="kw">map</span> #(Character/digit <span class="va">%</span> <span class="dv">10</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>               (<span class="kw">str</span> (numerator (<span class="kw">+</span> <span class="dv">2</span> (sum-terms (e-terms <span class="dv">99</span>)))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="eval-result">272</span></p>
 </section>
 <section id="helpers" class="level2 problem-section">
 <h2 class="problem-section anchored" data-anchor-id="helpers">Helpers</h2>
 <p>These are helper functions used across problems.</p>
 <p>Since many of the problems deal with prime numbers, let’s write the Sieve of Eratosthenes to generate all prime numbers below <span class="math inline">\(n\)</span>.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sieve-of-eratosthenes</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  [n]</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [sieve (BitSet. (<span class="kw">inc</span> n))]</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; Set all bits to true initially</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    (.<span class="kw">set</span> sieve <span class="dv">0</span> (<span class="kw">inc</span> n))</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; 0 and 1 are not prime</span></span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">0</span>)</span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">1</span>)</span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">doseq</span> [x (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">int</span> (Math/sqrt n))))]</span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">doseq</span> [i (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> n x)))]</span>
-<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>        (.clear sieve (<span class="kw">*</span> x i))))</span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">filter</span> #(.<span class="kw">get</span> sieve <span class="va">%</span>) (<span class="kw">range</span> <span class="dv">2</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">defn</span><span class="fu"> sieve-of-eratosthenes</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  [n]</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">let</span> [sieve (BitSet. (<span class="kw">inc</span> n))]</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; Set all bits to true initially</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    (.<span class="kw">set</span> sieve <span class="dv">0</span> (<span class="kw">inc</span> n))</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">;; 0 and 1 are not prime</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">0</span>)</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    (.clear sieve <span class="dv">1</span>)</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">doseq</span> [x (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">int</span> (Math/sqrt n))))]</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">doseq</span> [i (<span class="kw">range</span> <span class="dv">2</span> (<span class="kw">inc</span> (<span class="kw">quot</span> n x)))]</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>        (.clear sieve (<span class="kw">*</span> x i))))</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">filter</span> #(.<span class="kw">get</span> sieve <span class="va">%</span>) (<span class="kw">range</span> <span class="dv">2</span> n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
