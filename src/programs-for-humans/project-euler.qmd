@@ -474,6 +474,28 @@ _Difficulty: 5%_
 
 <span class="eval-result">[837799 525]</span>
 
+## Problem 15 {.problem-section}
+_Difficulty: 5%_
+
+```typescript
+function fac(n: bigint): bigint {
+    let result = 1n;
+    for (let i: bigint = n; i > 1n; i--) {
+        result *= i;
+    }
+    return result;
+}
+
+const choose = (n: bigint, k: bigint): bigint =>
+    fac(n) / (fac(k) * fac(n - k));
+
+function problem15() {
+    console.log(choose(40n, 20n));
+}
+```
+
+<span class="eval-result">137846528820</span>
+
 ## Problem 16 {.problem-section}
 _Difficulty: 5%_
 

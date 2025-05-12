@@ -817,5 +817,12 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 52",
     "text": "Problem 52\n\nFind the smallest positive integer \\(x\\) such that \\(x\\), \\(2x\\), \\(3x\\), \\(4x\\), \\(5x\\), and \\(6x\\) all contain the same digits.\n\nimport BitSet from \"bitset\";\n\nexport function digitSet(n: number): BitSet {\n    const bs = new BitSet(\"0000000000\");\n    const DIGITS: Record&lt;string, number&gt; = {\n        \"0\": 0,\n        \"1\": 1,\n        \"2\": 2,\n        \"3\": 3,\n        \"4\": 4,\n        \"5\": 5,\n        \"6\": 6,\n        \"7\": 7,\n        \"8\": 8,\n        \"9\": 9,\n    };\n    for (const c of n.toString()) {\n        bs.set(DIGITS[c]);\n    }\n    return bs;\n}\n\nexport function allEqual(sets: Array&lt;BitSet&gt;): boolean {\n    const first = sets[0];\n    for (let i = 1; i &lt; sets.length; i++) {\n        if (!first.equals(sets[i])) {\n            return false;\n        }\n    }\n    return true;\n}\n\nexport function tryNumber(n: number): boolean {\n    const sets: Array&lt;BitSet&gt; =\n        [1, 2, 3, 4, 5, 6].map((x) =&gt; digitSet(n * x));\n    return allEqual(sets);\n}\n\nfunction problem52() {\n    console.time(\"problem52\");\n    for (let n = 1; n &lt; 1000000; n++) {\n        if (tryNumber(n)) {\n            const vals = [1, 2, 3, 4, 5, 6].map((x) =&gt; n * x);\n            console.log(`${vals.join(\" \")}`);\n        }\n    }\n    console.timeEnd(\"problem52\");\n}\n\nproblem52();\n142857"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-15",
+    "href": "programs-for-humans/project-euler.html#problem-15",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 15",
+    "text": "Problem 15\nDifficulty: 5%\nfunction fac(n: bigint): bigint {\n    let result = 1n;\n    for (let i: bigint = n; i &gt; 1n; i--) {\n        result *= i;\n    }\n    return result;\n}\n\nconst choose = (n: bigint, k: bigint): bigint =&gt;\n    fac(n) / (fac(k) * fac(n - k));\n\nfunction problem15() {\n    console.log(choose(40n, 20n));\n}\n137846528820"
   }
 ]
