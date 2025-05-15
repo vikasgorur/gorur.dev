@@ -824,5 +824,12 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 15",
     "text": "Problem 15\nDifficulty: 5%\nfunction fac(n: bigint): bigint {\n    let result = 1n;\n    for (let i: bigint = n; i &gt; 1n; i--) {\n        result *= i;\n    }\n    return result;\n}\n\nconst choose = (n: bigint, k: bigint): bigint =&gt;\n    fac(n) / (fac(k) * fac(n - k));\n\nfunction problem15() {\n    console.log(choose(40n, 20n));\n}\n137846528820"
+  },
+  {
+    "objectID": "programs-for-humans/project-euler.html#problem-12",
+    "href": "programs-for-humans/project-euler.html#problem-12",
+    "title": "Project Euler - first 100 problems",
+    "section": "Problem 12",
+    "text": "Problem 12\nEvery time I try Rust I’m delighted by how fast my code runs. For once it feels like I’m actually taking advantage of the insane Apple M4 chip. I’ve tried to learn Rust a few times in the past, but maybe doing the rest of the problems in this set is how I’ll finally get it.\nI did the brute force solution here because the smarter solutions I read about (quadratic sieve) seemed too complicated for the first 100 problems.\nuse std::collections::HashSet;\n\nfn count_divisors(n: usize) -&gt; usize {\n    let mut divisors: HashSet&lt;usize&gt; = HashSet::new();\n    divisors.extend([1, n]);\n\n    for d in 2..((n as f32).sqrt() as usize) + 1 {\n        if n % d == 0 {\n            divisors.insert(d);\n            divisors.insert(n / d);\n        }\n    }\n    divisors.len()\n}\n\nfn main() {\n    let mut sum = 1;\n    let mut i = 1;\n    loop {\n        if count_divisors(sum) &gt; 500 {\n            println!(\"{}\", sum);\n            break;\n        }\n        i += 1;\n        sum += i;\n    }\n}\n76576500"
   }
 ]

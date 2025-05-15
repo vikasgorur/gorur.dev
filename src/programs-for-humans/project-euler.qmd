@@ -417,6 +417,45 @@ fun main() {
 
 <span class="eval-result">70600674</span>
 
+## Problem 12 {.problem-section}
+
+Every time I try Rust I'm delighted by how _fast_ my code runs. For once it feels like
+I'm actually taking advantage of the insane Apple M4 chip. I've tried to learn Rust a few times in the past, but maybe doing the rest of the problems in this set is how I'll finally get it.
+
+I did the brute force solution here because the smarter solutions I read about (quadratic sieve) seemed too complicated for the first 100 problems.
+
+```rust
+use std::collections::HashSet;
+
+fn count_divisors(n: usize) -> usize {
+    let mut divisors: HashSet<usize> = HashSet::new();
+    divisors.extend([1, n]);
+
+    for d in 2..((n as f32).sqrt() as usize) + 1 {
+        if n % d == 0 {
+            divisors.insert(d);
+            divisors.insert(n / d);
+        }
+    }
+    divisors.len()
+}
+
+fn main() {
+    let mut sum = 1;
+    let mut i = 1;
+    loop {
+        if count_divisors(sum) > 500 {
+            println!("{}", sum);
+            break;
+        }
+        i += 1;
+        sum += i;
+    }
+}
+```
+
+<span class="eval-result">76576500</span>
+
 ## Problem 13 {.problem-section}
 _Difficulty: 5%_
 
