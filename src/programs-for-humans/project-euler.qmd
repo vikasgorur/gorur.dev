@@ -949,6 +949,36 @@ fun main() {
 
 <span class="eval-result">9183</span>
 
+## Problem 32 {.problem-section}
+
+```rust
+use std::{collections::HashSet};
+
+fn is_pandigital(a: usize, b: usize, prod: usize) -> bool {
+    const DIGITS: [char; 9] = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    let mut digits: Vec<char> = Vec::new();
+    digits.extend(a.to_string().chars());
+    digits.extend(b.to_string().chars());
+    digits.extend(prod.to_string().chars());
+
+    digits.len() == 9 && DIGITS.iter().all(|&d| digits.contains(&d))
+}
+
+pub fn solution() -> usize {
+    let mut pandigitals: HashSet<usize> = HashSet::new();
+    for a in 1..2000 {
+        for b in 1..2000 {
+            if is_pandigital(a, b, a*b) {
+                pandigitals.insert(a*b);
+            }
+        }
+    }
+    pandigitals.iter().fold(0, |acc, x| acc+x)
+}
+```
+
+<span class="eval-result">45228</span>
+
 ## Problem 46 {.problem-section}
 
 ```typescript
