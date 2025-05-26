@@ -212,13 +212,13 @@ window.Quarto = {
 <section id="in-pytorch" class="level2">
 <h2 class="anchored" data-anchor-id="in-pytorch">8-3-8 in PyTorch</h2>
 <p>Let’s implement the autoencoder using PyTorch.</p>
-<div id="75e2dddb" class="cell" data-execution_count="1">
+<div id="efe82918" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch <span class="im">import</span> nn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The eight inputs together can be represented as an 8x8 matrix.</p>
-<div id="30effb26" class="cell" data-execution_count="2">
+<div id="ddf397ff" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>INPUTS <span class="op">=</span> torch.diag(torch.ones(<span class="dv">8</span>))</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>INPUTS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -233,7 +233,7 @@ window.Quarto = {
 </div>
 </div>
 <p>The network is a <code>Sequential</code> stack, which means the inputs only flow forward (“feed-forward”). We’ll use the <code>sigmoid</code> as the activation for historical accuracy.</p>
-<div id="bd2aadea" class="cell" data-execution_count="3">
+<div id="d7392b04" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> OrderedDict</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AutoEncoder(nn.Module):</span>
@@ -257,7 +257,7 @@ window.Quarto = {
 <li><p>My first attempt at the training code didn’t work and I spent a lot of time tinkering with the loss function and the hyperparameters before someone pointed out that PyTorch doesn’t reset the gradient values automatically. Adding the line <code>sgd.zero_grad()</code> fixed the problem.</p></li>
 </ul>
 <p><em>Thanks to Prakhar Dixit for pointing out the above mistake</em>.</p>
-<div id="e3a4e19a" class="cell" data-execution_count="4">
+<div id="b510f969" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(epochs: <span class="bu">int</span>, lr: <span class="bu">float</span>, momentum: <span class="bu">float</span>):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> AutoEncoder()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -286,7 +286,7 @@ window.Quarto = {
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model, losses</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can now run the training and plot the loss curve.</p>
-<div id="237d538e" class="cell" data-execution_count="5">
+<div id="77f812ac" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
@@ -307,7 +307,7 @@ i =  15000, loss: 0.000383</code></pre>
 </div>
 </div>
 <p>We can see that the network has learnt to very closely match the inputs by printing the result of running all 8 inputs through it.</p>
-<div id="9c582e4e" class="cell" data-execution_count="6">
+<div id="87a0c486" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>torch.set_printoptions(linewidth<span class="op">=</span><span class="dv">120</span>, sci_mode<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>net(INPUTS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">

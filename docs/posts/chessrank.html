@@ -240,7 +240,7 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 <p><em>Some code below is hidden for clarity but you can find everything on <a href="https://github.com/vikasgorur/gorur.dev/blob/main/src/posts/chessrank.qmd">github</a></em>.</p>
 <p>Let’s apply the above ranking method to a real tournament, the 2024 Candidates, won by Gukesh D who would go on to become the youngest world champion in Dec 2024.</p>
 <p>First we load the results into a <code>DataFrame</code> that looks like this (a few sample rows shown):</p>
-<div id="f77027c5" class="cell" data-execution_count="1">
+<div id="8de7ec1d" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
@@ -257,39 +257,39 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">45</td>
+<td data-quarto-table-cell-role="th">53</td>
+<td>Abasov</td>
 <td>Vidit</td>
-<td>Pragg</td>
-<td>0.0</td>
-<td>1.0</td>
+<td>0.5</td>
+<td>0.5</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">37</td>
+<td data-quarto-table-cell-role="th">50</td>
+<td>Vidit</td>
+<td>Alireza</td>
+<td>1.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">52</td>
+<td>Vidit</td>
+<td>Abasov</td>
+<td>0.5</td>
+<td>0.5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
 <td>Pragg</td>
-<td>Fabi</td>
+<td>Gukesh</td>
 <td>0.0</td>
 <td>1.0</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">27</td>
-<td>Fabi</td>
-<td>Nepo</td>
-<td>0.5</td>
-<td>0.5</td>
-</tr>
-<tr class="even">
 <td data-quarto-table-cell-role="th">14</td>
 <td>Hikaru</td>
 <td>Nepo</td>
 <td>0.5</td>
 <td>0.5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">20</td>
-<td>Hikaru</td>
-<td>Vidit</td>
-<td>0.0</td>
-<td>1.0</td>
 </tr>
 </tbody>
 </table>
@@ -299,7 +299,7 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 </div>
 <p>
 </p><p>We then turn it into the matrix <code>T</code>:</p>
-<div id="78307137" class="cell" data-execution_count="2">
+<div id="3a795edd" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>[[0.0   0.5   0.5   0.0   0.5   1.0   0.0   1.0]
  [1.5   0.0   0.5   1.0   0.0   0.5   1.0   0.5]
@@ -312,7 +312,7 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 </div>
 </div>
 <p>When we follow the conventional method of just adding the points, we get the following tournament ranking:</p>
-<div id="a0d716ee" class="cell" data-execution_count="3">
+<div id="40143859" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -370,7 +370,7 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 <p>The <strong>power iteration method</strong> can be described in one sentence as:</p>
 <p><span class="indent">If you start with a random vector and repeatedly apply a matrix, it converges to the eigenvector with the largest eigenvalue.</span></p>
 <p>The only further detail needed is that the vector should be normalized after each iteration to prevent it from growing without bounds. Let’s write the function and also have it return all the intermediate values because it’ll be useful later to visualize:</p>
-<div id="46ccf716" class="cell" data-execution_count="4">
+<div id="b49178a1" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> power_iters(T: np.array, n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">list</span>[np.array]:</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Return the results of the applying the power method n times"</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -387,7 +387,7 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 <p>Why does this work?</p>
 <p>Imagine that the eigenvectors of <span class="math inline">\({\mathbf T}\)</span> form the basis for our vector space. Ignore for a moment whether this is possible in general. When expressed in this basis, <span class="math inline">\({\mathbf T}\)</span> is a <em>diagonal matrix</em>, with the diagonal values being the eigenvalues. Let’s call the largest of these the dominant eigenvalue. Now if we take a random vector and repeatedly apply the matrix to it (while normalizing after each step), the dominant eigenvalue will make one of the components of the vector grow relative to the others. Eventually the vector will come to point almost entirely in the direction of that component. Given that we’re working in the eigenbasis, this vector is nothing but an eigenvector.</p>
 <p>Another way to think about it is that the power method continually “pulls” a vector towards the eigenvector with the dominant eigenvalue. We can see this in action with our dataset. We’ll start with a random vector that represents an arbitrary ranking of the players. After each iteration, we’ll mark the players that rose or fell in the rankings. The scores mentioned after each player name are the 3 digits after the decimal place (so <span class="math inline">\(0.919… = 919\)</span>).</p>
-<div id="8acc5e7b" class="cell page-columns page-full" data-execution_count="5">
+<div id="7d4005bc" class="cell page-columns page-full" data-execution_count="5">
 <div class="cell-output cell-output-display page-columns page-full">
 <div class="page-columns page-full">
 <figure class="figure page-columns page-full">
