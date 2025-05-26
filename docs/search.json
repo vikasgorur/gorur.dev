@@ -39,7 +39,7 @@
     "href": "index.html#machine-learning",
     "title": "Vikas Gorur",
     "section": "Machine Learning",
-    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n2025-01-26 The Simplest Autoencoder\n2024-10-18 Path to LLMs\n2024-09-01 Breaking Caesar Ciphers Using Relative Entropy\n2024-08-31 Learning by Gradient Descent"
+    "text": "Machine Learning\nThis is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.\n2025-01-26 The Simplest Autoencoder\n2024-10-18 Path to LLMs\n2024-09-01 Breaking Caesar Ciphers Using Relative Entropy\n2024-08-31 Learning by Gradient Descent\n\nMakemore\n2025-05-26 Makemore 1: bigram frequencies"
   },
   {
     "objectID": "index.html#applied-math",
@@ -382,7 +382,7 @@
     "href": "index.html#programs-for-humans",
     "title": "Vikas Gorur",
     "section": "Programs for Humans",
-    "text": "Programs for Humans\n\nPrograms must be written for people to read, and only incidentally for machines to execute.\n\n— Abelson & Sussman, SICP.\nThese are programs I write solely to understand something and maybe help another human understand it.\n2025-02-21 Project Euler - first 100 problems\n2024-12-22 Cryptopals: Set 1\n2024-12-09 Advent of Code 2024 (Clojure)"
+    "text": "Programs for Humans\nThese are programs I write solely to understand something and maybe help another human understand it.\n2025-02-21 Project Euler - first 100 problems\n2024-12-22 Cryptopals: Set 1\n2024-12-09 Advent of Code 2024 (Clojure)"
   },
   {
     "objectID": "programs-for-humans/advent-of-code-2024.html",
@@ -838,5 +838,82 @@
     "title": "Project Euler - first 100 problems",
     "section": "Problem 32",
     "text": "Problem 32\nuse std::{collections::HashSet};\n\nfn is_pandigital(a: usize, b: usize, prod: usize) -&gt; bool {\n    const DIGITS: [char; 9] = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];\n    let mut digits: Vec&lt;char&gt; = Vec::new();\n    digits.extend(a.to_string().chars());\n    digits.extend(b.to_string().chars());\n    digits.extend(prod.to_string().chars());\n\n    digits.len() == 9 && DIGITS.iter().all(|&d| digits.contains(&d))\n}\n\npub fn solution() -&gt; usize {\n    let mut pandigitals: HashSet&lt;usize&gt; = HashSet::new();\n    for a in 1..2000 {\n        for b in 1..2000 {\n            if is_pandigital(a, b, a*b) {\n                pandigitals.insert(a*b);\n            }\n        }\n    }\n    pandigitals.iter().fold(0, |acc, x| acc+x)\n}\n45228"
+  },
+  {
+    "objectID": "programs-for-humans/makemore.html",
+    "href": "programs-for-humans/makemore.html",
+    "title": "Makemore 1 - bigram frequency model",
+    "section": "",
+    "text": "In this series of posts we will follow along Andrej Karpathy (2022) and build language models.\nConsider text in a language to be a stream of tokens. The set of all possible tokens is the vocabulary. A token can be any sequence of bytes. The simplest possible tokens are just single ASCII characters.\nThe task of language modeling is to learn the probability distribution:\n\\[\nP(t_{n+1} | t_1 ... t_n)\n\\]\nwhere:"
+  },
+  {
+    "objectID": "programs-for-humans/makemore.html#bigram-character-model",
+    "href": "programs-for-humans/makemore.html#bigram-character-model",
+    "title": "Makemore 1 - bigram frequency model",
+    "section": "Bigram character model",
+    "text": "Bigram character model\nConsider the vocabulary to be the set of Python strings: {'A', 'B', ..., 'Z', ' ', '.'}. The size of this vocabulary is 28.\n\nimport torch\n\ndef train(corpus: list[str]) -&gt; torch.tensor:\n    N_TOKENS = 28\n    counts = torch.zeros((N_TOKENS, N_TOKENS))\n    for name in corpus:\n        name = \".\" + name + \".\"\n        for c, c_next in zip(name, name[1:]):\n            counts[stoi(c), stoi(c_next)] += 1\n\n    # Normalize the counts into probabilities on each row\n    return counts / counts.sum(1, keepdim=True)\n\nmodel = train(MOVIES)\n\n\nSampling\n\ndef sample(model: torch.tensor, context: str) -&gt; str:\n    return itos(\n        torch.multinomial(\n            model[stoi(context), :],\n            replacement=True,\n            num_samples=1\n        )\n    )\n\nprint(sample(model, '.'))\n\nN\n\n\n\n\nGenerate:\n\ndef generate(model: torch.tensor, n: int) -&gt; list[str]:\n    names = []\n    for i in range(n):\n        result = \"\"\n        token = \".\"\n        for i in range(10):\n            next_token = sample(model, token)\n            if next_token == \".\":\n                break\n\n            result += next_token\n\n        names.append(result)\n    return names\n\ngenerate(model, 5)\n\n['ABHSYDIPAA', 'SAJRMPAUNM', 'BNVMKAMPMB', 'DANHMRPPAU', 'CYAPHIBDFA']"
+  },
+  {
+    "objectID": "programs-for-humans/makemore.html#dataset",
+    "href": "programs-for-humans/makemore.html#dataset",
+    "title": "Makemore 1 - bigram frequency model",
+    "section": "Dataset",
+    "text": "Dataset\nIn this series we’ll use a dataset of Bollywood movie names, with the goal of making more movie names.\n\nimport pandas as pd\n\ndef read_movie_names() -&gt; list[str]:\n    movies = pd.read_csv(\"data/movies.csv\")\n\n    def has_special_chars(name: str) -&gt; bool:\n        AZ = set(\"ABCDEFGHIJKLMNOPQRSTUVWXYZ \")\n        return len(set(name) - AZ) &gt; 0\n\n    return [\n        n.upper()\n        for n in list(movies.query(\"Language == 'hindi'\")[\"Movie Name\"])\n        if not has_special_chars(n.upper())\n    ]\n\nMOVIES = read_movie_names()\nprint(f\"Number of names: {len(MOVIES)}\")\nprint(f\"Sample names: {MOVIES[1000:1005]}\")\n\nNumber of names: 12900\nSample names: ['ZIMMEDAAAR', 'MAYA DARPAN', 'SHERA', 'BITTOO BOSS', 'UJALA']\n\n\n\ndef verify(cond: bool):\n    if cond:\n        print(\"✅\")\n    else:\n        print(\"❌\")"
+  },
+  {
+    "objectID": "programs-for-humans/makemore.html#models",
+    "href": "programs-for-humans/makemore.html#models",
+    "title": "Makemore 1 - bigram frequency model",
+    "section": "Models",
+    "text": "Models\nIn this series we’ll implement many kinds of language models, but each of them will be a class that contains the same two methods:\n\ntrain(corpus: list[str])\n\ngenerate(n: int) -&gt; list[str]"
+  },
+  {
+    "objectID": "programs-for-humans/makemore.html#encoding-and-decoding",
+    "href": "programs-for-humans/makemore.html#encoding-and-decoding",
+    "title": "Makemore 1 - bigram frequency model",
+    "section": "Encoding and decoding",
+    "text": "Encoding and decoding\n\ndef stoi(s: str) -&gt; int:\n    assert len(s) == 1\n    if s == \".\":\n        return 27\n    elif s == \" \":\n        return 26\n    else:\n        return ord(s) - ord(\"A\")\n\nverify(all([\n    stoi('A') == 0,\n    stoi('Z') == 25,\n    stoi(' ') == 26,\n    stoi('.') == 27\n]))\n\n✅\n\n\n\ndef itos(i: int) -&gt; str:\n    if i == 27:\n        return \".\"\n    elif i == 26:\n        return \" \"\n    else:\n        return chr(i + ord(\"A\"))\n\nverify(all([\n    itos(0) == 'A',\n    itos(25) == 'Z',\n    itos(26) == ' ',\n    itos(27) == '.'\n]))\n\n✅"
+  },
+  {
+    "objectID": "posts/makemore-1.html",
+    "href": "posts/makemore-1.html",
+    "title": "Makemore 1: bigram frequencies",
+    "section": "",
+    "text": "In this series of posts we will follow along Andrej Karpathy’s series of videos about building a language model. In this post we’re implementing the first model from the video:\nConsider text in a language to be a stream of tokens. The set of all possible tokens is the vocabulary. A token can be any sequence of bytes. The simplest possible tokens are just single ASCII characters.\nThe task of language modeling is to learn the probability distribution:\n\\[\nP(t_{n+1} | t_1 ... t_n)\n\\]\nwhere:"
+  },
+  {
+    "objectID": "posts/makemore-1.html#dataset",
+    "href": "posts/makemore-1.html#dataset",
+    "title": "Makemore 1: bigram frequencies",
+    "section": "Dataset",
+    "text": "Dataset\nIn this series we’ll use a dataset of Bollywood movie names with the goal of making more movie names (hence “makemore”).\n\nimport pandas as pd\n\ndef read_movie_names() -&gt; list[str]:\n    movies = pd.read_csv(\"data/movies.csv\")\n\n    def has_special_chars(name: str) -&gt; bool:\n        AZ = set(\"ABCDEFGHIJKLMNOPQRSTUVWXYZ \")\n        return len(set(name) - AZ) &gt; 0\n\n    return [\n        n.upper()\n        for n in list(movies.query(\"Language == 'hindi'\")[\"Movie Name\"])\n        if not has_special_chars(n.upper())\n    ]\n\nMOVIES = read_movie_names()\nprint(f\"Number of names: {len(MOVIES)}\")\nsample_names = \"\\n\\t\".join(MOVIES[5584:5589])\nprint(f\"Sample names:\\n\\n\\t{sample_names}\")\n\nNumber of names: 12900\nSample names:\n\n    BAAZIGAR\n    PARDES\n    ANURAG MAURYA ACT\n    BLACK MARKET\n    AKHIYON SE GOLI MAARE\n\n\nWe’ll write a small utility function to “unit-test” code in this notebook.\n\ndef verify(cond: bool):\n    if cond:\n        print(\"✅\")\n    else:\n        print(\"❌\")"
+  },
+  {
+    "objectID": "posts/makemore-1.html#encoding-and-decoding",
+    "href": "posts/makemore-1.html#encoding-and-decoding",
+    "title": "Makemore 1: bigram frequencies",
+    "section": "Encoding and decoding",
+    "text": "Encoding and decoding\n\ndef stoi(s: str) -&gt; int:\n    assert len(s) == 1\n    if s == \".\":\n        return 27\n    elif s == \" \":\n        return 26\n    else:\n        return ord(s) - ord(\"A\")\n\nverify(all([\n    stoi('A') == 0,\n    stoi('Z') == 25,\n    stoi(' ') == 26,\n    stoi('.') == 27\n]))\n\n✅\n\n\n\ndef itos(i: int) -&gt; str:\n    if i == 27:\n        return \".\"\n    elif i == 26:\n        return \" \"\n    else:\n        return chr(i + ord(\"A\"))\n\nverify(all([\n    itos(0) == 'A',\n    itos(25) == 'Z',\n    itos(26) == ' ',\n    itos(27) == '.'\n]))\n\n✅\n\n\n\nimport torch\n\ndef train(corpus: list[str]) -&gt; torch.tensor:\n    N_TOKENS = 28\n    counts = torch.zeros((N_TOKENS, N_TOKENS))\n    for name in corpus:\n        name = \".\" + name + \".\"\n        for c, c_next in zip(name, name[1:]):\n            counts[stoi(c), stoi(c_next)] += 1\n\n    # Normalize the counts into probabilities on each row\n    return counts / counts.sum(1, keepdim=True)\n\nmodel = train(MOVIES)\n\n\nSampling\n\ndef sample(model: torch.tensor, context: str) -&gt; str:\n    return itos(\n        torch.multinomial(\n            model[stoi(context), :],\n            replacement=True,\n            num_samples=1\n        )\n    )\n\nprint(sample(model, '.'))\n\nS\n\n\n\n\nGenerate\n\ndef generate(model: torch.tensor, n: int) -&gt; list[str]:\n    names = []\n    for i in range(n):\n        result = \"\"\n        token = \".\"\n        while True:\n            token = sample(model, token)\n            if token == '.':\n                break\n\n            result += token\n\n        names.append(result)\n    return names\n\ngenerate(model, 5)\n\n['HRERERK LEIL BAKHU', 'OOFARIPISHARS CHAN', 'MN DAKRIAZAVEE', 'P', 'RA']"
+  },
+  {
+    "objectID": "posts/makemore-1.html#bigram-character-model",
+    "href": "posts/makemore-1.html#bigram-character-model",
+    "title": "Makemore 1: bigram frequencies",
+    "section": "Bigram character model",
+    "text": "Bigram character model\nThe first model we build will be based on bigrams, two-character strings. The set of tokens will be: {'A', 'B', ..., 'Z', ' ', '.'}. The size of this vocabulary is 28. The special token . will be used to indicate the beginning and end of each word.\nThe probability function “learned” by this model will just be the frequency of bigrams occuring in the training set. For that we first need a way to turn tokens into numbers and vice-versa.\n\nEncoding and decoding\nWe’ll map tokens to numbers using the functions below. The unit-test assertions explain how they work.\n\ndef stoi(s: str) -&gt; int:\n    assert len(s) == 1\n    if s == \".\":\n        return 27\n    elif s == \" \":\n        return 26\n    else:\n        return ord(s) - ord(\"A\")\n\nverify(all([\n    stoi('A') == 0,\n    stoi('Z') == 25,\n    stoi(' ') == 26,\n    stoi('.') == 27\n]))\n\n✅\n\n\n\ndef itos(i: int) -&gt; str:\n    if i == 27:\n        return \".\"\n    elif i == 26:\n        return \" \"\n    else:\n        return chr(i + ord(\"A\"))\n\nverify(all([\n    itos(0) == 'A',\n    itos(25) == 'Z',\n    itos(26) == ' ',\n    itos(27) == '.'\n]))\n\n✅\n\n\n\n\nTraining\nThe “training” of this model just involves counting the frequencies of each bigram in the training corpus (set of movie names) and computing probabilities by normalizing. The code below is vectorized using PyTorch for performance. The broadcasting semantics of PyTorch/NumPy code can be tricky, so we have to be careful when using arguments like keepdim=True. In the video Karpathy mentions how leaving out keepdim=True in the call to sum() runs without crashing but yields the wrong probabilities.\n\nimport torch\n\ndef train(corpus: list[str]) -&gt; torch.tensor:\n    N_TOKENS = 28\n    counts = torch.zeros((N_TOKENS, N_TOKENS))\n    for name in corpus:\n        name = \".\" + name + \".\"\n        for c, c_next in zip(name, name[1:]):\n            counts[stoi(c), stoi(c_next)] += 1\n\n    # Normalize the counts into probabilities on each row\n    return counts / counts.sum(1, keepdim=True)\n\nmodel = train(MOVIES)\n\nWe can visualize the probability distribution computed by this model.\n\nimport matplotlib.pyplot as plt\n\nplt.imshow(model)\n\n\n\n\n\n\n\n\n\n\nSampling\nGiven a context (a single letter), we generate the next token (letter in this case) by taking a sample from the probability distribution of the next token conditioned on the context. This distribution is the row vector model[stoi(context), :] and multinomial takes a sample from it.\n\ndef sample(model: torch.tensor, context: str) -&gt; str:\n    return itos(\n        torch.multinomial(\n            model[stoi(context), :],\n            replacement=True,\n            num_samples=1\n        )\n    )\n\nprint(sample(model, '.'))\n\nG\n\n\n\n\nGenerating\nTo generate a new movie name we start with the special token . and sample to get the next token. We sample again using this new token as the context, and keep going until the sampling returns the special token . again. We do this n times to generate many movie names.\n\ndef generate(model: torch.tensor, n: int) -&gt; list[str]:\n    names = []\n    for i in range(n):\n        result = \"\"\n        token = \".\"\n        while True:\n            token = sample(model, token)\n            if token == '.':\n                break\n\n            result += token\n\n        names.append(result)\n    return names\n\ngenerate(model, 5)\n\n['SHA BAA SPE PR KHO SH',\n 'STTADMMEERLIL A',\n 'ICEEARURALANAAKIY',\n 'ST ANANDODAWAUBARENDEEKRAKHHAROO',\n 'DUCH HABEK JANDE MOOMADOVAS']\n\n\nGiven that we’re only using bigrams it’s unlikely that the model will even come up with real words, but we can see that it’s getting close to generating syllables that kinda sound like Hindi/Urdu."
+  },
+  {
+    "objectID": "posts/makemore-1.html#loss-function",
+    "href": "posts/makemore-1.html#loss-function",
+    "title": "Makemore 1: bigram frequencies",
+    "section": "Loss function",
+    "text": "Loss function\nLet us define that our training set for language modeling consists of many documents. In our example here, each movie name should be considered a document.\nNow consider an arbitrary language model \\(M\\) (i.e., not necessarily bigram). As defined above, \\(M\\) should allow us to compute the probability of any \\((t_1 ... t_n, t_{n+1})\\) sequence. That is, given a context \\(t_1 ... t_n\\), the probability of every possible next token \\(t_{n+1}\\).\nGiven such a model, we can define the likelihood that it produces a particular document \\(d\\). This likelihood is the probability that all possible (context, next_token) pairs that are found in the document occur at the same time. Thus the likelihood is computed as the product of the model’s probabilities for all such pairs, for a given document.\n\\[\nL(d) = p_1 \\cdot p_2 \\cdot p_3 ... p_k\n\\]\nwhere each \\(p_i\\) is the probability of one possible token sequence \\((t_1 ... t_n, t_{n+1})\\).\nLet’s work this out for the bigram model. Consider the document SHOLAY. It consists of the bigrams {'.S', 'SH', 'OL', 'LA', 'AY', 'Y.'}. We’ve added an extra token . to signify the beginning and end. Assume now that M is a Python function that returns the probability of the next letter given a letter, so for example M('S', 'H') is the probability that H follows an S. The likelihood of SHOLAY under this model is therefore:\nL = M('.', 'S') * M('S', 'H') * M('O', 'L')\n    * M('L', 'A') * M('A', 'Y') * M('Y', '.')\n(This might seem a bit pointless and circular for the bigram frequency language model. But this is setting up a concept that’ll be useful later for the neural network models).\nWe’ll now make a couple of tweaks to make the floating point math better. Instead of working with likelihoods that are very small numbers (because they are the products of many numbers less than \\(1\\)), we will instead compute the negative log-likelihood for each document.\n\\[\n\\mathrm{NLL}(d) = - (\\log p_1 + \\log p_2 + \\log p_3 \\ldots + \\log p_k)\n\\]\nOnce we have this definition for a single document, we can compute the \\(\\mathrm{NLL}\\) for every document in the training set and take an average.\n\\[\n\\mathrm{NLL_avg} = \\frac{1}{N} \\sum_{i=1}^{N} d_i\n\\]\nwhere \\(N\\) is the number of documents.\nThe average negative log-likelihood is our loss function and has an intuitive meaning. It is a single number that allows us to measure how well the model has learnt to approximate its training set.\nLet’s compute the loss for our bigram model by first defining the negative log-likelihood for a single name:\n\nimport math\n\ndef nll(name: str) -&gt; float:\n    logprobs = 0\n    for c, c_next in zip(name, name[1:]):\n        logprobs += math.log(model[stoi(c)][stoi(c_next)])\n\n    return -logprobs\n\nnll('SHOLAY')\n\n11.525210992670486\n\n\nThe total loss is the average across all names.\n\nLOSS = sum([nll(name) for name in MOVIES]) / len(MOVIES)\nprint(LOSS)\n\n27.295884523366528\n\n\nIn the rest of this series we’ll build more and more complicated models and all their training will be driven by the goal of minimizing this loss function."
+  },
+  {
+    "objectID": "posts/makemore-2.html",
+    "href": "posts/makemore-2.html",
+    "title": "Makemore 2: neural network",
+    "section": "",
+    "text": "Second part from the first video."
   }
 ]

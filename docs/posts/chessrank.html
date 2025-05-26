@@ -78,7 +78,6 @@ div.csl-indent {
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
@@ -92,13 +91,13 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7fccaa5a4effadb8a2e8cfc8e0465904.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-385a08c56f94855b39b5da98c9e70883.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "navbar",
+  "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "end",
-  "type": "overlay",
+  "panel-placement": "start",
+  "type": "textbox",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
@@ -157,36 +156,11 @@ window.Quarto = {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="fullcontent">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
-      <div class="navbar-container container-fluid">
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-  <span class="navbar-toggler-icon"></span>
-</button>
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
-<span class="menu-text">Home</span></a>
-  </li>  
-</ul>
-          </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
-  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
-  <div class="quarto-reader-toggle-btn">
-  <i class="bi"></i>
-  </div>
-</a>
-</div>
-      </div> <!-- /container-fluid -->
-    </nav>
-</header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
@@ -266,8 +240,8 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 <p><em>Some code below is hidden for clarity but you can find everything on <a href="https://github.com/vikasgorur/gorur.dev/blob/main/src/posts/chessrank.qmd">github</a></em>.</p>
 <p>Let’s apply the above ranking method to a real tournament, the 2024 Candidates, won by Gukesh D who would go on to become the youngest world champion in Dec 2024.</p>
 <p>First we load the results into a <code>DataFrame</code> that looks like this (a few sample rows shown):</p>
-<div id="ccd8489d" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div id="f77027c5" class="cell" data-execution_count="1">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
 
@@ -283,39 +257,39 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 </thead>
 <tbody>
 <tr class="odd">
+<td data-quarto-table-cell-role="th">45</td>
+<td>Vidit</td>
+<td>Pragg</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr class="even">
 <td data-quarto-table-cell-role="th">37</td>
 <td>Pragg</td>
 <td>Fabi</td>
 <td>0.0</td>
 <td>1.0</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>Pragg</td>
-<td>Gukesh</td>
-<td>0.0</td>
-<td>1.0</td>
-</tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">49</td>
-<td>Abasov</td>
-<td>Pragg</td>
-<td>0.0</td>
-<td>1.0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">44</td>
-<td>Pragg</td>
-<td>Vidit</td>
-<td>0.5</td>
-<td>0.5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Gukesh</td>
+<td data-quarto-table-cell-role="th">27</td>
+<td>Fabi</td>
 <td>Nepo</td>
 <td>0.5</td>
 <td>0.5</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">14</td>
+<td>Hikaru</td>
+<td>Nepo</td>
+<td>0.5</td>
+<td>0.5</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">20</td>
+<td>Hikaru</td>
+<td>Vidit</td>
+<td>0.0</td>
+<td>1.0</td>
 </tr>
 </tbody>
 </table>
@@ -325,7 +299,7 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 </div>
 <p>
 </p><p>We then turn it into the matrix <code>T</code>:</p>
-<div id="28938379" class="cell" data-execution_count="2">
+<div id="78307137" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-stdout">
 <pre><code>[[0.0   0.5   0.5   0.0   0.5   1.0   0.0   1.0]
  [1.5   0.0   0.5   1.0   0.0   0.5   1.0   0.5]
@@ -338,8 +312,8 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 </div>
 </div>
 <p>When we follow the conventional method of just adding the points, we get the following tournament ranking:</p>
-<div id="f626f775" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="13">
+<div id="a0d716ee" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
@@ -396,7 +370,7 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 <p>The <strong>power iteration method</strong> can be described in one sentence as:</p>
 <p><span class="indent">If you start with a random vector and repeatedly apply a matrix, it converges to the eigenvector with the largest eigenvalue.</span></p>
 <p>The only further detail needed is that the vector should be normalized after each iteration to prevent it from growing without bounds. Let’s write the function and also have it return all the intermediate values because it’ll be useful later to visualize:</p>
-<div id="d8caa703" class="cell" data-execution_count="4">
+<div id="46ccf716" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> power_iters(T: np.array, n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">list</span>[np.array]:</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Return the results of the applying the power method n times"</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    </span>
@@ -413,7 +387,7 @@ t_{41}\,q_1 + t_{42}\,q_2 + t_{43}\,q_4 + t_{44}\,q_4 &amp;= \lambda q_4 \\
 <p>Why does this work?</p>
 <p>Imagine that the eigenvectors of <span class="math inline">\({\mathbf T}\)</span> form the basis for our vector space. Ignore for a moment whether this is possible in general. When expressed in this basis, <span class="math inline">\({\mathbf T}\)</span> is a <em>diagonal matrix</em>, with the diagonal values being the eigenvalues. Let’s call the largest of these the dominant eigenvalue. Now if we take a random vector and repeatedly apply the matrix to it (while normalizing after each step), the dominant eigenvalue will make one of the components of the vector grow relative to the others. Eventually the vector will come to point almost entirely in the direction of that component. Given that we’re working in the eigenbasis, this vector is nothing but an eigenvector.</p>
 <p>Another way to think about it is that the power method continually “pulls” a vector towards the eigenvector with the dominant eigenvalue. We can see this in action with our dataset. We’ll start with a random vector that represents an arbitrary ranking of the players. After each iteration, we’ll mark the players that rose or fell in the rankings. The scores mentioned after each player name are the 3 digits after the decimal place (so <span class="math inline">\(0.919… = 919\)</span>).</p>
-<div id="1793582e" class="cell page-columns page-full" data-execution_count="5">
+<div id="8acc5e7b" class="cell page-columns page-full" data-execution_count="5">
 <div class="cell-output cell-output-display page-columns page-full">
 <div class="page-columns page-full">
 <figure class="figure page-columns page-full">

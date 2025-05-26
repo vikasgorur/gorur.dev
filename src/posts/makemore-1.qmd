@@ -1,0 +1,245 @@
+---
+title: "Makemore 1: bigram frequencies"
+date: 2025-05-26
+author: Vikas Gorur
+toc: true
+toc-location: left
+toc-title: "On this page"
+toc-depth: 6
+toc-expand: true
+---
+
+In this series of posts we will follow along Andrej Karpathy's series of videos
+about building a language model. In this post we're implementing the first model from the video:
+
+- [The spelled-out intro to language modeling: building makemore](https://www.youtube.com/watch?v=PaCmpygFfXo).
+
+Consider text in a _language_ to be a stream of _tokens_. The set of all possible tokens
+is the _vocabulary_. A token can be any sequence of bytes. The simplest possible tokens
+are just single ASCII characters.
+
+The task of language modeling is to learn the probability distribution:
+
+$$
+P(t_{n+1} | t_1 ... t_n)
+$$
+
+where:
+
+- $t_1 ... t_n$ is the _context_, a sequence of previous tokens. \
+- $t_{n+1}$ is the next token.
+
+## Dataset
+
+In this series we'll use a dataset of Bollywood movie names with the goal of making more movie names (hence "makemore").
+
+```{python}
+import pandas as pd
+
+def read_movie_names() -> list[str]:
+    movies = pd.read_csv("data/movies.csv")
+
+    def has_special_chars(name: str) -> bool:
+        AZ = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ ")
+        return len(set(name) - AZ) > 0
+
+    return [
+        n.upper()
+        for n in list(movies.query("Language == 'hindi'")["Movie Name"])
+        if not has_special_chars(n.upper())
+    ]
+
+MOVIES = read_movie_names()
+print(f"Number of names: {len(MOVIES)}")
+sample_names = "\n\t".join(MOVIES[5584:5589])
+print(f"Sample names:\n\n\t{sample_names}")
+```
+
+We'll write a small utility function to "unit-test" code in this notebook.
+
+```{python}
+def verify(cond: bool):
+    if cond:
+        print("✅")
+    else:
+        print("❌")
+```
+
+## Bigram character model
+
+The first model we build will be based on _bigrams_, two-character strings. The set of tokens will be: `{'A', 'B', ..., 'Z', ' ', '.'}`. The size of this vocabulary is 28. The special token `.` will be used to indicate the beginning and end of each word.
+
+The probability function "learned" by this model will just be the frequency of bigrams occuring in the training set. For that we first need a way to turn tokens into numbers and vice-versa.
+
+### Encoding and decoding
+
+We'll map tokens to numbers using the functions below. The unit-test assertions explain how they work.
+
+```{python}
+def stoi(s: str) -> int:
+    assert len(s) == 1
+    if s == ".":
+        return 27
+    elif s == " ":
+        return 26
+    else:
+        return ord(s) - ord("A")
+
+verify(all([
+    stoi('A') == 0,
+    stoi('Z') == 25,
+    stoi(' ') == 26,
+    stoi('.') == 27
+]))
+```
+
+```{python}
+def itos(i: int) -> str:
+    if i == 27:
+        return "."
+    elif i == 26:
+        return " "
+    else:
+        return chr(i + ord("A"))
+
+verify(all([
+    itos(0) == 'A',
+    itos(25) == 'Z',
+    itos(26) == ' ',
+    itos(27) == '.'
+]))
+```
+
+### Training
+
+The "training" of this model just involves counting the frequencies of each bigram in the training corpus (set of movie names) and computing probabilities by normalizing. The code below is vectorized using PyTorch for performance. The [broadcasting semantics](https://numpy.org/doc/stable/user/basics.broadcasting.html) of PyTorch/NumPy code can be tricky, so we have to be careful when using arguments like `keepdim=True`. In the video Karpathy mentions how leaving out `keepdim=True` in the call to `sum()` runs without crashing but yields the wrong probabilities.
+
+```{python}
+import torch
+
+def train(corpus: list[str]) -> torch.tensor:
+    N_TOKENS = 28
+    counts = torch.zeros((N_TOKENS, N_TOKENS))
+    for name in corpus:
+        name = "." + name + "."
+        for c, c_next in zip(name, name[1:]):
+            counts[stoi(c), stoi(c_next)] += 1
+
+    # Normalize the counts into probabilities on each row
+    return counts / counts.sum(1, keepdim=True)
+
+model = train(MOVIES)
+```
+
+We can visualize the probability distribution computed by this model.
+
+```{python}
+import matplotlib.pyplot as plt
+
+plt.imshow(model)
+```
+
+### Sampling
+
+Given a context (a single letter), we generate the next token (letter in this case) by taking a sample from the probability distribution of the next token conditioned on the context. This distribution is the row vector `model[stoi(context), :]` and `multinomial` takes a sample from it.
+
+```{python}
+def sample(model: torch.tensor, context: str) -> str:
+    return itos(
+        torch.multinomial(
+            model[stoi(context), :],
+            replacement=True,
+            num_samples=1
+        )
+    )
+
+print(sample(model, '.'))
+```
+
+### Generating
+
+To generate a new movie name we start with the special token `.` and sample to get the next token. We sample again using this new token as the context, and keep going until the sampling returns the special token `.` again. We do this `n` times to generate many movie names.
+
+```{python}
+def generate(model: torch.tensor, n: int) -> list[str]:
+    names = []
+    for i in range(n):
+        result = ""
+        token = "."
+        while True:
+            token = sample(model, token)
+            if token == '.':
+                break
+
+            result += token
+
+        names.append(result)
+    return names
+
+generate(model, 5)
+```
+
+Given that we're only using bigrams it's unlikely that the model will even come up with real words, but we can see that it's getting close to generating syllables that kinda sound like Hindi/Urdu.
+
+## Loss function
+
+Let us define that our _training set_ for language modeling consists of many _documents_. In our example here, each movie name should be considered a document.
+
+Now consider an arbitrary language model $M$ (i.e., not necessarily bigram). As defined above, $M$ should allow us to compute the probability of any $(t_1 ... t_n, t_{n+1})$ sequence. That is, given a context $t_1 ... t_n$, the probability of every possible next token $t_{n+1}$.
+
+Given such a model, we can define the _likelihood_ that it produces a particular document $d$. This likelihood is the probability that all possible `(context, next_token)` pairs that are found in the document occur _at the same time_. Thus the likelihood is computed as the product of the model's probabilities for all such pairs, for a given document.
+
+$$
+L(d) = p_1 \cdot p_2 \cdot p_3 ... p_k
+$$
+
+where each $p_i$ is the probability of one possible token sequence $(t_1 ... t_n, t_{n+1})$.
+
+Let's work this out for the bigram model. Consider the document `SHOLAY`. It consists of the bigrams `{'.S', 'SH', 'OL', 'LA', 'AY', 'Y.'}`. We've added an extra token `.` to signify the beginning and end. Assume now that `M` is a Python function that returns the probability of the next letter given a letter, so for example `M('S', 'H')` is the probability that `H` follows an `S`. The likelihood of `SHOLAY` under this model is therefore:
+
+```
+L = M('.', 'S') * M('S', 'H') * M('O', 'L')
+    * M('L', 'A') * M('A', 'Y') * M('Y', '.')
+```
+
+(This might seem a bit pointless and circular for the bigram frequency language model. But this is setting up a concept that'll be useful later for the neural network models).
+
+We'll now make a couple of tweaks to make the floating point math better. Instead of working with likelihoods that are very small numbers (because they are the products of many numbers less than $1$), we will instead compute the _negative log-likelihood_ for each document.
+
+$$
+\mathrm{NLL}(d) = - (\log p_1 + \log p_2 + \log p_3 \ldots + \log p_k)
+$$
+
+Once we have this definition for a single document, we can compute the $\mathrm{NLL}$ for _every_ document in the training set and take an average.
+
+$$
+\mathrm{NLL_avg} = \frac{1}{N} \sum_{i=1}^{N} d_i
+$$
+
+where $N$ is the number of documents.
+
+The average negative log-likelihood is our **loss function** and has an intuitive meaning. It is a single number that allows us to measure how well the model has learnt to approximate its training set.
+
+Let's compute the loss for our bigram model by first defining the negative log-likelihood for a single name:
+
+```{python}
+import math
+
+def nll(name: str) -> float:
+    logprobs = 0
+    for c, c_next in zip(name, name[1:]):
+        logprobs += math.log(model[stoi(c)][stoi(c_next)])
+
+    return -logprobs
+
+nll('SHOLAY')
+```
+
+The total loss is the average across all names.
+
+```{python}
+LOSS = sum([nll(name) for name in MOVIES]) / len(MOVIES)
+print(LOSS)
+```
+
+In the rest of this series we'll build more and more complicated models and all their training will be driven by the goal of minimizing this loss function.

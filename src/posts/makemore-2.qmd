@@ -1,0 +1,12 @@
+---
+title: "Makemore 2: neural network"
+date: 2025-05-24
+author: Vikas Gorur
+toc: true
+toc-location: left
+toc-title: "On this page"
+toc-depth: 6
+toc-expand: true
+---
+
+Second part from the first video.

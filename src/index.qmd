@@ -19,6 +19,11 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 <span class="pub-date">2024-09-01</span> [Breaking Caesar Ciphers Using Relative Entropy](posts/breaking-caesar-cipher.qmd) \
 <span class="pub-date">2024-08-31</span> [Learning by Gradient Descent](posts/learning-by-gradient-descent.qmd)
 
+### Makemore
+
+<span class="pub-date">2025-05-26</span> [Makemore 1: bigram frequencies](posts/makemore-1.qmd)
+
+
 ## Applied Math
 
 <span class="pub-date">2025-01-03</span> [Chessrank: Who Should Win a Chess Tournament?](posts/chessrank.qmd) \
@@ -35,9 +40,6 @@ My notes on papers and articles I've read.
 <span class="pub-date">2024-10-07</span> [History of Language Modeling](annotations/history-of-language-models.qmd)
 
 ## Programs for Humans
-> Programs must be written for people to read, and only incidentally for machines to execute.
-
---- Abelson & Sussman, [SICP](https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/full-text/book/book-Z-H-7.html#%_chap_Temp_4).
 
 These are programs I write solely to understand something and maybe help another human understand it.
 

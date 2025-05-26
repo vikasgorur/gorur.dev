@@ -1,0 +1,155 @@
+---
+title: Makemore 1 - bigram frequency model
+date: 2025-05-24
+author: Vikas Gorur
+toc: true
+toc-location: left
+toc-title: "On this page"
+toc-depth: 6
+toc-expand: true
+---
+
+In this series of posts we will follow along @andrejkarpathySpelledoutIntroLanguage2022 and build language models.
+
+Consider text in a _language_ to be a stream of _tokens_. The set of all possible tokens
+is the _vocabulary_. A token can be any sequence of bytes. The simplest possible tokens
+are just single ASCII characters.
+
+The task of language modeling is to learn the probability distribution:
+
+$$
+P(t_{n+1} | t_1 ... t_n)
+$$
+
+where:
+
+- $t_1 ... t_n$ is the _context_, a sequence of previous tokens. \
+- $t_{n+1}$ is the next token.
+
+## Dataset
+
+In this series we'll use a dataset of Bollywood movie names, with the goal of making more movie names.
+
+```{python}
+import pandas as pd
+
+def read_movie_names() -> list[str]:
+    movies = pd.read_csv("data/movies.csv")
+
+    def has_special_chars(name: str) -> bool:
+        AZ = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ ")
+        return len(set(name) - AZ) > 0
+
+    return [
+        n.upper()
+        for n in list(movies.query("Language == 'hindi'")["Movie Name"])
+        if not has_special_chars(n.upper())
+    ]
+
+MOVIES = read_movie_names()
+print(f"Number of names: {len(MOVIES)}")
+print(f"Sample names: {MOVIES[1000:1005]}")
+```
+
+```{python}
+def verify(cond: bool):
+    if cond:
+        print("✅")
+    else:
+        print("❌")
+```
+
+## Encoding and decoding
+
+```{python}
+def stoi(s: str) -> int:
+    assert len(s) == 1
+    if s == ".":
+        return 27
+    elif s == " ":
+        return 26
+    else:
+        return ord(s) - ord("A")
+
+verify(all([
+    stoi('A') == 0,
+    stoi('Z') == 25,
+    stoi(' ') == 26,
+    stoi('.') == 27
+]))
+```
+
+```{python}
+def itos(i: int) -> str:
+    if i == 27:
+        return "."
+    elif i == 26:
+        return " "
+    else:
+        return chr(i + ord("A"))
+
+verify(all([
+    itos(0) == 'A',
+    itos(25) == 'Z',
+    itos(26) == ' ',
+    itos(27) == '.'
+]))
+```
+
+## Bigram character model
+
+Consider the vocabulary to be the set of Python strings: `{'A', 'B', ..., 'Z', ' ', '.'}`.
+The size of this vocabulary is 28.
+
+```{python}
+import torch
+
+def train(corpus: list[str]) -> torch.tensor:
+    N_TOKENS = 28
+    counts = torch.zeros((N_TOKENS, N_TOKENS))
+    for name in corpus:
+        name = "." + name + "."
+        for c, c_next in zip(name, name[1:]):
+            counts[stoi(c), stoi(c_next)] += 1
+
+    # Normalize the counts into probabilities on each row
+    return counts / counts.sum(1, keepdim=True)
+
+model = train(MOVIES)
+```
+
+### Sampling
+
+```{python}
+def sample(model: torch.tensor, context: str) -> str:
+    return itos(
+        torch.multinomial(
+            model[stoi(context), :],
+            replacement=True,
+            num_samples=1
+        )
+    )
+
+print(sample(model, '.'))
+```
+
+### Generate:
+
+```{python}
+def generate(model: torch.tensor, n: int) -> list[str]:
+    names = []
+    for i in range(n):
+        result = ""
+        token = "."
+        for i in range(10):
+            next_token = sample(model, token)
+            if next_token == ".":
+                break
+
+            result += next_token
+
+        names.append(result)
+    return names
+
+generate(model, 5)
+```

@@ -6,6 +6,8 @@ project:
     port: 14000
   render:
     - index.qmd
+    - posts/makemore-1.qmd
+    - posts/makemore-2.qmd
     - posts/for-a-kannada-movie.qmd
     - posts/simplest-autoencoder.qmd
     - posts/learning-by-gradient-descent.qmd
@@ -29,19 +31,10 @@ project:
 bibliography: /Users/vikas/study/gorur.dev/src/zotero.bib
 csl: chicago-with-urls.csl
 
-website:
-  navbar:
-    background: primary
-    left:
-      - text: "Home"
-        href: index.qmd
-  reader-mode: true
-
 format:
   html:
     theme: journal
     fontsize: 1.2em
-    toc: false
     code-fold: false
     highlight-style: arrow
     callout-appearance: minimal
