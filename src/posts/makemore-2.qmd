@@ -1,6 +1,6 @@
 ---
-title: "Makemore 2: neural network"
-date: 2025-05-24
+title: "Makemore 2: bigram neural network"
+date: 2025-05-27
 author: Vikas Gorur
 toc: true
 toc-location: left
@@ -9,4 +9,18 @@ toc-depth: 6
 toc-expand: true
 ---
 
-Second part from the first video.
+In the [first part](makemore-1.qmd) of this series we implemented a language model using
+bigram frequency counts. In this post we'll achieve the same result but using a neural
+network. We're still following the first video from Karpathy's series:
+
+- [The spelled-out intro to language modeling: building makemore](https://www.youtube.com/watch?v=PaCmpygFfXo).
+
+## Training set
+
+## Neural net
+
+We'll have a single layer, no bias, no activation function. Thus just a matrix W: (28, 28).
+
+Treat the output of the neural net as log-counts ("logits"). By normalizing these logits we get probabilities.
+
+The point of all this is to just setup the inputs and outputs such that the neural network can learn the function that we want (prob. distributions).

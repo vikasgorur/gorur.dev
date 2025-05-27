@@ -183,19 +183,32 @@ Given that we're only using bigrams it's unlikely that the model will even come 
 
 ## Loss function
 
-Let us define that our _training set_ for language modeling consists of many _documents_. In our example here, each movie name should be considered a document.
+Let us consider the entire set of movie names and call it the _corpus_. We can think of
+each bigram in it as a _training example_. Since our language models only look at their
+limited context, it doesn't matter that these examples come from different "documents"
+(individual movie names).
 
 Now consider an arbitrary language model $M$ (i.e., not necessarily bigram). As defined above, $M$ should allow us to compute the probability of any $(t_1 ... t_n, t_{n+1})$ sequence. That is, given a context $t_1 ... t_n$, the probability of every possible next token $t_{n+1}$.
 
-Given such a model, we can define the _likelihood_ that it produces a particular document $d$. This likelihood is the probability that all possible `(context, next_token)` pairs that are found in the document occur _at the same time_. Thus the likelihood is computed as the product of the model's probabilities for all such pairs, for a given document.
+Given such a model, we can define the _likelihood_ that it produces our corpus $c$. This likelihood is the probability that all possible `(context, next_token)` pairs that are found in the corpus occur _at the same time_. Thus the likelihood is computed as the product of the model's probabilities for all such pairs.
 
 $$
-L(d) = p_1 \cdot p_2 \cdot p_3 ... p_k
+L(c) = p(x_1) \cdot p(x_2) \cdot p(x_3) ... p(x_k)
 $$
 
-where each $p_i$ is the probability of one possible token sequence $(t_1 ... t_n, t_{n+1})$.
+where each $p(x_i)$ is the probability of the $i$th training example.
 
-Let's work this out for the bigram model. Consider the document `SHOLAY`. It consists of the bigrams `{'.S', 'SH', 'OL', 'LA', 'AY', 'Y.'}`. We've added an extra token `.` to signify the beginning and end. Assume now that `M` is a Python function that returns the probability of the next letter given a letter, so for example `M('S', 'H')` is the probability that `H` follows an `S`. The likelihood of `SHOLAY` under this model is therefore:
+A couple of things to note here:
+
+- When a bigram appears multiple times in the corpus, there is one term for each occurence when computing $L$. \
+- Since we're using the product rule to multiply the probabilities, there is an implicit assumption that all training examples are independent. That is, we're assuming that the occurence of one bigram has no influence on others.
+
+Let's work out the loss for the bigram model. Consider the corpus `SHOLAY`. It consists of
+the bigrams `{'.S', 'SH', 'OL', 'LA', 'AY', 'Y.'}`. We've added an extra token `.` to
+signify the beginning and end. Assume now that `M` is a Python function that returns the
+probability of the next letter given a letter, so for example `M('S', 'H')` is the
+probability that `H` follows an `S`. The likelihood of `SHOLAY` under this model is
+therefore:
 
 ```
 L = M('.', 'S') * M('S', 'H') * M('O', 'L')
@@ -204,42 +217,38 @@ L = M('.', 'S') * M('S', 'H') * M('O', 'L')
 
 (This might seem a bit pointless and circular for the bigram frequency language model. But this is setting up a concept that'll be useful later for the neural network models).
 
-We'll now make a couple of tweaks to make the floating point math better. Instead of working with likelihoods that are very small numbers (because they are the products of many numbers less than $1$), we will instead compute the _negative log-likelihood_ for each document.
+We'll now make a couple of tweaks to make the floating point math better. Instead of working with likelihoods that are very small numbers (because they are the products of many numbers less than $1$), we will instead compute the _negative log-likelihood_.
 
 $$
-\mathrm{NLL}(d) = - (\log p_1 + \log p_2 + \log p_3 \ldots + \log p_k)
+\mathrm{NLL}(c) = - (\log p(x_1) + \log p(x_2) + \log p(x_3) \ldots + \log p(x_k))
 $$
 
 Once we have this definition for a single document, we can compute the $\mathrm{NLL}$ for _every_ document in the training set and take an average.
 
 $$
-\mathrm{NLL_avg} = \frac{1}{N} \sum_{i=1}^{N} d_i
+\mathrm{NLL_avg} = - \frac{1}{N} \sum_{i=1}^{N} \log p(x_i)
 $$
 
-where $N$ is the number of documents.
+where $N$ is the number of training examples.
 
 The average negative log-likelihood is our **loss function** and has an intuitive meaning. It is a single number that allows us to measure how well the model has learnt to approximate its training set.
 
-Let's compute the loss for our bigram model by first defining the negative log-likelihood for a single name:
+Let's compute the loss for our bigram model:
 
 ```{python}
 import math
 
-def nll(name: str) -> float:
+def nll_loss(names: list[str]) -> float:
     logprobs = 0
-    for c, c_next in zip(name, name[1:]):
-        logprobs += math.log(model[stoi(c)][stoi(c_next)])
+    count = 0
+    for name in names:
+        for c, c_next in zip(name, name[1:]):
+            logprobs += math.log(model[stoi(c)][stoi(c_next)])
+            count += 1
 
-    return -logprobs
+    return -logprobs / count
 
-nll('SHOLAY')
+nll_loss(MOVIES)
 ```
 
-The total loss is the average across all names.
-
-```{python}
-LOSS = sum([nll(name) for name in MOVIES]) / len(MOVIES)
-print(LOSS)
-```
-
-In the rest of this series we'll build more and more complicated models and all their training will be driven by the goal of minimizing this loss function.
+## Neural network

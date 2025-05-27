@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Vikas Gorur">
-<meta name="dcterms.date" content="2025-05-24">
+<meta name="dcterms.date" content="2025-05-27">
 
-<title>Makemore 2: neural network</title>
+<title>Makemore 2: bigram neural network</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -79,7 +79,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#training-set" id="toc-training-set" class="nav-link active" data-scroll-target="#training-set">Training set</a></li>
+  <li><a href="#neural-net" id="toc-neural-net" class="nav-link" data-scroll-target="#neural-net">Neural net</a></li>
+  </ul>
+</nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
@@ -90,7 +97,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Makemore 2: neural network</h1>
+<h1 class="title">Makemore 2: bigram neural network</h1>
 </div>
 
 
@@ -107,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">May 24, 2025</p>
+      <p class="date">May 27, 2025</p>
     </div>
   </div>
   
@@ -119,9 +126,21 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Second part from the first video.</p>
+<p>In the <a href="../posts/makemore-1.html">first part</a> of this series we implemented a language model using bigram frequency counts. In this post we’ll achieve the same result but using a neural network. We’re still following the first video from Karpathy’s series:</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=PaCmpygFfXo">The spelled-out intro to language modeling: building makemore</a>.</li>
+</ul>
+<section id="training-set" class="level2">
+<h2 class="anchored" data-anchor-id="training-set">Training set</h2>
+</section>
+<section id="neural-net" class="level2">
+<h2 class="anchored" data-anchor-id="neural-net">Neural net</h2>
+<p>We’ll have a single layer, no bias, no activation function. Thus just a matrix W: (28, 28).</p>
+<p>Treat the output of the neural net as log-counts (“logits”). By normalizing these logits we get probabilities.</p>
+<p>The point of all this is to just setup the inputs and outputs such that the neural network can learn the function that we want (prob. distributions).</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

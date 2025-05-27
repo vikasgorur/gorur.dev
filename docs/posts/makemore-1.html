@@ -155,6 +155,7 @@ window.Quarto = {
   <li><a href="#generating" id="toc-generating" class="nav-link" data-scroll-target="#generating">Generating</a></li>
   </ul></li>
   <li><a href="#loss-function" id="toc-loss-function" class="nav-link" data-scroll-target="#loss-function">Loss function</a></li>
+  <li><a href="#neural-network" id="toc-neural-network" class="nav-link" data-scroll-target="#neural-network">Neural network</a></li>
   </ul>
 </nav>
 </nav>
@@ -214,7 +215,7 @@ P(t_{n+1} | t_1 ... t_n)
 <section id="dataset" class="level2">
 <h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
 <p>In this series we’ll use a dataset of Bollywood movie names with the goal of making more movie names (hence “makemore”).</p>
-<div id="ccc3ff5a" class="cell" data-execution_count="1">
+<div id="24725fa6" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_movie_names() <span class="op">-&gt;</span> <span class="bu">list</span>[<span class="bu">str</span>]:</span>
@@ -246,7 +247,7 @@ Sample names:
 </div>
 </div>
 <p>We’ll write a small utility function to “unit-test” code in this notebook.</p>
-<div id="92796f67" class="cell" data-execution_count="2">
+<div id="18f27ac9" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> verify(cond: <span class="bu">bool</span>):</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> cond:</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"✅"</span>)</span>
@@ -261,7 +262,7 @@ Sample names:
 <section id="encoding-and-decoding" class="level3">
 <h3 class="anchored" data-anchor-id="encoding-and-decoding">Encoding and decoding</h3>
 <p>We’ll map tokens to numbers using the functions below. The unit-test assertions explain how they work.</p>
-<div id="e31702ab" class="cell" data-execution_count="3">
+<div id="fe36b457" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> stoi(s: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="bu">len</span>(s) <span class="op">==</span> <span class="dv">1</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> s <span class="op">==</span> <span class="st">"."</span>:</span>
@@ -281,7 +282,7 @@ Sample names:
 <pre><code>✅</code></pre>
 </div>
 </div>
-<div id="4cd8d0aa" class="cell" data-execution_count="4">
+<div id="8a5a21d6" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> itos(i: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">==</span> <span class="dv">27</span>:</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"."</span></span>
@@ -304,7 +305,7 @@ Sample names:
 <section id="training" class="level3">
 <h3 class="anchored" data-anchor-id="training">Training</h3>
 <p>The “training” of this model just involves counting the frequencies of each bigram in the training corpus (set of movie names) and computing probabilities by normalizing. The code below is vectorized using PyTorch for performance. The <a href="https://numpy.org/doc/stable/user/basics.broadcasting.html">broadcasting semantics</a> of PyTorch/NumPy code can be tricky, so we have to be careful when using arguments like <code>keepdim=True</code>. In the video Karpathy mentions how leaving out <code>keepdim=True</code> in the call to <code>sum()</code> runs without crashing but yields the wrong probabilities.</p>
-<div id="9358e74f" class="cell" data-execution_count="5">
+<div id="fdb963f9" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(corpus: <span class="bu">list</span>[<span class="bu">str</span>]) <span class="op">-&gt;</span> torch.tensor:</span>
@@ -321,7 +322,7 @@ Sample names:
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> train(MOVIES)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can visualize the probability distribution computed by this model.</p>
-<div id="1009da60" class="cell" data-execution_count="6">
+<div id="79ba13f6" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -337,7 +338,7 @@ Sample names:
 <section id="sampling" class="level3">
 <h3 class="anchored" data-anchor-id="sampling">Sampling</h3>
 <p>Given a context (a single letter), we generate the next token (letter in this case) by taking a sample from the probability distribution of the next token conditioned on the context. This distribution is the row vector <code>model[stoi(context), :]</code> and <code>multinomial</code> takes a sample from it.</p>
-<div id="37b9b88a" class="cell" data-execution_count="7">
+<div id="6dd5e902" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sample(model: torch.tensor, context: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> itos(</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        torch.multinomial(</span>
@@ -349,14 +350,14 @@ Sample names:
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sample(model, <span class="st">'.'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>P</code></pre>
+<pre><code>R</code></pre>
 </div>
 </div>
 </section>
 <section id="generating" class="level3">
 <h3 class="anchored" data-anchor-id="generating">Generating</h3>
 <p>To generate a new movie name we start with the special token <code>.</code> and sample to get the next token. We sample again using this new token as the context, and keep going until the sampling returns the special token <code>.</code> again. We do this <code>n</code> times to generate many movie names.</p>
-<div id="46e5b431" class="cell" data-execution_count="8">
+<div id="fcb16ccf" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate(model: torch.tensor, n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">list</span>[<span class="bu">str</span>]:</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    names <span class="op">=</span> []</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
@@ -373,12 +374,8 @@ Sample names:
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> names</span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>generate(model, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>['US',
- 'N RARIHANTA',
- 'JEN K JJBI Y RER BAAHO JLIYAJHAMTUHAUBOOOFI KI',
- 'S',
- 'I FOMURARI QAYAMEETONDAROWAFATACHBAMANDUNW']</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<pre><code>['ANTI', 'MANA', 'QA COVECAR MAM BA SQLT', 'PANANTADA', 'I BAI DHAGUB LI']</code></pre>
 </div>
 </div>
 <p>Given that we’re only using bigrams it’s unlikely that the model will even come up with real words, but we can see that it’s getting close to generating syllables that kinda sound like Hindi/Urdu.</p>
@@ -386,52 +383,55 @@ Sample names:
 </section>
 <section id="loss-function" class="level2">
 <h2 class="anchored" data-anchor-id="loss-function">Loss function</h2>
-<p>Let us define that our <em>training set</em> for language modeling consists of many <em>documents</em>. In our example here, each movie name should be considered a document.</p>
+<p>Let us consider the entire set of movie names and call it the <em>corpus</em>. We can think of each bigram in it as a <em>training example</em>. Since our language models only look at their limited context, it doesn’t matter that these examples come from different “documents” (individual movie names).</p>
 <p>Now consider an arbitrary language model <span class="math inline">\(M\)</span> (i.e., not necessarily bigram). As defined above, <span class="math inline">\(M\)</span> should allow us to compute the probability of any <span class="math inline">\((t_1 ... t_n, t_{n+1})\)</span> sequence. That is, given a context <span class="math inline">\(t_1 ... t_n\)</span>, the probability of every possible next token <span class="math inline">\(t_{n+1}\)</span>.</p>
-<p>Given such a model, we can define the <em>likelihood</em> that it produces a particular document <span class="math inline">\(d\)</span>. This likelihood is the probability that all possible <code>(context, next_token)</code> pairs that are found in the document occur <em>at the same time</em>. Thus the likelihood is computed as the product of the model’s probabilities for all such pairs, for a given document.</p>
+<p>Given such a model, we can define the <em>likelihood</em> that it produces our corpus <span class="math inline">\(c\)</span>. This likelihood is the probability that all possible <code>(context, next_token)</code> pairs that are found in the corpus occur <em>at the same time</em>. Thus the likelihood is computed as the product of the model’s probabilities for all such pairs.</p>
 <p><span class="math display">\[
-L(d) = p_1 \cdot p_2 \cdot p_3 ... p_k
+L(c) = p(x_1) \cdot p(x_2) \cdot p(x_3) ... p(x_k)
 \]</span></p>
-<p>where each <span class="math inline">\(p_i\)</span> is the probability of one possible token sequence <span class="math inline">\((t_1 ... t_n, t_{n+1})\)</span>.</p>
-<p>Let’s work this out for the bigram model. Consider the document <code>SHOLAY</code>. It consists of the bigrams <code>{'.S', 'SH', 'OL', 'LA', 'AY', 'Y.'}</code>. We’ve added an extra token <code>.</code> to signify the beginning and end. Assume now that <code>M</code> is a Python function that returns the probability of the next letter given a letter, so for example <code>M('S', 'H')</code> is the probability that <code>H</code> follows an <code>S</code>. The likelihood of <code>SHOLAY</code> under this model is therefore:</p>
+<p>where each <span class="math inline">\(p(x_i)\)</span> is the probability of the <span class="math inline">\(i\)</span>th training example.</p>
+<p>A couple of things to note here:</p>
+<ul>
+<li>When a bigram appears multiple times in the corpus, there is one term for each occurence when computing <span class="math inline">\(L\)</span>.<br>
+</li>
+<li>Since we’re using the product rule to multiply the probabilities, there is an implicit assumption that all training examples are independent. That is, we’re assuming that the occurence of one bigram has no influence on others.</li>
+</ul>
+<p>Let’s work out the loss for the bigram model. Consider the corpus <code>SHOLAY</code>. It consists of the bigrams <code>{'.S', 'SH', 'OL', 'LA', 'AY', 'Y.'}</code>. We’ve added an extra token <code>.</code> to signify the beginning and end. Assume now that <code>M</code> is a Python function that returns the probability of the next letter given a letter, so for example <code>M('S', 'H')</code> is the probability that <code>H</code> follows an <code>S</code>. The likelihood of <code>SHOLAY</code> under this model is therefore:</p>
 <pre><code>L = M('.', 'S') * M('S', 'H') * M('O', 'L')
     * M('L', 'A') * M('A', 'Y') * M('Y', '.')</code></pre>
 <p>(This might seem a bit pointless and circular for the bigram frequency language model. But this is setting up a concept that’ll be useful later for the neural network models).</p>
-<p>We’ll now make a couple of tweaks to make the floating point math better. Instead of working with likelihoods that are very small numbers (because they are the products of many numbers less than <span class="math inline">\(1\)</span>), we will instead compute the <em>negative log-likelihood</em> for each document.</p>
+<p>We’ll now make a couple of tweaks to make the floating point math better. Instead of working with likelihoods that are very small numbers (because they are the products of many numbers less than <span class="math inline">\(1\)</span>), we will instead compute the <em>negative log-likelihood</em>.</p>
 <p><span class="math display">\[
-\mathrm{NLL}(d) = - (\log p_1 + \log p_2 + \log p_3 \ldots + \log p_k)
+\mathrm{NLL}(c) = - (\log p(x_1) + \log p(x_2) + \log p(x_3) \ldots + \log p(x_k))
 \]</span></p>
 <p>Once we have this definition for a single document, we can compute the <span class="math inline">\(\mathrm{NLL}\)</span> for <em>every</em> document in the training set and take an average.</p>
 <p><span class="math display">\[
-\mathrm{NLL_avg} = \frac{1}{N} \sum_{i=1}^{N} d_i
+\mathrm{NLL_avg} = - \frac{1}{N} \sum_{i=1}^{N} \log p(x_i)
 \]</span></p>
-<p>where <span class="math inline">\(N\)</span> is the number of documents.</p>
+<p>where <span class="math inline">\(N\)</span> is the number of training examples.</p>
 <p>The average negative log-likelihood is our <strong>loss function</strong> and has an intuitive meaning. It is a single number that allows us to measure how well the model has learnt to approximate its training set.</p>
-<p>Let’s compute the loss for our bigram model by first defining the negative log-likelihood for a single name:</p>
-<div id="5f9c9b1a" class="cell" data-execution_count="9">
+<p>Let’s compute the loss for our bigram model:</p>
+<div id="7fa7230f" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nll(name: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nll_loss(names: <span class="bu">list</span>[<span class="bu">str</span>]) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    logprobs <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c, c_next <span class="kw">in</span> <span class="bu">zip</span>(name, name[<span class="dv">1</span>:]):</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        logprobs <span class="op">+=</span> math.log(model[stoi(c)][stoi(c_next)])</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>logprobs</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>nll(<span class="st">'SHOLAY'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>11.525210992670486</code></pre>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name <span class="kw">in</span> names:</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c, c_next <span class="kw">in</span> <span class="bu">zip</span>(name, name[<span class="dv">1</span>:]):</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>            logprobs <span class="op">+=</span> math.log(model[stoi(c)][stoi(c_next)])</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>            count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>logprobs <span class="op">/</span> count</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>nll_loss(MOVIES)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<pre><code>2.491346227086267</code></pre>
 </div>
 </div>
-<p>The total loss is the average across all names.</p>
-<div id="95ccf9dc" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>LOSS <span class="op">=</span> <span class="bu">sum</span>([nll(name) <span class="cf">for</span> name <span class="kw">in</span> MOVIES]) <span class="op">/</span> <span class="bu">len</span>(MOVIES)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(LOSS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>27.295884523366528</code></pre>
-</div>
-</div>
-<p>In the rest of this series we’ll build more and more complicated models and all their training will be driven by the goal of minimizing this loss function.</p>
+</section>
+<section id="neural-network" class="level2">
+<h2 class="anchored" data-anchor-id="neural-network">Neural network</h2>
 
 
 </section>
