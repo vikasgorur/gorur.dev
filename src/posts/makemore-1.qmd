@@ -1,5 +1,5 @@
 ---
-title: "Makemore 1: bigram frequencies"
+title: "Makemore 1: bigram model"
 date: 2025-05-26
 author: Vikas Gorur
 toc: true
@@ -252,3 +252,17 @@ nll_loss(MOVIES)
 ```
 
 ## Neural network
+
+We'll use the loss function to train the simplest possible neural network to do the same job of predicting the next character. This "network" will consist of a single matrix of weights, $W$.
+
+We want the output of the network to be a probability vector, so that gives us part of the shape of $W$.
+
+$$
+\mathrm{shape\,of}\,\, W = (?, 28)
+$$
+
+It doesn't make sense to just feed the token IDs (like `5`) to the network, because there is no ordering relationship among the tokens. That is, `A` is not in any way "lesser than" `S` for our purposes here. Thus we'll _one-hot encode_ the input token. This means that the shape of $W$ will be `(28, 28)`.
+
+Finally, since the output of the network will have arbitrarily large numbers (because the parameters in $W$ are arbitrary), we need to turn the output vector into a probability vector (sums to 1) by using the `softmax` operation.
+
+We'll now put all of this together into a single training function.

@@ -21,7 +21,7 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 
 ### Makemore
 
-<span class="pub-date">2025-05-26</span> [Makemore 1: bigram frequencies](posts/makemore-1.qmd)
+<span class="pub-date">2025-05-26</span> [Makemore 1: bigram model](posts/makemore-1.qmd)
 
 
 ## Applied Math

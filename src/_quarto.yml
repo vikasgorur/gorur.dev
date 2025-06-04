@@ -36,6 +36,6 @@ format:
     theme: journal
     fontsize: 1.2em
     code-fold: false
-    highlight-style: arrow
+    highlight-style: haddock
     callout-appearance: minimal
     css: styles.css

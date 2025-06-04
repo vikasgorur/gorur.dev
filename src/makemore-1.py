@@ -51,18 +51,23 @@ def stoi(s: str) -> int:
         return ord(s) - ord("A")
 
 
-@app.function
-def itos(i: int) -> str:
-    if i == 27:
-        return "."
-    elif i == 26:
-        return " "
-    else:
-        return chr(i + ord("A"))
+@app.cell
+def _(MOVIES):
+    all_chars = sorted(list(set(''.join(MOVIES))))
+    STOI = {s:i for i,s in enumerate(all_chars)}
+    STOI['.'] = 27
+    STOI
+    return (STOI,)
 
 
 @app.cell
-def _(MOVIES):
+def _(STOI):
+    ITOS = {i:s for s,i in STOI.items()}
+    return (ITOS,)
+
+
+@app.cell
+def _(MOVIES, STOI):
     import torch
 
     def train(corpus: list[str]) -> torch.tensor:
@@ -71,7 +76,7 @@ def _(MOVIES):
         for name in corpus:
             name = "." + name + "."
             for c, c_next in zip(name, name[1:]):
-                counts[stoi(c), stoi(c_next)] += 1
+                counts[STOI[c], STOI[c_next]] += 1
 
         # Normalize the counts into probabilities on each row
         return counts / counts.sum(1, keepdim=True)
@@ -81,15 +86,15 @@ def _(MOVIES):
 
 
 @app.cell
-def _(model, torch):
+def _(ITOS, STOI, model, torch):
     def sample(model: torch.tensor, context: str) -> str:
-        return itos(
+        return ITOS[
             torch.multinomial(
-                model[stoi(context), :],
+                model[STOI[context], :],
                 replacement=True,
                 num_samples=1
-            )
-        )
+            ).item()
+        ]
 
     print(sample(model, '.'))
     return (sample,)
@@ -117,24 +122,74 @@ def _(model, sample, torch):
 
 
 @app.cell
-def _(model):
+def _(MOVIES, STOI, model):
     import math
 
-    def nll(name: str) -> float:
+    def nll(names: list[str]) -> float:
         logprobs = 0
-        for c, c_next in zip(name, name[1:]):
-            logprobs += math.log(model[stoi(c)][stoi(c_next)])
+        count = 0
+        for name in names:
+            for c, c_next in zip(name, name[1:]):
+                logprobs += math.log(model[STOI[c]][STOI[c_next]])
+                count += 1
 
-        return -logprobs
+        return -logprobs / count
 
-    nll('SHOLAY')
-    return (nll,)
+    nll(MOVIES)
+    return
 
 
 @app.cell
-def _(MOVIES, nll):
-    LOSS = sum([nll(name) for name in MOVIES]) / len(MOVIES)
-    LOSS
+def _(MOVIES, STOI, torch):
+    def training_set() -> (torch.Tensor, torch.Tensor):
+        xs, ys = [], []
+        for name in MOVIES:
+            chars = ['.'] + list(name) + ['.']
+            for c1, c2 in zip(chars, chars[1:]):
+                ix1 = STOI[c1]
+                ix2 = STOI[c2]
+                xs.append(ix1)
+                ys.append(ix2)
+    
+        return (torch.tensor(xs), torch.tensor(ys))
+        
+    return (training_set,)
+
+
+@app.cell
+def _(training_set):
+    X, Y = training_set()
+    print(X.shape, Y.shape)
+    return X, Y
+
+
+@app.cell
+def _(X, Y, torch):
+    import torch.nn.functional as F
+
+    def train_nn() -> torch.Tensor:
+        W = torch.randn((28, 28), requires_grad=True)
+        N = len(X)
+        for k in range(100):
+            X_enc = F.one_hot(X, num_classes=28).float()
+            logits = X_enc @ W
+            counts = logits.exp()
+            probs = counts / counts.sum(1, keepdims=True)
+            #print(probs.shape)
+            loss = -probs[torch.arange(N), Y].log().mean() + 0.01*(W**2).mean()
+            print(loss.item())
+
+            W.grad = None
+            loss.backward()
+
+            W.data += -50 * W.grad
+
+    return (train_nn,)
+
+
+@app.cell
+def _(train_nn):
+    train_nn()
     return
 
 
