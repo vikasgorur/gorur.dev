@@ -34,10 +34,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-d52074d9c3b0f0a0a71642eb979545ba.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-a8cfe63eade0b71b47e9ce25a1507d2f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-1204684990e64d2547dbbc72b1740fa5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e070b85f713cd67a0fb0dac2117015e2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -70,16 +70,16 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-search-results"></div>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-page" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -88,7 +88,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page">
 
     
   
@@ -100,27 +100,52 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><img src="mysore.jpeg" alt="A drawing of the Mysore railway station" width="120%" style="margin-left:-10%;"></p>
+<style>
+#quarto-content {
+    width: 100%;
+    margin: 0 auto;
+}
+
+h3 {
+    margin-top: 0;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+<p><img src="mysore.jpeg" alt="A drawing of the Mysore railway station" width="40%"></p>
 <p>Past work: <a href="https://www.airbase.com/">Airbase</a>, Twitter, <a href="https://www.gluster.org">Gluster</a>.</p>
-<section id="machine-learning" class="level2">
-<h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
+<div class="content-grid">
+<section id="machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="machine-learning">Machine Learning</h3>
 <p>This is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-4.</p>
 <p><span class="pub-date">2025-01-26</span> <a href="./posts/simplest-autoencoder.html">The Simplest Autoencoder</a><br>
 <span class="pub-date">2024-10-18</span> <a href="./posts/path-to-llms.html">Path to LLMs</a><br>
 <span class="pub-date">2024-09-01</span> <a href="./posts/breaking-caesar-cipher.html">Breaking Caesar Ciphers Using Relative Entropy</a><br>
 <span class="pub-date">2024-08-31</span> <a href="./posts/learning-by-gradient-descent.html">Learning by Gradient Descent</a></p>
-<section id="makemore" class="level3">
-<h3 class="anchored" data-anchor-id="makemore">Makemore</h3>
+<section id="makemore" class="level4">
+<h4 class="anchored" data-anchor-id="makemore">Makemore</h4>
 <p><span class="pub-date">2025-05-26</span> <a href="./posts/makemore-1.html">Makemore 1: bigram model</a></p>
 </section>
 </section>
-<section id="applied-math" class="level2">
-<h2 class="anchored" data-anchor-id="applied-math">Applied Math</h2>
-<p><span class="pub-date">2025-01-03</span> <a href="./posts/chessrank.html">Chessrank: Who Should Win a Chess Tournament?</a><br>
-<span class="pub-date">2024-07-24</span> <a href="./posts/counting-is-hard.html">Counting is hard</a></p>
+<section id="programs-for-humans" class="level3">
+<h3 class="anchored" data-anchor-id="programs-for-humans">Programs for Humans</h3>
+<p>These are programs I write solely to understand something and maybe help another human understand it.</p>
+<p><span class="pub-date">2025-02-21</span> <a href="./programs-for-humans/project-euler.html">Project Euler - first 100 problems</a><br>
+<span class="pub-date">2024-12-22</span> <a href="./programs-for-humans/cryptopals-set1.html">Cryptopals: Set 1</a><br>
+<span class="pub-date">2024-12-09</span> <a href="./programs-for-humans/advent-of-code-2024.html">Advent of Code 2024 (Clojure)</a></p>
 </section>
-<section id="annotations" class="level2">
-<h2 class="anchored" data-anchor-id="annotations">Annotations</h2>
+<section id="annotations" class="level3">
+<h3 class="anchored" data-anchor-id="annotations">Annotations</h3>
 <p>My notes on papers and articles I’ve read.</p>
 <p><span class="pub-date">2025-04-25</span> <a href="./annotations/biology-of-llm.html">On the Biology of a Large Language Model (Anthropic)</a><br>
 <span class="pub-date">2025-04-01</span> <a href="./annotations/deep-dive-into-llms.html">Deep Dive into LLMs like ChatGPT (Karpathy)</a><br>
@@ -128,26 +153,22 @@ ul.task-list li input[type="checkbox"] {
 <span class="pub-date">2024-11-27</span> <a href="./annotations/why-machines-learn.html"><em>Why Machines Learn</em></a> (book)<br>
 <span class="pub-date">2024-10-07</span> <a href="./annotations/history-of-language-models.html">History of Language Modeling</a></p>
 </section>
-<section id="programs-for-humans" class="level2">
-<h2 class="anchored" data-anchor-id="programs-for-humans">Programs for Humans</h2>
-<p>These are programs I write solely to understand something and maybe help another human understand it.</p>
-<p><span class="pub-date">2025-02-21</span> <a href="./programs-for-humans/project-euler.html">Project Euler - first 100 problems</a><br>
-<span class="pub-date">2024-12-22</span> <a href="./programs-for-humans/cryptopals-set1.html">Cryptopals: Set 1</a><br>
-<span class="pub-date">2024-12-09</span> <a href="./programs-for-humans/advent-of-code-2024.html">Advent of Code 2024 (Clojure)</a></p>
+<section id="applied-math" class="level3">
+<h3 class="anchored" data-anchor-id="applied-math">Applied Math</h3>
+<p><span class="pub-date">2025-01-03</span> <a href="./posts/chessrank.html">Chessrank: Who Should Win a Chess Tournament?</a><br>
+<span class="pub-date">2024-07-24</span> <a href="./posts/counting-is-hard.html">Counting is hard</a><br>
+<span class="pub-date">2024-11-02</span> <a href="./exercises/stats110-practice1.html">Stats 110: Practice 1</a></p>
 </section>
-<section id="exercises" class="level2">
-<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
-<p><span class="pub-date">2024-11-02</span> <a href="./exercises/stats110-practice1.html">Stats 110: Practice 1</a></p>
-</section>
-<section id="misc" class="level2">
-<h2 class="anchored" data-anchor-id="misc">Misc</h2>
+<section id="essays" class="level3">
+<h3 class="anchored" data-anchor-id="essays">Essays</h3>
 <p><span class="pub-date">2024-12-14</span> <a href="./posts/mysore-food-guide.html">Mysore Food Guide</a><br>
 <span class="pub-date">2022-04-25</span> <a href="./posts/varieties-of-silence.html">The Varieties of Silence</a><br>
 <span class="pub-date">2021-03-16</span> <a href="./posts/for-a-kannada-movie.html">For A Kannada Movie</a><br>
 <span class="pub-date">2020-04-30</span> <a href="./posts/feature-flags.html">How to do Feature Flag-Driven Development</a></p>
-
-
 </section>
+</div>
+
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
