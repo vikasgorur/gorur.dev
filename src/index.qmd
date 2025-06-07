@@ -39,7 +39,7 @@ Past work: [Airbase](https://www.airbase.com/), Twitter, [Gluster](https://www.g
 
 ### Machine Learning
 
-This is my attempt to build the "tech tree" of ML, starting from the absolute basics and ending up somewhere around GPT-4.
+This is my attempt to build the "tech tree" of ML, starting from the absolute basics and ending up somewhere around GPT-2.
 
 <span class="pub-date">2025-01-26</span> [The Simplest Autoencoder](posts/simplest-autoencoder.qmd) \
 <span class="pub-date">2024-10-18</span> [Path to LLMs](posts/path-to-llms.qmd) \
@@ -52,7 +52,7 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 
 ### Programs for Humans
 
-These are programs I write solely to understand something and maybe help another human understand it.
+These are programs I write solely to understand something.
 
 <span class="pub-date">2025-02-21</span> [Project Euler - first 100 problems](programs-for-humans/project-euler.qmd)</span> \
 <span class="pub-date">2024-12-22</span> [Cryptopals: Set 1](programs-for-humans/cryptopals-set1.qmd)</span> \
