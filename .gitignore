@@ -1,6 +1,6 @@
 .vscode
 /.quarto/
-ipynb_checkpoints
+.ipynb_checkpoints
 __pycache__
 .calva
 .clj-kondo

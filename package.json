@@ -1,38 +1,18 @@
 {
   "name": "gorur.dev",
   "version": "1.0.0",
-  "description": "Vikas website",
-  "homepage": "https://github.com/vikasgorur/gorur.dev#readme",
-  "bugs": {
-    "url": "https://github.com/vikasgorur/gorur.dev/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vikasgorur/gorur.dev.git"
-  },
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
+  "description": "",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
-    "test": "vitest",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "@eslint/js": "^9.25.1",
-    "@githubnext/vitale": "^0.0.19",
-    "@types/node": "^22.15.3",
-    "@typescript-eslint/eslint-plugin": "^8.31.1",
-    "@typescript-eslint/parser": "^8.31.1",
-    "eslint": "^9.25.1",
-    "typescript": "npm:@githubnext/typescript@^5.4.5-hacked.1",
-    "vitest": "^3.1.2"
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
   "dependencies": {
-    "bitset": "^5.2.3"
+    "@types/d3": "^7.4.3",
+    "d3": "^7.9.0",
+    "random": "^5.4.0"
   }
 }

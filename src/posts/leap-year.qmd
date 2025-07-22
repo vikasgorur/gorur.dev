@@ -1,0 +1,27 @@
+---
+title: Teaching a neural network about leap years 
+---
+
+A simple net with a single layer of (12, 1) and no bias learns the leap
+year function almost perfectly.
+
+It only gets centuries not divisible by 400 wrong!
+
+Investigate this mystery.
+
+Jul 10:
+
+What I learned so far:
+
+- The (12, 1) net thinks that all centuries are leap years, when it should only consider centuries that are divisible by 400 as leap years.
+- Increasing the capacity by adding hidden layers or making the layers wider doesn't help.
+
+This might be happening because of imbalanced data. Only < 0.1% of years fall into either the ÷100 or ÷400 buckets. Maybe balancing the dataset will fix the problem?
+
+Jul 14:
+
+- If I change the training dataset to have 50% leap years and 50% non leap years, the entire model's accuracy becomes 50%!
+
+- Accuracy is 0.9921 if leap years 20% and non leap years 80% in the training set.
+
+Next: try every value 1-99% leap year and graph the accuracy against that.
