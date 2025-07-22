@@ -76,6 +76,7 @@ My notes on papers and articles I've read.
 <span class="pub-date">2024-11-02</span> [Stats 110: Practice 1](exercises/stats110-practice1.qmd)
 
 ### Essays
+<span class="pub-date">2025-07-22</span> [Secret Sharing in APL](posts/secret-sharing-in-apl.qmd) \
 <span class="pub-date">2024-12-14</span> [Mysore Food Guide](posts/mysore-food-guide.qmd) \
 <span class="pub-date">2022-04-25</span> [The Varieties of Silence](posts/varieties-of-silence.qmd) \
 <span class="pub-date">2021-03-16</span> [For A Kannada Movie](posts/for-a-kannada-movie.qmd) \

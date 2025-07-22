@@ -18,6 +18,7 @@ project:
     - posts/chessrank.qmd
     - posts/mysore-food-guide.qmd
     - posts/varieties-of-silence.qmd
+    - posts/secret-sharing-in-apl.qmd
     - annotations/biology-of-llm.qmd
     - annotations/deep-dive-into-llms.qmd
     - annotations/history-of-language-models.qmd
@@ -34,7 +35,7 @@ csl: chicago-with-urls.csl
 format:
   html:
     theme: journal
-    fontsize: 1.2em
+    fontsize: 1.1em
     code-fold: false
     highlight-style: haddock
     callout-appearance: minimal
