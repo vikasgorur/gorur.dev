@@ -1,0 +1,103 @@
+---
+title: Blogs by Humans
+---
+
+_Last updated_: Jul 27, 2025.
+
+I love writing code with Claude. I'm excited about the possibilities of AI in
+building many kinds of software. **I never want to read prose written by AI**.
+
+This is not a contradiction for those of us who relish the aesthetic qualities
+of prose. I empathize with people for whom writing is a chore, or they're being
+forced to write something (like corporate paperwork) and thus want to just get
+it over with using AI assistance. But if you're putting your writing on the
+Internet and want people to read it, you should learn to write. When I sit down
+in the morning with a freshly made cup of coffee to read something, I want the
+writer of that piece to have put in more effort than I did in making that
+coffee. Life is too short for anything else. There are still Dostoevsky novels I
+haven't read, and someday I want to read _Moby Dick_.
+
+"What if there's valuable information in an AI-assisted post, don't you want to
+read it?", you ask. No. Information is not scarce. If I just want information
+about something, I'll ask ChatGPT!
+
+I want to read to understand a specific person's viewpoint or their life
+experience. If prose is crafted well, it allows for transmission of an
+arrangement of concepts from one brain to another. If it's crafted _really_
+well, the writer takes you on a journey, a chain of thought and imagery that
+produces a feeling.
+
+Let me illustrate with two examples. The first is an article that pushed me to
+write this post: [Why Elixir? A Rebuttal to Common
+Misconceptions](https://matthewsinclair.com/blog/0181-why-elixir).
+
+I don't mean to pick on this specific person, but there is zero value to me in
+that article. It's almost entirely written by ChatGPT. Worse, it starts off by
+pretending to be a personal account:
+
+> I am sick and tired of having to justify “Why Elixir?” so I decided to write down all of the reasons why in one spot!
+
+I already have some opinions about Elixir. I'm aware of its features. If I
+wanted a bland sales pitch about why it's so great I could have typed into
+ChatGPT: "give me 10 reasons why Elixir is a great language", which I'm sure is
+pretty close to the prompt used to generate that "essay". I also found it
+somewhat disheartening that there were only two comments on the [HN
+thread](https://news.ycombinator.com/item?id=44659251) pointing out that this
+was AI slop. This is probably a combination of people not reading articles
+before commenting and the average person being absolutely terrible at
+identifying AI-written prose.
+
+In contrast look at [this
+post](https://soumith.ch/blog/2024-10-02-training-10k-scale.md.html) about
+training an LLM on 10,000 GPUs by Soumit Chintala, one of the founders of
+PyTorch. There is an incredible amount of hard-won knowledge packed into that
+short post. I don't care that it hasn't been polished into a 2,000 word essay.
+I would rather read bullet points written by someone with something worthwhile
+to say than lazy slop.
+
+All of this is preamble to share a list of blogs that I love. These are by
+people I trust to put in the effort to write well. For each blog I'll also
+include one great post that can be your entry point. 
+
+---
+
+In alphabetical order of their first names.
+
+Adam Mastroianni, _Experimental History_: psychology, the scientific method. \
+<span class="indent">[Excuse me but why are you eating so many frogs](https://www.experimental-history.com/p/excuse-me-but-why-are-you-eating)</span>
+
+Brian Potter, _Construction Physics_: essays about everything we build in the physical world. \
+<span class="indent">[How to Build a $20 Billion Semiconductor Fab](https://www.construction-physics.com/p/how-to-build-a-20-billion-semiconductor)</span>
+
+Henrik Karlsson, _Escaping Flatland_: personal essays. \
+<span class="indent">[A blog post is a very long and complex search query to find fascinating people and make them route interesting stuff to your inbox](https://www.henrikkarlsson.xyz/p/search-query)</span>
+
+Nikhil Suresh, _Ludicity_: "Office Space" for the 21st century? \
+<span class="indent">[Leadership Is A Hell Of A Drug](https://ludic.mataroa.blog/blog/leadership-is-a-hell-of-a-drug/)</span> 
+
+Patrick McKenzie, _Bits About Money_: software and finance. \
+<span class="indent">[Anatomy of a credit card rewards program](https://www.bitsaboutmoney.com/archive/anatomy-of-credit-card-rewards-programs/)</span>
+
+_Mr. and Mrs. Psmith’s Bookshelf_: Book reviews that are illuminating by themselves. I also love that they review books published years and decades ago. \
+<span class="indent">[REVIEW: Sick Societies, by Robert B. Edgerton](https://www.thepsmiths.com/p/review-sick-societies-by-robert-b)</span>
+
+Yuxi Liu, _Yuxi on the Wired_: deep dives into AI, math, physics. \
+<span class="indent">[The Backstory of Backpropagation](https://yuxi.ml/essays/posts/backstory-of-backpropagation/)</span>
+
+
+---
+
+Speaking of _Moby Dick_, what language model would ever write this delightfully improbable paragraph?
+
+> I never go as a passenger; nor, though I am
+something of a salt, do I ever go to sea as a Commodore, or a Captain, or a
+Cook.  I abandon the glory and distinction of such offices to those who like
+them.  For my part, I abominate all honorable respectable toils, trials, and
+tribulations of every kind whatsoever. It is quite as much as I can do to take
+care of myself, without taking care of ships, barques, brigs, schooners, and
+what not.  And as for going as cook,—though I confess there is considerable
+glory in that, a cook being a sort of officer on ship-board—yet, somehow, I
+never fancied broiling fowls;—though once broiled, judiciously buttered, and
+judgmatically salted and peppered, there is no one who will speak more
+respectfully, not to say reverentially, of a broiled fowl than I will.
+

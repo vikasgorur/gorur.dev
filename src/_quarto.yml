@@ -19,6 +19,7 @@ project:
     - posts/mysore-food-guide.qmd
     - posts/varieties-of-silence.qmd
     - posts/secret-sharing-in-apl.qmd
+    - posts/blogs-by-humans.qmd
     - annotations/biology-of-llm.qmd
     - annotations/deep-dive-into-llms.qmd
     - annotations/history-of-language-models.qmd

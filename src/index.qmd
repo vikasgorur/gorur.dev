@@ -75,7 +75,8 @@ My notes on papers and articles I've read.
 <span class="pub-date">2024-07-24</span> [Counting is hard](posts/counting-is-hard.qmd) \
 <span class="pub-date">2024-11-02</span> [Stats 110: Practice 1](exercises/stats110-practice1.qmd)
 
-### Essays
+### Blog
+<span class="pub-date">2025-07-27</span> [Blogs by Humans](posts/blogs-by-humans.qmd) \
 <span class="pub-date">2025-07-22</span> [Secret Sharing in APL](posts/secret-sharing-in-apl.qmd) \
 <span class="pub-date">2024-12-14</span> [Mysore Food Guide](posts/mysore-food-guide.qmd) \
 <span class="pub-date">2022-04-25</span> [The Varieties of Silence](posts/varieties-of-silence.qmd) \
