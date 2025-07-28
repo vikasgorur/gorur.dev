@@ -2,9 +2,6 @@
 
 .content {
     font-family: "Iowan Old Style", "Georgia", serif;
-    text-align: justify;
-    text-justify: inter-word;
-    hyphens: none;
 }
 
 .sourceCode {

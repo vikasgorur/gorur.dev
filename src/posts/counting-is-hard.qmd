@@ -3,13 +3,14 @@ title: "Counting is hard"
 jupyter: python3
 ---
 
+_Last updated: Nov 30, 2024._
+
+::: {.callout-note}
 George Casella, Roger L. Berger, *Statistical Inference*, 2nd edition, 2002. Exercise 1.20.
 
 My telephone rings 12 times each week, the calls being randomly distributed among the 7 days. What is the probability
 that I get atleast one call each day?
-
----
-_Last updated: Nov 30, 2024._
+:::
 
 This problem seems simple enough at first. Each of the 12 phone calls can independently happen on any of the 7 days, so the total number
 of ways to distribute the phone calls is $7^{12}$.
