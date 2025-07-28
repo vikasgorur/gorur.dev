@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -34,10 +54,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-a8cfe63eade0b71b47e9ce25a1507d2f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-385a08c56f94855b39b5da98c9e70883.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-6af7117b0cae87218a364fcc14d9eb72.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -135,7 +155,7 @@ window.Quarto = {
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>This annotation is for the paper <span class="citation" data-cites="hangli2022">(<a href="#ref-hangli2022" role="doc-biblioref"><strong>hangli2022?</strong></a>)</span></p>
+<p>This annotation is for the paper <span class="citation" data-cites="hangliLanguageModelsPresent2022">Hang Li (<a href="#ref-hangliLanguageModelsPresent2022" role="doc-biblioref">2022</a>)</span>.</p>
 </div>
 </div>
 </div>
@@ -151,17 +171,17 @@ window.Quarto = {
 <p><span class="math display">\[
 p(w_1, w_2, ..., w_N) = \prod_{i=1}^{N} p(w_i | w_1, w_2, ..., w_{i-1})
 \]</span></p>
-<p>Markov invented the concept of Markov processes when studying language. See <span class="citation" data-cites="hayes2013">(<a href="#ref-hayes2013" role="doc-biblioref"><strong>hayes2013?</strong></a>)</span> for a fascinating history of how he analyzed the text of Pushkin’s <em>Eugene Onegin</em> by hand.</p>
+<p>Markov invented the concept of Markov processes when studying language. See <span class="citation" data-cites="hayesFirstLinksMarkov2013">(<a href="#ref-hayesFirstLinksMarkov2013" role="doc-biblioref">Hayes 2013</a>)</span> for a fascinating history of how he analyzed the text of Pushkin’s <em>Eugene Onegin</em> by hand.</p>
 <p>An <span class="math inline">\(n\)</span>-gram language model assumes that the probability of a word depends only on the words at the previous <span class="math inline">\(n - 1\)</span> positions. This kind of model is a Markov chain of the order <span class="math inline">\(n - 1\)</span>.</p>
-<p><span class="citation" data-cites="shannon1948">(<a href="#ref-shannon1948" role="doc-biblioref"><strong>shannon1948?</strong></a>)</span> defined the concepts of entropy and cross-entropy. The cross-entropy is a measure of how well the model has learned the “true” probability. What is this true probability? I think it’s just the probability computed using frequencies in the training corpus.</p>
+<p><span class="citation" data-cites="shannonMathematicalTheoryCommunication1948">Shannon (<a href="#ref-shannonMathematicalTheoryCommunication1948" role="doc-biblioref">1948</a>)</span> defined the concepts of entropy and cross-entropy. The cross-entropy is a measure of how well the model has learned the “true” probability. What is this true probability? I think it’s just the probability computed using frequencies in the training corpus.</p>
 <p>The other approach to language modeling was the hierarchy of grammars proposed by Chomsky in 1956. This is not at all influential anymore. Chomsky thought that finite state grammars (like n-gram models) are limited and that context-free grammars can model language more effectively.</p>
-<p><span class="citation" data-cites="bengio2003">(<a href="#ref-bengio2003" role="doc-biblioref"><strong>bengio2003?</strong></a>)</span> (Turing Award 2018) first used neural networks for language modeling. Their paper had two key ideas:</p>
+<p><span class="citation" data-cites="bengioNeuralProbabilisticLanguage2003">Bengio et al. (<a href="#ref-bengioNeuralProbabilisticLanguage2003" role="doc-biblioref">2003</a>)</span> (Turing Award 2018) first used neural networks for language modeling. Their paper had two key ideas:</p>
 <ul>
 <li>Words (tokens) have a “distributed representation” as vectors. This is the embedding.</li>
 <li>The language model is a neural network.</li>
 </ul>
 <p>The number of parameters of this model is of the order <span class="math inline">\(O(V)\)</span> where <span class="math inline">\(V\)</span> is the size of the vocabulary.</p>
-<p>The next step in neural language modeling was the use of recurrent neural networks (RNNs). See <span class="citation" data-cites="karpathy2015">(<a href="#ref-karpathy2015" role="doc-biblioref"><strong>karpathy2015?</strong></a>)</span> on their “unreasonable effectiveness”.</p>
+<p>The next step in neural language modeling was the use of recurrent neural networks (RNNs). See <span class="citation" data-cites="andrejkarpathyUnreasonableEffectivenessRecurrent2015">Andrej Karpathy (<a href="#ref-andrejkarpathyUnreasonableEffectivenessRecurrent2015" role="doc-biblioref">2015</a>)</span> on their “unreasonable effectiveness”.</p>
 <p>A “conditional” language model calculates probability of word sequence under the condition of a previous sequence. These are the seq2seq models. These models can do tasks such as machine translation where the input and output are both sequences of tokens.</p>
 <p>Seq2seq models led to the transformer and pre-trained language models. A pre-trained model:</p>
 <ul>
@@ -173,7 +193,24 @@ p(w_1, w_2, ..., w_N) = \prod_{i=1}^{N} p(w_i | w_1, w_2, ..., w_{i-1})
 
 
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-andrejkarpathyUnreasonableEffectivenessRecurrent2015" class="csl-entry" role="listitem">
+Andrej Karpathy. 2015. <span>“The <span>Unreasonable Effectiveness</span> of <span>Recurrent Neural Networks</span>.”</span> <a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/">https://karpathy.github.io/2015/05/21/rnn-effectiveness/</a>.
+</div>
+<div id="ref-bengioNeuralProbabilisticLanguage2003" class="csl-entry" role="listitem">
+Bengio, Yoshua, Réjean Ducharme, Pascal Vincent, and Christian Janvin. 2003. <span>“A Neural Probabilistic Language Model.”</span> <em>J. Mach. Learn. Res.</em> 3 (null): 1137–55.
+</div>
+<div id="ref-hangliLanguageModelsPresent2022" class="csl-entry" role="listitem">
+Hang Li. 2022. <span>“Language Models: Past, Present, and Future.”</span> <em>Communications of the ACM</em> 65 (7): 56–63. <a href="https://doi.org/10.1145/3490443">https://doi.org/10.1145/3490443</a>.
+</div>
+<div id="ref-hayesFirstLinksMarkov2013" class="csl-entry" role="listitem">
+Hayes, Brian. 2013. <span>“First <span>Links</span> in the <span>Markov Chain</span>.”</span> <em>American Scientist</em> 101 (2). <a href="https://doi.org/10.1511/2013.101.92">https://doi.org/10.1511/2013.101.92</a>.
+</div>
+<div id="ref-shannonMathematicalTheoryCommunication1948" class="csl-entry" role="listitem">
+Shannon, Claude. 1948. <span>“A <span>Mathematical Theory</span> of <span>Communication</span>.”</span> <em>Bell System Technical Journal</em> 27. <a href="https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf">https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
