@@ -76,6 +76,7 @@ My notes on papers and articles I've read.
 <span class="pub-date">2024-11-02</span> [Stats 110: Practice 1](exercises/stats110-practice1.qmd)
 
 ### Blog
+<span class="pub-date">2025-07-28</span> [Unfortunately, Worse is Better](posts/worse-is-better.qmd) \
 <span class="pub-date">2025-07-27</span> [Blogs by Humans](posts/blogs-by-humans.qmd) \
 <span class="pub-date">2025-07-22</span> [Secret Sharing in APL](posts/secret-sharing-in-apl.qmd) \
 <span class="pub-date">2024-12-14</span> [Mysore Food Guide](posts/mysore-food-guide.qmd) \

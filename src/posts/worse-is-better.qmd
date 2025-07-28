@@ -1,0 +1,28 @@
+---
+title: Unfortunately, Worse is Better
+---
+
+Last updated: _Jul 28, 2025_.
+
+Richard Gabriel's classic essay [The Rise of Worse is
+Better](https://www.dreamsongs.com/RiseOfWorseIsBetter.html) was written to
+illustrate two different approaches to system design (which he calls MIT and
+Unix) and partly explain why Common Lisp hasn't been as successful as Unix. The
+phrase over time has become a useful shorthand for many tradeoffs that arise in
+the practice and business of software.
+
+This post is a list of all the times I've thought to myself, "well, worse is better". A common theme in these examples is "you get what you pay for". There is a big difference between what people claim they want out of software (stated preference) and what they will actually pay for (revealed preference) and this drives companies to make the "worse is better" choice.
+
+Every product claims to have a world-class security posture and users claim to care about it a great deal. A whole industry of audits and paperwork exists to support this notion. But what is the reality?
+
+On July 19, 2024, [CrowdStrike](https://en.wikipedia.org/wiki/2024_CrowdStrike-related_IT_outages) was the reason for perhaps the largest IT outage in history. Planes were grounded, hospitals were paralyzed. One year later, its stock price is up 56%. Where is the incentive to do better?
+
+Many command-line tools that can access critical infrastructure store their credentials in a plain-text file on your laptop (in `~/.netrc` and other places). Everyone installs untrusted code from the Internet all the time, in the form of npm packages, VS Code extensions and so on. This is a perfectly combustible mixture enabling the theft of credentials. This is considered normal because it's convenient. Worse is better.
+
+It's the same with performance. A native Mac app is a joy to use, but a bloated Electron app is cheaper to build. For every [Zed](https://zed.dev) that obsesses over performance, there are ten apps like Slack or Spotify that are commercially successful despite being laggy and bloated. Worse is better.
+
+"Worse is better" is a cautionary tale for startups, but the lesson isn't simply that nothing matters. It's hard to imagine, for example, Linear or Figma succeeding if they weren't lightning fast and finely crafted. A startup product's adoption depends far more on its inherent quality than an enterprise product that people are forced to buy.
+
+The real lesson is that **technical excellence alone won't make a product successful**. There is always a chance that something else that's cheaper, or faster to market, or has better marketing will beat you even when you can tell yourself that it's technically inferior.
+
+
