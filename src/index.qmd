@@ -50,6 +50,17 @@ This is my attempt to build the "tech tree" of ML, starting from the absolute ba
 
 <span class="pub-date">2025-05-26</span> [Makemore 1: bigram model](posts/makemore-1.qmd)
 
+### Blog
+<span class="pub-date">2025-07-28</span> [Unfortunately, Worse is Better](posts/worse-is-better.qmd) \
+<span class="pub-date">2025-07-27</span> [Blogs by Humans](posts/blogs-by-humans.qmd) \
+<span class="pub-date">2025-07-22</span> [Secret Sharing in APL](posts/secret-sharing-in-apl.qmd) \
+
+<span class="pub-date">2024-12-14</span> [Mysore Food Guide](posts/mysore-food-guide.qmd) \
+<span class="pub-date">2022-04-25</span> [The Varieties of Silence](posts/varieties-of-silence.qmd) \
+<span class="pub-date">2021-03-16</span> [For A Kannada Movie](posts/for-a-kannada-movie.qmd) \
+<span class="pub-date">2020-04-30</span> [How to do Feature Flag-Driven Development](posts/feature-flags.qmd)
+
+
 ### Programs for Humans
 
 These are programs I write solely to understand something.
@@ -74,14 +85,5 @@ My notes on papers and articles I've read.
 <span class="pub-date">2025-01-03</span> [Chessrank: Who Should Win a Chess Tournament?](posts/chessrank.qmd) \
 <span class="pub-date">2024-07-24</span> [Counting is hard](posts/counting-is-hard.qmd) \
 <span class="pub-date">2024-11-02</span> [Stats 110: Practice 1](exercises/stats110-practice1.qmd)
-
-### Blog
-<span class="pub-date">2025-07-28</span> [Unfortunately, Worse is Better](posts/worse-is-better.qmd) \
-<span class="pub-date">2025-07-27</span> [Blogs by Humans](posts/blogs-by-humans.qmd) \
-<span class="pub-date">2025-07-22</span> [Secret Sharing in APL](posts/secret-sharing-in-apl.qmd) \
-<span class="pub-date">2024-12-14</span> [Mysore Food Guide](posts/mysore-food-guide.qmd) \
-<span class="pub-date">2022-04-25</span> [The Varieties of Silence](posts/varieties-of-silence.qmd) \
-<span class="pub-date">2021-03-16</span> [For A Kannada Movie](posts/for-a-kannada-movie.qmd) \
-<span class="pub-date">2020-04-30</span> [How to do Feature Flag-Driven Development](posts/feature-flags.qmd)
 
 </div>

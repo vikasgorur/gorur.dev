@@ -24,6 +24,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
@@ -37,13 +38,13 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-a8cfe63eade0b71b47e9ce25a1507d2f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6af7117b0cae87218a364fcc14d9eb72.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-b0914bf9e93b132249acb5aa2d8c51da.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
-  "location": "sidebar",
+  "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
-  "panel-placement": "start",
-  "type": "textbox",
+  "panel-placement": "end",
+  "type": "overlay",
   "limit": 50,
   "keyboard-shortcut": [
     "f",
@@ -70,11 +71,31 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
@@ -137,6 +158,17 @@ h3 {
 <p><span class="pub-date">2025-05-26</span> <a href="./posts/makemore-1.html">Makemore 1: bigram model</a></p>
 </section>
 </section>
+<section id="blog" class="level3">
+<h3 class="anchored" data-anchor-id="blog">Blog</h3>
+<p><span class="pub-date">2025-07-28</span> <a href="./posts/worse-is-better.html">Unfortunately, Worse is Better</a><br>
+<span class="pub-date">2025-07-27</span> <a href="./posts/blogs-by-humans.html">Blogs by Humans</a><br>
+<span class="pub-date">2025-07-22</span> <a href="./posts/secret-sharing-in-apl.html">Secret Sharing in APL</a><br>
+</p>
+<p><span class="pub-date">2024-12-14</span> <a href="./posts/mysore-food-guide.html">Mysore Food Guide</a><br>
+<span class="pub-date">2022-04-25</span> <a href="./posts/varieties-of-silence.html">The Varieties of Silence</a><br>
+<span class="pub-date">2021-03-16</span> <a href="./posts/for-a-kannada-movie.html">For A Kannada Movie</a><br>
+<span class="pub-date">2020-04-30</span> <a href="./posts/feature-flags.html">How to do Feature Flag-Driven Development</a></p>
+</section>
 <section id="programs-for-humans" class="level3">
 <h3 class="anchored" data-anchor-id="programs-for-humans">Programs for Humans</h3>
 <p>These are programs I write solely to understand something.</p>
@@ -158,16 +190,6 @@ h3 {
 <p><span class="pub-date">2025-01-03</span> <a href="./posts/chessrank.html">Chessrank: Who Should Win a Chess Tournament?</a><br>
 <span class="pub-date">2024-07-24</span> <a href="./posts/counting-is-hard.html">Counting is hard</a><br>
 <span class="pub-date">2024-11-02</span> <a href="./exercises/stats110-practice1.html">Stats 110: Practice 1</a></p>
-</section>
-<section id="blog" class="level3">
-<h3 class="anchored" data-anchor-id="blog">Blog</h3>
-<p><span class="pub-date">2025-07-28</span> <a href="./posts/worse-is-better.html">Unfortunately, Worse is Better</a><br>
-<span class="pub-date">2025-07-27</span> <a href="./posts/blogs-by-humans.html">Blogs by Humans</a><br>
-<span class="pub-date">2025-07-22</span> <a href="./posts/secret-sharing-in-apl.html">Secret Sharing in APL</a><br>
-<span class="pub-date">2024-12-14</span> <a href="./posts/mysore-food-guide.html">Mysore Food Guide</a><br>
-<span class="pub-date">2022-04-25</span> <a href="./posts/varieties-of-silence.html">The Varieties of Silence</a><br>
-<span class="pub-date">2021-03-16</span> <a href="./posts/for-a-kannada-movie.html">For A Kannada Movie</a><br>
-<span class="pub-date">2020-04-30</span> <a href="./posts/feature-flags.html">How to do Feature Flag-Driven Development</a></p>
 </section>
 </div>
 

@@ -34,6 +34,14 @@ project:
 bibliography: /Users/vikas/study/gorur.dev/src/zotero.bib
 csl: chicago-with-urls.csl
 
+website:
+  navbar:
+      background: primary
+      search: false
+      left:
+        - text: "Home"
+          href: index.qmd
+
 format:
   html:
     theme: journal
