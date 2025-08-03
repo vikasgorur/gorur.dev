@@ -1,22 +1,23 @@
 ---
 title: "Makemore 1: bigram model"
-date: 2025-05-26
+date: 2025-08-03
 author: Vikas Gorur
 toc: true
 toc-location: left
-toc-title: "On this page"
+toc-title: "Contents"
 toc-depth: 6
 toc-expand: true
 ---
 
 In this series of posts we will follow along Andrej Karpathy's series of videos
-about building a language model. In this post we're implementing the first model from the video:
+about building a language model. In this post we're implementing the first
+model from the video:
 
 - [The spelled-out intro to language modeling: building makemore](https://www.youtube.com/watch?v=PaCmpygFfXo).
 
-Consider text in a _language_ to be a stream of _tokens_. The set of all possible tokens
-is the _vocabulary_. A token can be any sequence of bytes. The simplest possible tokens
-are just single ASCII characters.
+Consider text in a _language_ to be a stream of _tokens_. The set of all
+possible tokens is the _vocabulary_. A token can be any sequence of bytes. The
+simplest possible tokens are just single ASCII characters.
 
 The task of language modeling is to learn the probability distribution:
 
@@ -31,7 +32,8 @@ where:
 
 ## Dataset
 
-In this series we'll use a dataset of Bollywood movie names with the goal of making more movie names (hence "makemore").
+In this series we'll use a dataset of Bollywood movie names with the goal of
+making more movie names (hence "makemore").
 
 ```{python}
 import pandas as pd
@@ -67,47 +69,24 @@ def verify(cond: bool):
 
 ## Bigram character model
 
-The first model we build will be based on _bigrams_, two-character strings. The set of tokens will be: `{'A', 'B', ..., 'Z', ' ', '.'}`. The size of this vocabulary is 28. The special token `.` will be used to indicate the beginning and end of each word.
+The first model we build will be based on _bigrams_, two-character strings. The
+set of tokens will be: `{'A', 'B', ..., 'Z', ' ', '.'}`. The size of this
+vocabulary is 28. The special token `.` will be used to indicate the beginning
+and end of each word.
 
-The probability function "learned" by this model will just be the frequency of bigrams occuring in the training set. For that we first need a way to turn tokens into numbers and vice-versa.
+The probability function "learned" by this model will just be the frequency of
+bigrams occuring in the training set. For that we first need a way to turn
+tokens into numbers and vice-versa.
 
 ### Encoding and decoding
 
-We'll map tokens to numbers using the functions below. The unit-test assertions explain how they work.
+We'll map tokens to numbers using the dictionaries below. The mapping is 
+`{' ': 0, 'A': 1, 'B': 2, ..., '.': 28}`.
 
 ```{python}
-def stoi(s: str) -> int:
-    assert len(s) == 1
-    if s == ".":
-        return 27
-    elif s == " ":
-        return 26
-    else:
-        return ord(s) - ord("A")
-
-verify(all([
-    stoi('A') == 0,
-    stoi('Z') == 25,
-    stoi(' ') == 26,
-    stoi('.') == 27
-]))
-```
-
-```{python}
-def itos(i: int) -> str:
-    if i == 27:
-        return "."
-    elif i == 26:
-        return " "
-    else:
-        return chr(i + ord("A"))
-
-verify(all([
-    itos(0) == 'A',
-    itos(25) == 'Z',
-    itos(26) == ' ',
-    itos(27) == '.'
-]))
+VOCAB = sorted(list(set(''.join(MOVIES)))) + ['.'] 
+STOI = {s:i for i,s in enumerate(VOCAB)}
+ITOS = {i:s for s,i in STOI.items()}
 ```
 
 ### Training
@@ -118,12 +97,12 @@ The "training" of this model just involves counting the frequencies of each bigr
 import torch
 
 def train(corpus: list[str]) -> torch.tensor:
-    N_TOKENS = 28
+    N_TOKENS = len(VOCAB)
     counts = torch.zeros((N_TOKENS, N_TOKENS))
     for name in corpus:
         name = "." + name + "."
         for c, c_next in zip(name, name[1:]):
-            counts[stoi(c), stoi(c_next)] += 1
+            counts[STOI[c], STOI[c_next]] += 1
 
     # Normalize the counts into probabilities on each row
     return counts / counts.sum(1, keepdim=True)
@@ -145,20 +124,23 @@ Given a context (a single letter), we generate the next token (letter in this ca
 
 ```{python}
 def sample(model: torch.tensor, context: str) -> str:
-    return itos(
+    return ITOS[
         torch.multinomial(
-            model[stoi(context), :],
+            model[STOI[context], :],
             replacement=True,
             num_samples=1
-        )
-    )
+        ).item()
+    ]
 
 print(sample(model, '.'))
 ```
 
 ### Generating
 
-To generate a new movie name we start with the special token `.` and sample to get the next token. We sample again using this new token as the context, and keep going until the sampling returns the special token `.` again. We do this `n` times to generate many movie names.
+To generate a new movie name we start with the special token `.` and sample to
+get the next token. We sample again using this new token as the context, and
+keep going until the sampling returns the special token `.` again. We do this
+`n` times to generate many movie names.
 
 ```{python}
 def generate(model: torch.tensor, n: int) -> list[str]:
@@ -183,14 +165,21 @@ Given that we're only using bigrams it's unlikely that the model will even come 
 
 ## Loss function
 
-Let us consider the entire set of movie names and call it the _corpus_. We can think of
-each bigram in it as a _training example_. Since our language models only look at their
-limited context, it doesn't matter that these examples come from different "documents"
-(individual movie names).
+Let us consider the entire set of movie names and call it the _corpus_. We can
+think of each bigram in it as a _training example_. Since our language models
+only look at their limited context, it doesn't matter that these examples come
+from different "documents" (individual movie names).
 
-Now consider an arbitrary language model $M$ (i.e., not necessarily bigram). As defined above, $M$ should allow us to compute the probability of any $(t_1 ... t_n, t_{n+1})$ sequence. That is, given a context $t_1 ... t_n$, the probability of every possible next token $t_{n+1}$.
+Now consider an arbitrary language model $M$ (i.e., not necessarily bigram). As
+defined above, $M$ should allow us to compute the probability of any $(t_1 ...
+t_n, t_{n+1})$ sequence. That is, given a context $t_1 ... t_n$, the probability
+of every possible next token $t_{n+1}$.
 
-Given such a model, we can define the _likelihood_ that it produces our corpus $c$. This likelihood is the probability that all possible `(context, next_token)` pairs that are found in the corpus occur _at the same time_. Thus the likelihood is computed as the product of the model's probabilities for all such pairs.
+Given such a model, we can define the _likelihood_ that it produces our corpus
+$c$. This likelihood is the probability that all possible `(context,
+next_token)` pairs that are found in the corpus occur _at the same time_. Thus
+the likelihood is computed as the product of the model's probabilities for all
+such pairs.
 
 $$
 L(c) = p(x_1) \cdot p(x_2) \cdot p(x_3) ... p(x_k)
@@ -203,12 +192,12 @@ A couple of things to note here:
 - When a bigram appears multiple times in the corpus, there is one term for each occurence when computing $L$. \
 - Since we're using the product rule to multiply the probabilities, there is an implicit assumption that all training examples are independent. That is, we're assuming that the occurence of one bigram has no influence on others.
 
-Let's work out the loss for the bigram model. Consider the corpus `SHOLAY`. It consists of
-the bigrams `{'.S', 'SH', 'OL', 'LA', 'AY', 'Y.'}`. We've added an extra token `.` to
-signify the beginning and end. Assume now that `M` is a Python function that returns the
-probability of the next letter given a letter, so for example `M('S', 'H')` is the
-probability that `H` follows an `S`. The likelihood of `SHOLAY` under this model is
-therefore:
+Let's work out the loss for the bigram model. Consider the corpus `SHOLAY`. It
+consists of the bigrams `{'.S', 'SH', 'OL', 'LA', 'AY', 'Y.'}`. We've added an
+extra token `.` to signify the beginning and end. Assume now that `M` is a
+Python function that returns the probability of the next letter given a letter,
+so for example `M('S', 'H')` is the probability that `H` follows an `S`. The
+likelihood of `SHOLAY` under this model is therefore:
 
 ```
 L = M('.', 'S') * M('S', 'H') * M('O', 'L')
@@ -223,13 +212,11 @@ $$
 \mathrm{NLL}(c) = - (\log p(x_1) + \log p(x_2) + \log p(x_3) \ldots + \log p(x_k))
 $$
 
-Once we have this definition for a single document, we can compute the $\mathrm{NLL}$ for _every_ document in the training set and take an average.
+We then take the average by dividing the sum by the number of training examples, $N$.
 
 $$
 \mathrm{NLL_avg} = - \frac{1}{N} \sum_{i=1}^{N} \log p(x_i)
 $$
-
-where $N$ is the number of training examples.
 
 The average negative log-likelihood is our **loss function** and has an intuitive meaning. It is a single number that allows us to measure how well the model has learnt to approximate its training set.
 
@@ -243,7 +230,7 @@ def nll_loss(names: list[str]) -> float:
     count = 0
     for name in names:
         for c, c_next in zip(name, name[1:]):
-            logprobs += math.log(model[stoi(c)][stoi(c_next)])
+            logprobs += math.log(model[STOI[c]][STOI[c_next]])
             count += 1
 
     return -logprobs / count
@@ -265,4 +252,63 @@ It doesn't make sense to just feed the token IDs (like `5`) to the network, beca
 
 Finally, since the output of the network will have arbitrarily large numbers (because the parameters in $W$ are arbitrary), we need to turn the output vector into a probability vector (sums to 1) by using the `softmax` operation.
 
-We'll now put all of this together into a single training function.
+So first we generate the training set:
+
+```{python}
+from typing import Tuple
+
+def training_set() -> Tuple[torch.Tensor, torch.Tensor]:
+    xs, ys = [], []
+    for name in MOVIES:
+        chars = ['.'] + list(name) + ['.']
+        for c1, c2 in zip(chars, chars[1:]):
+            ix1 = STOI[c1]
+            ix2 = STOI[c2]
+            xs.append(ix1)
+            ys.append(ix2)
+
+    return torch.tensor(xs), torch.tensor(ys) 
+    
+X, Y = training_set()
+print(X.shape, Y.shape)
+```
+
+The training function does the following: \
+- One-hot encodes the input. \
+- Implements the forward pass and computes the loss. \
+- Uses gradient descent to tune $W$.
+
+```{python}
+import torch.nn.functional as F
+
+def train() -> Tuple[torch.tensor, float]:
+    "Trains the neural net and returns the weight matrix and the loss"
+
+    g = torch.Generator().manual_seed(2147483647)
+    Xenc = F.one_hot(X, num_classes=len(VOCAB)).float()
+    N = X.nelement()
+    W = torch.randn((len(VOCAB), len(VOCAB)), generator=g, requires_grad=True)
+    loss = 0
+
+    def forward():
+        logits = Xenc @ W
+        # the two lines below are "softmax"
+        counts = logits.exp()
+        probs = counts / counts.sum(1, keepdims=True) 
+        return -probs[torch.arange(N), Y].log().mean()
+
+    for k in range(100):
+        loss = forward()
+        if k % 10 == 0:
+            print(f"loss = {loss}")
+   
+        W.grad = None
+        loss.backward()
+        W.data += -100 * W.grad
+
+    return W, loss
+
+W, loss = train()
+```
+
+The final loss ($2.53...$) is close to the loss we computed using just frequencies ($2.49...$), suggesting that the neural network has learned nearly the same probabilities. The framework of the loss function and the neural network training will now allow us to make the network much more complex and thus do a better job of modeling the training data.
