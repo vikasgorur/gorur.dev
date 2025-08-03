@@ -1,0 +1,57 @@
+---
+title: The Static UI is Dead
+---
+
+_Last updated_: Jul 29, 2025.
+
+**ABSTRACT**
+
+I define “static UI” as the familiar set of navigation elements, forms, dialog
+boxes, buttons and so on that make up a desktop or web application. I argue
+that this paradigm of talking to the computer is obsolete in the age of AI. I
+make this case by looking at the history of code editors and argue that the
+lessons apply broadly to all software. I conclude by speculating on what comes
+next.
+
+
+## I. Editing Code
+
+In the beginning was the [command
+line](https://web.stanford.edu/class/cs81n/command.txt). The fifth edition of
+Unix, in 1974, was likely entirely written using the line editor
+[ed](https://www.gnu.org/fun/jokes/ed-msg.en.html). Line editors were designed
+in the era of printer terminals, where all output and input happened on paper.
+You would type commands on something that looked like an electronic typewriter
+and the computer would type back on the same sheet of paper. Since there was no
+display, the only way to see the entire file at once was to ask for it to be
+printed.
+
+The line editor ed still exists on every Linux and Mac system. Here is a sample
+session with ed where I make a minor edit to the title of this post. 
+
+```
+$ ed static-ui-is-dead.qmd
+1083
+,5p
+---
+title: The Static UI is dead
+---
+
+_Last updated_: Jul 29, 2025.
+2s/dead/Dead/
+2p
+title: The Static UI is Dead
+w
+1083
+```
+
+This session used the commands `p` (print), `s` (substitute), and `w` (write).
+
+These commands survive in sed and vi.
+vi and emacs still have commands.
+
+Coding agents love to use these commands as their low level primitives.
+
+IDE screenshots.
+
+![](images/intellij.png)

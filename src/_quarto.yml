@@ -21,6 +21,7 @@ project:
     - posts/secret-sharing-in-apl.qmd
     - posts/blogs-by-humans.qmd
     - posts/worse-is-better.qmd
+    - posts/static-ui-is-dead.qmd
     - annotations/biology-of-llm.qmd
     - annotations/deep-dive-into-llms.qmd
     - annotations/history-of-language-models.qmd
@@ -29,6 +30,7 @@ project:
     - programs-for-humans/advent-of-code-2024.qmd
     - programs-for-humans/cryptopals-set1.qmd
     - programs-for-humans/project-euler.qmd
+    - programs-for-humans/cryptopals-set1-rust.qmd
     - exercises/stats110-practice1.qmd
 
 bibliography: /Users/vikas/study/gorur.dev/src/zotero.bib

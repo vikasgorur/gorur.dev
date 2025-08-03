@@ -1,0 +1,45 @@
+---
+title: Cryptopals, Set 1
+---
+Last updated: _Feb 1, 2025_.
+
+---
+
+This post contains my solutions to the [cryptopals](https://cryptopals.com)
+cryptography challenges. These challenges are a lot of fun and often rely on
+coming up with the right clever ideas, so I highly encourage you to try them
+yourself first if you want to avoid spoilers.
+
+
+pub fn hex_to_base64(h: &str) -> String {
+    // Decode hex string to bytes
+    let bytes = hex::decode(h).expect("Invalid hex string");
+    // Encode bytes to base64
+    STANDARD.encode(bytes)
+}
+
+
+<div class="literate-block">
+<div class="code-main">
+```rust
+pub fn gibberish_score(text: &[u8]) -> f32 {
+    text.iter()
+        .filter(|&&byte| !byte.is_ascii_alphabetic() && byte != b' ')
+        .count() as f32 / (text.len().max(1) as f32)
+}
+```
+</div>
+
+<div class="code-test">
+```rust
+fn test_gibberish_score() {
+    assert_eq!(gibberish_score(b""), 0.0);
+    assert_eq!(gibberish_score(b"Hello World"), 0.0);
+    
+    // 4 non-readable out of 10 chars
+    assert_eq!(gibberish_score(b"Helloo123!"), 0.4); 
+    assert_eq!(gibberish_score(b"123!@#"), 1.0);
+}
+```
+</div>
+</div>

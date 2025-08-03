@@ -2,6 +2,33 @@
 title: Teaching a neural network about leap years 
 ---
 
+## TASKS:
+
+- Do the train/test split for each experiment.
+-  
+
+The goal is to somehow automatically learn something like this
+[leap year in 3 instructions](https://hueffner.de/falk/blog/a-leap-year-check-in-three-instructions.html)
+
+## Experiment 1 - one hot
+
+- Input is (16,) just the binary representation of the year
+- One hidden layer of size 16
+- Sigmoid at the end
+
+This gets centuries divisible by 400 wrong and gets everything else right.
+
+## Experiment 2 - engineered features
+
+- Input is (3,): [divisible by 4, divisible by 100, divisible by 400]
+- One hidden layer of size 4
+
+This gets 100% accuracy.
+
+o3 gave me some leads: [leap year checking](https://chatgpt.com/c/688dfd70-4df4-832a-8773-d7dc9e6c24d0)
+
+## Scratch
+
 A simple net with a single layer of (12, 1) and no bias learns the leap
 year function almost perfectly.
 
@@ -25,3 +52,16 @@ Jul 14:
 - Accuracy is 0.9921 if leap years 20% and non leap years 80% in the training set.
 
 Next: try every value 1-99% leap year and graph the accuracy against that.
+
+Aug 2:
+
+`leap-year-features.ipynb`:
+- 1 hidden layer of size 4
+- input is just a 3d vector which is bool [divisible by 4, div. by 100, div. by 400]
+
+RESEARCH IDEA:
+
+Can I build a system (using Claude etc.) such that:
+
+- It is given input/output for some arbitrary function.
+- It figures out the bit twiddling tricks and generates assembly code for it.

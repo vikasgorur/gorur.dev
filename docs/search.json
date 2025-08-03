@@ -845,5 +845,26 @@
     "title": "Unfortunately, Worse is Better",
     "section": "Counterexamples",
     "text": "Counterexamples"
+  },
+  {
+    "objectID": "posts/static-ui-is-dead.html",
+    "href": "posts/static-ui-is-dead.html",
+    "title": "The Static UI is Dead",
+    "section": "",
+    "text": "Last updated: Jul 29, 2025.\nABSTRACT\nI define “static UI” as the familiar set of navigation elements, forms, dialog boxes, buttons and so on that make up a desktop or web application. I argue that this paradigm of talking to the computer is obsolete in the age of AI. I make this case by looking at the history of code editors and argue that the lessons apply broadly to all software. I conclude by speculating on what comes next."
+  },
+  {
+    "objectID": "posts/static-ui-is-dead.html#i.-editing-code",
+    "href": "posts/static-ui-is-dead.html#i.-editing-code",
+    "title": "The Static UI is Dead",
+    "section": "I. Editing Code",
+    "text": "I. Editing Code\nIn the beginning was the command line. The fifth edition of Unix, in 1974, was likely entirely written using the line editor ed. Line editors were designed in the era of printer terminals, where all output and input happened on paper. You would type commands on something that looked like an electronic typewriter and the computer would type back on the same sheet of paper. Since there was no display, the only way to see the entire file at once was to ask for it to be printed.\nThe line editor ed still exists on every Linux and Mac system. Here is a sample session with ed where I make a minor edit to the title of this post.\n$ ed static-ui-is-dead.qmd\n1083\n,5p\n---\ntitle: The Static UI is dead\n---\n\n_Last updated_: Jul 29, 2025.\n2s/dead/Dead/\n2p\ntitle: The Static UI is Dead\nw\n1083\nThis session used the commands p (print), s (substitute), and w (write).\nThese commands survive in sed and vi. vi and emacs still have commands.\nCoding agents love to use these commands as their low level primitives.\nIDE screenshots."
+  },
+  {
+    "objectID": "programs-for-humans/cryptopals-set1-rust.html",
+    "href": "programs-for-humans/cryptopals-set1-rust.html",
+    "title": "Cryptopals, Set 1",
+    "section": "",
+    "text": "Last updated: Feb 1, 2025.\n\nThis post contains my solutions to the cryptopals cryptography challenges. These challenges are a lot of fun and often rely on coming up with the right clever ideas, so I highly encourage you to try them yourself first if you want to avoid spoilers.\npub fn hex_to_base64(h: &str) -&gt; String { // Decode hex string to bytes let bytes = hex::decode(h).expect(“Invalid hex string”); // Encode bytes to base64 STANDARD.encode(bytes) }\n\n\npub fn gibberish_score(text: &[u8]) -&gt; f32 {\n    text.iter()\n        .filter(|&&byte| !byte.is_ascii_alphabetic() && byte != b' ')\n        .count() as f32 / (text.len().max(1) as f32)\n}\n\n\nfn test_gibberish_score() {\n    assert_eq!(gibberish_score(b\"\"), 0.0);\n    assert_eq!(gibberish_score(b\"Hello World\"), 0.0);\n    \n    // 4 non-readable out of 10 chars\n    assert_eq!(gibberish_score(b\"Helloo123!\"), 0.4); \n    assert_eq!(gibberish_score(b\"123!@#\"), 1.0);\n}"
   }
 ]
