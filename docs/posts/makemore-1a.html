@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Vikas Gorur">
+<meta name="dcterms.date" content="2025-08-04">
 
-<title>Vikas Gorur</title>
+<title>Makemore 1A: exercises</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,25 +22,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-a8cfe63eade0b71b47e9ce25a1507d2f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-b0914bf9e93b132249acb5aa2d8c51da.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-a8cfe63eade0b71b47e9ce25a1507d2f.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-b0914bf9e93b132249acb5aa2d8c51da.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -67,11 +103,40 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="styles.css">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -84,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
 </ul>
@@ -95,23 +160,51 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul>
+  <li><a href="#e01" id="toc-e01" class="nav-link active" data-scroll-target="#e01">E01</a></li>
+  <li><a href="#e02" id="toc-e02" class="nav-link" data-scroll-target="#e02">E02</a></li>
+  <li><a href="#e03" id="toc-e03" class="nav-link" data-scroll-target="#e03">E03</a></li>
+  <li><a href="#e04" id="toc-e04" class="nav-link" data-scroll-target="#e04">E04</a></li>
+  <li><a href="#e05" id="toc-e05" class="nav-link" data-scroll-target="#e05">E05</a></li>
+  <li><a href="#e06" id="toc-e06" class="nav-link" data-scroll-target="#e06">E06</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Vikas Gorur</h1>
+<h1 class="title">Makemore 1A: exercises</h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Vikas Gorur </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 4, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -121,80 +214,76 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<style>
-#quarto-content {
-    width: 100%;
-    margin: 0 auto;
-}
-
-h3 {
-    margin-top: 0;
-}
-
-.content-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-}
-
-@media (max-width: 768px) {
-    .content-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
-<p><img src="mysore.jpeg" alt="A drawing of the Mysore railway station" width="40%"></p>
-<p>Past work: <a href="https://www.airbase.com/">Airbase</a>, Twitter, <a href="https://www.gluster.org">Gluster</a>.</p>
-<div class="content-grid">
-<section id="machine-learning" class="level3">
-<h3 class="anchored" data-anchor-id="machine-learning">Machine Learning</h3>
-<p>This is my attempt to build the “tech tree” of ML, starting from the absolute basics and ending up somewhere around GPT-2.</p>
-<p><span class="pub-date">2025-01-26</span> <a href="./posts/simplest-autoencoder.html">The Simplest Autoencoder</a><br>
-<span class="pub-date">2024-10-18</span> <a href="./posts/path-to-llms.html">Path to LLMs</a><br>
-<span class="pub-date">2024-09-01</span> <a href="./posts/breaking-caesar-cipher.html">Breaking Caesar Ciphers Using Relative Entropy</a><br>
-<span class="pub-date">2024-08-31</span> <a href="./posts/learning-by-gradient-descent.html">Learning by Gradient Descent</a></p>
-<section id="makemore" class="level4">
-<h4 class="anchored" data-anchor-id="makemore">Makemore</h4>
-<p><span class="pub-date">2025-08-03</span> <a href="./posts/makemore-1.html">makemore 1: bigram model</a><br>
-<span class="pub-date indent">2025-08-04</span> <a href="./posts/makemore-1a.html">makemore 1A: exercises</a></p>
+<p>This is a follow up to the post <a href="../posts/makemore-1.html">makemore 1</a>. In this post we’ll do the exercises suggested in the video.</p>
+<section id="e01" class="level2">
+<h2 class="anchored" data-anchor-id="e01">E01</h2>
+<blockquote class="blockquote">
+<p>Train a trigram language model, i.e.&nbsp;take two characters as an input to predict the 3rd one. Feel free to use either counting or a neural net. Evaluate the loss; Did it improve over a bigram model?</p>
+</blockquote>
+<p>We modify the training function to be:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_trigram(corpus: <span class="bu">list</span>[<span class="bu">str</span>]) <span class="op">-&gt;</span> torch.tensor:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    N_TOKENS <span class="op">=</span> <span class="bu">len</span>(VOCAB)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    counts <span class="op">=</span> torch.zeros((N_TOKENS, N_TOKENS, N_TOKENS))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name <span class="kw">in</span> corpus:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        name <span class="op">=</span> <span class="st">"."</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">"."</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c1, c2, c_next <span class="kw">in</span> <span class="bu">zip</span>(name, name[<span class="dv">1</span>:], name[<span class="dv">2</span>:]):</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            counts[STOI[c1], STOI[c2], STOI[c_next]] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalize the counts into probabilities on each row</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> counts <span class="op">/</span> counts.<span class="bu">sum</span>(<span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> train_trigram(MOVIES)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The model now has the shape <code>(28, 28, 28)</code>. The probability distribution for the context <code>ab</code> is given by <code>model[a, b, :]</code>.</p>
+<p>We compute the average negative log-likelihood loss again:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nll_loss(names: <span class="bu">list</span>[<span class="bu">str</span>]) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    logprobs <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> name <span class="kw">in</span> names:</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> c1, c2, c_next <span class="kw">in</span> <span class="bu">zip</span>(name, name[<span class="dv">1</span>:], name[<span class="dv">2</span>:]):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            logprobs <span class="op">+=</span> math.log(model[STOI[c1], STOI[c2], STOI[c_next]])</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">-</span>logprobs <span class="op">/</span> count</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>nll_loss(MOVIES)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><span class="eval-result">1.8170285469177778</span></p>
+<p>The loss for the bigram model was ~ <code>2.4913</code>. It makes sense that the loss is lower for the trigram model since it takes more information into account in its prediction.</p>
 </section>
+<section id="e02" class="level2">
+<h2 class="anchored" data-anchor-id="e02">E02</h2>
+<blockquote class="blockquote">
+<p>Split up the dataset randomly into 80% train set, 10% dev set, 10% test set. Train the bigram and trigram models only on the training set. Evaluate them on dev and test splits. What can you see?</p>
+</blockquote>
 </section>
-<section id="blog" class="level3">
-<h3 class="anchored" data-anchor-id="blog">Blog</h3>
-<p><span class="pub-date">2025-07-28</span> <a href="./posts/worse-is-better.html">Unfortunately, Worse is Better</a><br>
-<span class="pub-date">2025-07-27</span> <a href="./posts/blogs-by-humans.html">Blogs by Humans</a><br>
-<span class="pub-date">2025-07-22</span> <a href="./posts/secret-sharing-in-apl.html">Secret Sharing in APL</a><br>
-</p>
-<p><span class="pub-date">2024-12-14</span> <a href="./posts/mysore-food-guide.html">Mysore Food Guide</a><br>
-<span class="pub-date">2022-04-25</span> <a href="./posts/varieties-of-silence.html">The Varieties of Silence</a><br>
-<span class="pub-date">2021-03-16</span> <a href="./posts/for-a-kannada-movie.html">For A Kannada Movie</a><br>
-<span class="pub-date">2020-04-30</span> <a href="./posts/feature-flags.html">How to do Feature Flag-Driven Development</a></p>
+<section id="e03" class="level2">
+<h2 class="anchored" data-anchor-id="e03">E03</h2>
+<blockquote class="blockquote">
+<p>Use the dev set to tune the strength of smoothing (or regularization) for the trigram model - i.e.&nbsp;try many possibilities and see which one works best based on the dev set loss. What patterns can you see in the train and dev set loss as you tune this strength? Take the best setting of the smoothing and evaluate on the test set once and at the end. How good of a loss do you achieve?</p>
+</blockquote>
 </section>
-<section id="programs-for-humans" class="level3">
-<h3 class="anchored" data-anchor-id="programs-for-humans">Programs for Humans</h3>
-<p>These are programs I write solely to understand something.</p>
-<p><span class="pub-date">2025-02-21</span> <a href="./programs-for-humans/project-euler.html">Project Euler - first 100 problems</a><br>
-<span class="pub-date">2024-12-22</span> <a href="./programs-for-humans/cryptopals-set1.html">Cryptopals: Set 1</a><br>
-<span class="pub-date">2024-12-09</span> <a href="./programs-for-humans/advent-of-code-2024.html">Advent of Code 2024 (Clojure)</a></p>
+<section id="e04" class="level2">
+<h2 class="anchored" data-anchor-id="e04">E04</h2>
+<blockquote class="blockquote">
+<p>We saw that our 1-hot vectors merely select a row of W, so producing these vectors explicitly feels wasteful. Can you delete our use of F.one_hot in favor of simply indexing into rows of W?</p>
+</blockquote>
 </section>
-<section id="annotations" class="level3">
-<h3 class="anchored" data-anchor-id="annotations">Annotations</h3>
-<p>My notes on papers and articles I’ve read.</p>
-<p><span class="pub-date">2025-04-25</span> <a href="./annotations/biology-of-llm.html">On the Biology of a Large Language Model (Anthropic)</a><br>
-<span class="pub-date">2025-04-01</span> <a href="./annotations/deep-dive-into-llms.html">Deep Dive into LLMs like ChatGPT (Karpathy)</a><br>
-<span class="pub-date">2025-01-18</span> <a href="./annotations/programming-as-theory-building.html">Programming as Theory Building</a><br>
-<span class="pub-date">2024-11-27</span> <a href="./annotations/why-machines-learn.html"><em>Why Machines Learn</em></a> (book)<br>
-<span class="pub-date">2024-10-07</span> <a href="./annotations/history-of-language-models.html">History of Language Modeling</a></p>
+<section id="e05" class="level2">
+<h2 class="anchored" data-anchor-id="e05">E05</h2>
+<blockquote class="blockquote">
+<p>Look up and use <code>F.cross_entropy</code> instead. You should achieve the same result. Can you think of why we’d prefer to use <code>F.cross_entropy</code> instead?</p>
+</blockquote>
 </section>
-<section id="applied-math" class="level3">
-<h3 class="anchored" data-anchor-id="applied-math">Applied Math</h3>
-<p><span class="pub-date">2025-01-03</span> <a href="./posts/chessrank.html">Chessrank: Who Should Win a Chess Tournament?</a><br>
-<span class="pub-date">2024-07-24</span> <a href="./posts/counting-is-hard.html">Counting is hard</a><br>
-<span class="pub-date">2024-11-02</span> <a href="./exercises/stats110-practice1.html">Stats 110: Practice 1</a></p>
-</section>
-</div>
+<section id="e06" class="level2">
+<h2 class="anchored" data-anchor-id="e06">E06</h2>
+<blockquote class="blockquote">
+<p>Meta-exercise! Think of a fun/interesting exercise and complete it.</p>
+</blockquote>
+<p>What is a language model that can achieve a loss of <span class="math inline">\(0\)</span> on the training set?</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

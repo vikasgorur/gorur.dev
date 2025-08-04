@@ -7,6 +7,7 @@ project:
   render:
     - index.qmd
     - posts/makemore-1.qmd
+    - posts/makemore-1a.qmd
     - posts/makemore-2.qmd
     - posts/for-a-kannada-movie.qmd
     - posts/simplest-autoencoder.qmd
