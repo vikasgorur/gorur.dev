@@ -1,6 +1,6 @@
 ---
 title: "Makemore 1A: exercises"
-date: 2025-08-04
+date: 2025-08-09
 author: Vikas Gorur
 toc: true
 toc-location: left
@@ -18,54 +18,186 @@ do the exercises suggested in the video.
 predict the 3rd one. Feel free to use either counting or a neural net. Evaluate
 the loss; Did it improve over a bigram model?
 
-We modify the training function to be:
+We'll rewrite the counting based training code to be generic and work on n-grams.
+First, a function to return all the n-gram training examples as a tensor.
 
 ```python
-import torch
+def ngrams(corpus: list[str], n: int) -> torch.tensor:
+    "Returns the n-grams present in the corpus as a tensor, one row per n-gram"
+    # Add start/end tokens to each name
+    padded_names = ["." * (n-1) + name + "." for name in corpus]
+    
+    # Initialize tensor to store all n-grams
+    # Each n-gram will be represented as a row of n integers (STOI mappings)
+    total_ngrams = sum(len(name) - n + 1 for name in padded_names)
+    result = torch.zeros((total_ngrams, n), dtype=torch.long)
+    
+    # Fill the tensor with n-grams
+    idx = 0
+    for name in padded_names:
+        for i in range(len(name) - n + 1):
+            # Extract the n-gram and convert each character to its STOI index
+            ngram = name[i:i+n]
+            for j, char in enumerate(ngram):
+                result[idx, j] = STOI[char]
+            idx += 1
+            
+    return result
+```
 
-def train_trigram(corpus: list[str]) -> torch.tensor:
+Next, given the training set of ngrams, return the tensor of probabilities:
+
+```python
+def train_ngram(ngrams: torch.Tensor, n: int) -> torch.tensor:
+    """
+    Train an n-gram model using pre-computed n-grams tensor.
+    
+    Args:
+        ngrams: Tensor of shape (N, n) where N is number of n-grams and
+                each row contains n STOI indices representing an n-gram
+        n: The size of n-grams (e.g., 2 for bigrams, 3 for trigrams, etc.)
+    
+    Returns:
+        Tensor of shape (V, V, ..., V) containing normalized n-gram
+        probabilities, where V is vocabulary size
+    """
     N_TOKENS = len(VOCAB)
-    counts = torch.zeros((N_TOKENS, N_TOKENS, N_TOKENS))
-    for name in corpus:
-        name = "." + name + "."
-        for c1, c2, c_next in zip(name, name[1:], name[2:]):
-            counts[STOI[c1], STOI[c2], STOI[c_next]] += 1
-
-    # Normalize the counts into probabilities on each row
-    return counts / counts.sum(1, keepdim=True)
-
-model = train_trigram(MOVIES)
+    
+    # Create a sparse tensor of counts using index_put_
+    # Create a tuple of n dimensions, each of size N_TOKENS
+    shape = tuple([N_TOKENS] * n)
+    counts = torch.zeros(shape)
+    
+    # Split the ngrams tensor into n columns for index_put_
+    indices = tuple(ngrams[:, i] for i in range(n))
+    counts.index_put_(
+        indices,
+        torch.ones(len(ngrams)),
+        accumulate=True
+    )
+    
+    # Normalize the counts into probabilities
+    # Add a small epsilon to avoid division by zero
+    # Sum over the last dimension for normalization
+    return counts / (counts.sum(-1, keepdim=True) + 1e-10)
 ```
 
-The model now has the shape `(28, 28, 28)`. The probability distribution for the context `ab`
-is given by `model[a, b, :]`.
-
-We compute the average negative log-likelihood loss again:
+Finally, the loss function for n-grams.
 
 ```python
-def nll_loss(names: list[str]) -> float:
-    logprobs = 0
-    count = 0
-    for name in names:
-        for c1, c2, c_next in zip(name, name[1:], name[2:]):
-            logprobs += math.log(model[STOI[c1], STOI[c2], STOI[c_next]])
-            count += 1
-
-    return -logprobs / count
-
-nll_loss(MOVIES)
+def ngram_loss(model: torch.Tensor, data: torch.Tensor, n: int) -> float:
+    indices = tuple(data[:, i] for i in range(n))
+    
+    probs = model[indices]
+    logprobs = torch.log(probs + 1e-10)
+    
+    return -logprobs.mean().item()
 ```
 
-<span class="eval-result">1.8170285469177778</span>
+Now we can train a trigram model and compute its loss.
 
-The loss for the bigram model was ~ `2.4913`. It makes sense that the loss is lower for the
-trigram model since it takes more information into account in its prediction.
+```python
+bigrams = ngrams(MOVIES, 2)
+trigrams = ngrams(MOVIES, 3)
+
+bmodel = train_ngram(bigrams, 2)
+tmodel = train_ngram(trigrams, 3)
+
+print(f"bigram loss = {ngram_loss(bmodel, bigrams, 2)}")
+print(f"trigram loss = {ngram_loss(tmodel, trigrams, 3)}")
+```
+
+```
+bigram loss = 2.5086231231689453
+trigram loss = 2.1968438625335693
+```
+
+The loss is lower for the trigram model as we would expect, since it has the opportunity
+to pick up more of the structure present in the dataset.
 
 ## E02
 
 > Split up the dataset randomly into 80% train set, 10% dev set, 10% test set.
 Train the bigram and trigram models only on the training set. Evaluate them on
 dev and test splits. What can you see?
+
+We'll write a function to split the dataset.
+
+```python
+def split_dataset(
+        X: torch.tensor,
+        train: float,
+        dev: float,
+        test: float
+    ) -> Tuple[torch.tensor, torch.Tensor, torch.Tensor]:
+
+    "Split X by row into the 3 datasets"
+
+    assert abs(train + dev + test - 1.0) < 1e-5, "Proportions must sum to 1"
+    n = len(X)
+    
+    # Calculate indices for splits
+    train_idx = int(n * train)
+    dev_idx = train_idx + int(n * dev)
+    
+    # Create random permutation of indices
+    perm = torch.randperm(n)
+    
+    # Split the data using the permuted indices
+    train_data = X[perm[:train_idx]]
+    dev_data = X[perm[train_idx:dev_idx]]
+    test_data = X[perm[dev_idx:]]
+    
+    return train_data, dev_data, test_data
+```
+
+Now we'll write a function to train an n-gram model on just the training set
+and compute the loss for all the splits. 
+
+```python
+def train_dev_test(n: int):
+    data = ngrams(MOVIES, n)
+    train_set, dev_set, test_set = split_dataset(data, 0.8, 0.1, 0.1)
+
+    model = train_ngram(train_set, n)
+
+    train_loss = ngram_loss(model, train_set, n)
+    dev_loss = ngram_loss(model, dev_set, n)
+    test_loss = ngram_loss(model, test_set, n)
+
+    print(f"Training set loss: {train_loss:.4f}")
+    print(f"Development set loss: {dev_loss:.4f}")
+    print(f"Test set loss: {test_loss:.4f}")
+```
+
+For bigrams:
+
+```python
+train_dev_test(2)
+```
+```
+Training set loss: 2.5090
+Development set loss: 2.5243
+Test set loss: 2.5005
+```
+
+For trigrams:
+
+```python
+train_dev_test(3)
+```
+```
+Training set loss: 2.1925
+Development set loss: 2.3611
+Test set loss: 2.3867
+```
+
+What do we learn from this?
+
+The difference between training and test loss is greater for the trigram model than
+the bigram model. I interpret this as the trigram model picking up "more" of the structure
+that's present specifically in the training set, leading it to do worse on predicting the
+test set.
 
 ## E03
 
