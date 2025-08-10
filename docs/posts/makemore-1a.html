@@ -359,12 +359,32 @@ Test set loss: 2.3867</code></pre>
 <blockquote class="blockquote">
 <p>Use the dev set to tune the strength of smoothing (or regularization) for the trigram model - i.e.&nbsp;try many possibilities and see which one works best based on the dev set loss. What patterns can you see in the train and dev set loss as you tune this strength? Take the best setting of the smoothing and evaluate on the test set once and at the end. How good of a loss do you achieve?</p>
 </blockquote>
+<p>We will control regularization by adding this line to the <code>train_ngrams</code> function:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> torch.fill_(torch.zeros(shape), r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is filling the counts tensor with a provided value <code>r</code> instead of just zero. We can now try training the trigram model with different values of <code>r</code> and compute the training and dev set losses.</p>
+<pre><code>r =  0.01  losses: [train: 2.1891, dev: 2.2900]
+r =  0.10  losses: [train: 2.1958, dev: 2.2773]
+r =  0.50  losses: [train: 2.2183, dev: 2.2857]
+r =  1.00  losses: [train: 2.2405, dev: 2.3014]
+r =  5.00  losses: [train: 2.3547, dev: 2.3995]
+r = 10.00  losses: [train: 2.4445, dev: 2.4817]</code></pre>
+<p><code>0.1</code> is not a “count” obviously but it doesn’t matter. We can think of <code>r</code> simply as a parameter that affects the final probabilities. We’ll now evaluate the test set loss:</p>
+<pre><code>2.1236484050750732</code></pre>
+<p>We got lucky somehow and the test loss is lower than the training and dev losses.</p>
 </section>
 <section id="e04" class="level2">
 <h2 class="anchored" data-anchor-id="e04">E04</h2>
 <blockquote class="blockquote">
 <p>We saw that our 1-hot vectors merely select a row of W, so producing these vectors explicitly feels wasteful. Can you delete our use of F.one_hot in favor of simply indexing into rows of W?</p>
 </blockquote>
+<p>(Refer to the <code>train</code> function from the <a href="../posts/makemore-1.html">previous post</a>).</p>
+<p><code>X</code> is a 1-d tensor containing the integer code (<code>0-27</code>) of the first character of every bigram training example. <code>Xenc</code> is the tensor <code>(N, 28)</code> where each row is a one-hot encoded training example. <code>W</code> has shape <code>(28, 28)</code>. For a given training example, <code>Xenc @ W</code> just picks out one row from <code>W</code> and returns that as the probabilities. Thus the current code is:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Xenc <span class="op">=</span> F.one_hot(X, num_classes<span class="op">=</span><span class="bu">len</span>(VOCAB)).<span class="bu">float</span>()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># In forward()</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>logits <span class="op">=</span> Xenc <span class="op">@</span> W</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This can be replaced with a single line using PyTorch’s advanced indexing. We will use <code>X</code> as the index into <code>W</code>. This results in each element of <code>X</code> picking out a row from <code>W</code> and adding it to the resulting tensor.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>logits <span class="op">=</span> W[X]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="e05" class="level2">
 <h2 class="anchored" data-anchor-id="e05">E05</h2>
